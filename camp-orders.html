@@ -1,0 +1,2022 @@
+<!doctype html>
+<!--
+  ╔══════════════════════════════════════════════════════════╗
+  ║  HATCH KITCHEN — Camp Lunch Order Form                  ║
+  ║                                                          ║
+  ║  SETUP (2 steps):                                        ║
+  ║  1. Replace STRIPE_PK below with your publishable key   ║
+  ║     from: https://dashboard.stripe.com/apikeys           ║
+  ║                                                          ║
+  ║  2. In Vercel dashboard → Settings → Environment Vars:  ║
+  ║     STRIPE_SECRET_KEY = sk_live_...                     ║
+  ║                                                          ║
+  ║  Test card: 4242 4242 4242 4242, any exp/CVC            ║
+  ╚══════════════════════════════════════════════════════════╝
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Camp Lunch Orders | Hatch Kitchen — Summer 2026</title>
+<meta name="description" content="Order kosher summer camp lunches from Hatch Kitchen. Fresh daily meals delivered to your camper — rotisserie chicken, wraps, nuggets, smoothies and more.">
+<link rel="canonical" href="https://www.thehatchkitchen.com/camp-orders.html">
+<link rel="icon" href="favicon.png" type="image/png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Allura&family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Stripe.js -->
+<script src="https://js.stripe.com/v3/"></script>
+
+<style>
+/* ============================================================
+   HATCH KITCHEN — Camp Orders Design System
+   ============================================================ */
+:root {
+  --ink:        #121110;
+  --ink-soft:   #5B5346;
+  --cream:      #F5F1E3;
+  --cream-deep: #EAE2C7;
+  --paper:      #FBF9F1;
+  --gold:       #F3C457;
+  --gold-dark:  #C8941F;
+  --gold-tint:  #FCE9C0;
+  --peach:      #EFA862;
+  --sage:       #4F6B3D;
+  --sage-tint:  #E2E8D2;
+  --sage-dark:  #33431F;
+  --line:       rgba(18,17,16,.14);
+  --line-soft:  rgba(18,17,16,.08);
+  --red-alert:  #B91C1C;
+  --green-ok:   #15803D;
+  --green-bg:   #DCFCE7;
+
+  --f-display: "Poppins", sans-serif;
+  --f-script:  "Allura", cursive;
+  --f-body:    "Hanken Grotesk", sans-serif;
+  --f-mono:    "IBM Plex Mono", monospace;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --shadow:    0 2px 8px rgba(18,17,16,.08), 0 12px 28px -12px rgba(18,17,16,.18);
+  --shadow-lg: 0 20px 48px -16px rgba(18,17,16,.32);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--f-body);
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  font-size: 16px;
+}
+img { max-width: 100%; display: block; }
+ul  { margin: 0; padding: 0; list-style: none; }
+a   { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+h1,h2,h3,h4,p,figure { margin: 0; }
+input, select, textarea { font: inherit; }
+
+/* ---- Top bar ---- */
+.topbar {
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--f-mono);
+  font-size: .75rem;
+  letter-spacing: .03em;
+}
+.topbar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.topbar a { opacity: .82; transition: color .15s, opacity .15s; }
+.topbar a:hover { color: var(--gold); opacity: 1; }
+.topbar-tag {
+  background: var(--gold);
+  color: var(--ink);
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: .7rem;
+}
+.topbar-left, .topbar-right { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* ---- Header ---- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(18,17,16,.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(245,241,227,.1);
+  box-shadow: 0 4px 24px -8px rgba(0,0,0,.35);
+}
+.nav {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-img { height: 38px; width: auto; border-radius: 7px; }
+.logo-word { font-family: var(--f-display); font-weight: 700; font-size: 1.15rem; color: var(--cream); line-height: 1; }
+.logo-word small {
+  display: block;
+  font-family: var(--f-mono);
+  font-size: .5rem;
+  letter-spacing: .24em;
+  color: rgba(245,241,227,.45);
+  margin-top: 2px;
+}
+.nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--f-mono);
+  font-size: .78rem;
+  color: rgba(245,241,227,.65);
+  transition: color .15s;
+}
+.nav-back:hover { color: var(--gold); }
+
+/* ---- Hero Banner ---- */
+.camp-hero {
+  position: relative;
+  background: var(--ink);
+  overflow: hidden;
+  height: 200px;
+}
+.camp-hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .45;
+}
+.camp-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(18,17,16,.75) 0%, rgba(18,17,16,.4) 100%);
+}
+.camp-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.camp-hero-eyebrow {
+  font-family: var(--f-mono);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+.camp-hero h1 {
+  font-family: var(--f-display);
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  font-weight: 800;
+  color: var(--cream);
+  line-height: 1.05;
+  margin-bottom: 10px;
+}
+.camp-hero h1 em { font-style: normal; color: var(--gold); }
+.camp-hero-sub {
+  font-size: .92rem;
+  color: rgba(245,241,227,.78);
+  max-width: 44ch;
+}
+
+/* ---- Progress bar ---- */
+.progress-wrap {
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 63px;
+  z-index: 90;
+}
+.progress-bar {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+}
+.prog-step {
+  flex: 1;
+  padding: 12px 8px;
+  text-align: center;
+  font-family: var(--f-mono);
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: rgba(18,17,16,.38);
+  border-right: 1px solid var(--line-soft);
+  transition: all .25s ease;
+  position: relative;
+}
+.prog-step:last-child { border-right: none; }
+.prog-step.active { color: var(--ink); background: var(--gold-tint); }
+.prog-step.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--gold);
+  border-radius: 3px 3px 0 0;
+}
+.prog-step.done { color: var(--sage-dark); background: var(--sage-tint); }
+.prog-step.done::before { content: "✓ "; }
+
+/* ---- Layout ---- */
+.page-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 28px;
+  align-items: start;
+}
+@media (max-width: 860px) { .page-wrap { grid-template-columns: 1fr; } }
+
+/* ---- Step pages ---- */
+.step-page { display: none; }
+.step-page.active { display: contents; }
+/* Grid children from step-page */
+.step-main { grid-column: 1; }
+.step-side  { grid-column: 2; }
+@media (max-width: 860px) { .step-main, .step-side { grid-column: 1; } }
+
+/* Success spans full grid */
+.success-wrap { grid-column: 1 / -1; }
+
+/* ---- Panel ---- */
+.panel {
+  background: var(--paper);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.panel-title {
+  font-family: var(--f-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.panel-title .num {
+  width: 28px; height: 28px;
+  background: var(--ink);
+  color: var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-mono);
+  font-size: .78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.eyebrow {
+  font-family: var(--f-mono);
+  text-transform: uppercase;
+  letter-spacing: .13em;
+  font-size: .7rem;
+  font-weight: 600;
+  color: var(--gold-dark);
+  display: flex;
+  align-items: center;
+  gap: .5em;
+  margin-bottom: 14px;
+}
+.eyebrow::before {
+  content: "";
+  width: 6px; height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ---- Forms ---- */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field.full { grid-column: 1 / -1; }
+.field label {
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  letter-spacing: .02em;
+}
+.field label .req { color: var(--peach); margin-left: 2px; }
+.field input, .field select, .field textarea {
+  padding: 11px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: .95rem;
+  transition: border-color .15s, box-shadow .15s;
+  outline: none;
+  width: 100%;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--gold-dark);
+  box-shadow: 0 0 0 3px rgba(200,148,31,.15);
+}
+.field textarea { min-height: 80px; resize: vertical; }
+@media (max-width: 560px) {
+  .form-grid, .form-grid.cols-3 { grid-template-columns: 1fr; }
+}
+
+/* ---- Hint text ---- */
+.hint {
+  font-size: .8rem;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+.notice {
+  background: var(--gold-tint);
+  border: 1px solid rgba(200,148,31,.35);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  font-size: .88rem;
+  color: #6B4A0A;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+.notice strong { color: #4D3200; }
+
+/* ---- Child card ---- */
+.child-card {
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.child-card-header {
+  background: var(--ink);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.child-badge {
+  width: 36px; height: 36px;
+  background: var(--gold);
+  color: var(--ink);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: .88rem;
+  flex-shrink: 0;
+}
+.child-name { font-family: var(--f-display); font-weight: 700; color: var(--cream); font-size: 1rem; }
+.child-meta { font-family: var(--f-mono); font-size: .72rem; color: rgba(245,241,227,.5); margin-top: 1px; }
+.child-remove {
+  margin-left: auto;
+  background: none;
+  border: 1px solid rgba(245,241,227,.2);
+  color: rgba(245,241,227,.55);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 700;
+  transition: all .15s;
+}
+.child-remove:hover { border-color: #EF4444; color: #EF4444; }
+.child-body { padding: 20px; }
+
+/* ---- Add Child btn ---- */
+.btn-add-child {
+  width: 100%;
+  padding: 14px;
+  border: 2px dashed var(--line);
+  background: transparent;
+  border-radius: var(--radius-md);
+  color: var(--ink-soft);
+  font-weight: 700;
+  font-size: .95rem;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-add-child:hover {
+  border-color: var(--gold-dark);
+  color: var(--gold-dark);
+  background: var(--gold-tint);
+}
+
+/* ---- Week selector ---- */
+.week-grid { display: flex; flex-direction: column; gap: 8px; }
+.week-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--paper);
+  cursor: pointer;
+  transition: all .18s;
+  user-select: none;
+}
+.week-row:hover:not(.locked) { border-color: var(--gold-dark); }
+.week-row.selected {
+  border-color: var(--ink);
+  background: var(--ink);
+}
+.week-row.locked { opacity: .45; cursor: not-allowed; background: var(--cream-deep); }
+.week-num {
+  font-family: var(--f-mono);
+  font-size: .72rem;
+  font-weight: 700;
+  color: rgba(18,17,16,.4);
+  width: 48px;
+  flex-shrink: 0;
+}
+.week-row.selected .week-num { color: rgba(245,241,227,.4); }
+.week-dates {
+  flex: 1;
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: .95rem;
+  color: var(--ink);
+}
+.week-row.selected .week-dates { color: var(--gold); }
+.week-right { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+.week-cutoff { font-family: var(--f-mono); font-size: .7rem; color: rgba(18,17,16,.4); }
+.week-row.selected .week-cutoff { color: rgba(245,241,227,.4); }
+.week-row.locked .week-cutoff { color: var(--red-alert); font-weight: 700; }
+.week-countdown {
+  font-family: var(--f-mono);
+  font-size: .72rem;
+  font-weight: 600;
+  color: var(--sage-dark);
+}
+.week-countdown.urgent { color: #C05A00; }
+.week-countdown.critical { color: var(--red-alert); }
+.week-row.selected .week-countdown { color: #B8E04A; }
+.week-check {
+  width: 22px; height: 22px;
+  border: 1.5px solid var(--line);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .75rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  transition: all .18s;
+}
+.week-row.selected .week-check { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+
+/* ---- Meal selection ---- */
+.child-week-block {
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.child-week-header {
+  background: var(--ink);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.child-week-title {
+  font-family: var(--f-display);
+  font-weight: 700;
+  color: var(--gold);
+  font-size: .92rem;
+}
+.child-week-status {
+  font-family: var(--f-mono);
+  font-size: .7rem;
+  color: rgba(245,241,227,.4);
+}
+.child-week-status.full-week { color: var(--gold); font-weight: 700; }
+
+.week-actions-row {
+  display: flex;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--cream-deep);
+  border-bottom: 1px solid var(--line-soft);
+}
+.btn-select-all {
+  font-family: var(--f-mono);
+  font-size: .7rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1.5px solid var(--line);
+  background: var(--paper);
+  color: var(--ink-soft);
+  transition: all .15s;
+}
+.btn-select-all:hover { border-color: var(--ink); color: var(--ink); }
+.btn-select-all.primary { background: var(--ink); color: var(--gold); border-color: var(--ink); }
+
+.meal-day-row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--line-soft);
+  background: var(--paper);
+  transition: background .12s;
+}
+.meal-day-row:last-child { border-bottom: none; }
+.meal-day-row.selected { background: rgba(243,196,87,.06); }
+
+.meal-toggle-col {
+  padding: 12px 10px 12px 16px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.meal-checkbox {
+  width: 22px; height: 22px;
+  border: 1.5px solid var(--line);
+  border-radius: 5px;
+  background: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.meal-checkbox.checked { background: var(--ink); border-color: var(--ink); }
+.meal-checkbox.checked::after { content: "✓"; color: var(--gold); font-size: .72rem; font-weight: 800; }
+
+.meal-img-col { width: 80px; flex-shrink: 0; cursor: pointer; }
+.meal-img-col img { width: 80px; height: 72px; object-fit: cover; }
+
+.meal-info-col { flex: 1; padding: 10px 12px; cursor: pointer; min-width: 0; }
+.meal-day-label {
+  font-family: var(--f-mono);
+  font-size: .68rem;
+  font-weight: 600;
+  color: rgba(18,17,16,.4);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: 3px;
+}
+.meal-name { font-family: var(--f-display); font-weight: 700; font-size: .95rem; color: var(--ink); }
+.meal-desc { font-size: .8rem; color: var(--ink-soft); margin-top: 2px; }
+
+.meal-price-col {
+  padding: 10px 16px 10px 8px;
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: .92rem;
+  color: var(--gold-dark);
+  flex-shrink: 0;
+}
+
+.week-subtotal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--cream-deep);
+  font-size: .88rem;
+  border-top: 1px solid var(--line-soft);
+}
+.week-subtotal-label { color: var(--ink-soft); font-weight: 600; }
+.week-subtotal-amt { font-family: var(--f-mono); font-weight: 700; }
+.week-discount-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 16px 10px;
+  background: var(--green-bg);
+  font-size: .82rem;
+}
+.week-discount-label { color: var(--green-ok); font-weight: 700; }
+.week-discount-amt { color: var(--green-ok); font-family: var(--f-mono); font-weight: 700; }
+
+/* ---- Allergy chips ---- */
+.allergy-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.allergy-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  font-size: .83rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all .15s;
+  user-select: none;
+}
+.allergy-chip:hover { border-color: var(--ink-soft); }
+.allergy-chip.on { border-color: var(--ink); background: var(--ink); color: var(--gold); }
+.allergy-chip .icon { font-size: 1rem; }
+
+/* ---- Order summary sidebar ---- */
+.summary-card {
+  background: var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  color: var(--cream);
+  position: sticky;
+  top: 122px;
+}
+.summary-title {
+  font-family: var(--f-mono);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(245,241,227,.45);
+  margin-bottom: 16px;
+}
+.summary-empty {
+  text-align: center;
+  padding: 24px 0;
+  color: rgba(245,241,227,.3);
+  font-size: .88rem;
+}
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: .88rem;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(245,241,227,.08);
+  gap: 12px;
+}
+.summary-line:last-of-type { border-bottom: none; }
+.summary-line .s-label { color: rgba(245,241,227,.65); }
+.summary-line .s-val { font-family: var(--f-mono); font-weight: 600; color: rgba(245,241,227,.9); text-align: right; }
+.summary-discount .s-label { color: #86EFAC; }
+.summary-discount .s-val { color: #86EFAC; }
+.summary-divider { border: none; border-top: 1px solid rgba(245,241,227,.15); margin: 14px 0; }
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 8px;
+}
+.summary-total-label { font-size: .88rem; color: rgba(245,241,227,.5); }
+.summary-total-amt {
+  font-family: var(--f-display);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--gold);
+  line-height: 1;
+}
+.summary-meta {
+  font-family: var(--f-mono);
+  font-size: .68rem;
+  color: rgba(245,241,227,.3);
+  margin-top: 6px;
+  text-align: right;
+}
+.summary-section-head {
+  font-family: var(--f-display);
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin: 12px 0 6px;
+}
+
+/* ---- Stripe card element ---- */
+.stripe-element-wrap {
+  padding: 13px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  transition: border-color .15s, box-shadow .15s;
+  min-height: 44px;
+}
+.stripe-element-wrap.focused {
+  border-color: var(--gold-dark);
+  box-shadow: 0 0 0 3px rgba(200,148,31,.15);
+}
+.stripe-element-wrap.error { border-color: var(--red-alert); }
+.stripe-error {
+  color: var(--red-alert);
+  font-size: .82rem;
+  margin-top: 6px;
+  min-height: 18px;
+}
+.stripe-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: var(--f-mono);
+  font-size: .7rem;
+  color: rgba(18,17,16,.4);
+  margin-top: 12px;
+}
+
+/* ---- Buttons ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: .9em 1.8em;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  font-weight: 700;
+  font-size: .95rem;
+  cursor: pointer;
+  transition: transform .18s, box-shadow .18s, background .18s, color .18s;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+.btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+.btn-primary { width: 100%; background: var(--ink); color: var(--gold); box-shadow: 0 4px 16px -6px rgba(18,17,16,.45); }
+.btn-primary:hover { background: #2A2826; box-shadow: 0 8px 24px -6px rgba(18,17,16,.5); }
+.btn-gold    { background: var(--gold); color: var(--ink); }
+.btn-gold:hover { background: var(--gold-dark); color: var(--cream); }
+.btn-outline { background: transparent; border-color: var(--line); color: var(--ink-soft); }
+.btn-outline:hover { border-color: var(--ink); color: var(--ink); }
+.btn-nav {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+.btn-nav .btn { flex: 1; }
+
+/* ---- Loading spinner ---- */
+.spinner {
+  display: inline-block;
+  width: 18px; height: 18px;
+  border: 2px solid rgba(245,241,227,.3);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin .6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- Success screen ---- */
+.success-hero-box {
+  background: var(--ink);
+  border-radius: var(--radius-xl);
+  padding: 48px 36px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+.success-check {
+  width: 70px; height: 70px;
+  background: var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto 20px;
+  animation: popIn .5s var(--ease-out, cubic-bezier(0.22, 0.68, 0, 1.2)) both;
+}
+@keyframes popIn { from { transform: scale(.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.success-title {
+  font-family: var(--f-display);
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 800;
+  color: var(--cream);
+  margin-bottom: 10px;
+}
+.success-title em { font-style: normal; color: var(--gold); }
+.success-sub { font-size: 1rem; color: rgba(245,241,227,.65); line-height: 1.6; max-width: 50ch; margin: 0 auto; }
+
+.confirm-panel {
+  background: var(--paper);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+.confirm-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 13px 20px;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: .92rem;
+  gap: 20px;
+}
+.confirm-row:last-child { border-bottom: none; }
+.confirm-row .c-label { color: var(--ink-soft); flex-shrink: 0; }
+.confirm-row .c-val { font-weight: 700; text-align: right; }
+.confirm-total { background: var(--ink); }
+.confirm-total .c-label, .confirm-total .c-val { color: var(--cream); font-size: 1rem; }
+.confirm-total .c-val { font-family: var(--f-display); font-size: 1.5rem; color: var(--gold); }
+
+.success-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 16px; }
+.success-actions .btn { flex: 1; min-width: 160px; }
+
+/* ---- Footer ---- */
+.site-footer {
+  background: var(--ink);
+  color: rgba(245,241,227,.55);
+  font-size: .85rem;
+}
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.footer-brand-row { display: flex; align-items: center; gap: 10px; }
+.footer-brand-name { color: var(--gold); font-family: var(--f-display); font-weight: 700; font-size: .95rem; }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { transition: color .15s; }
+.footer-links a:hover { color: var(--gold); }
+
+/* ---- Media ---- */
+@media (max-width: 620px) {
+  .camp-hero { height: 160px; }
+  .camp-hero h1 { font-size: 1.5rem; }
+  .page-wrap { padding: 20px 16px 60px; }
+  .panel { padding: 18px; }
+  .meal-img-col { width: 56px; }
+  .meal-img-col img { width: 56px; height: 52px; }
+  .summary-total-amt { font-size: 1.8rem; }
+  .prog-step { font-size: .62rem; padding: 9px 4px; }
+}
+@media (max-width: 420px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .meal-img-col { display: none; }
+  .prog-step { font-size: .58rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-left">
+      <span class="topbar-tag">Certified Kosher · OK Kosher</span>
+      <a href="tel:+14244553195">(424) 455-3195</a>
+      <span>Sun–Thu 9AM–8PM · Fri 9AM–3PM</span>
+    </div>
+    <div class="topbar-right">
+      <a href="index.html">← Back to Hatch Kitchen</a>
+      <a href="https://www.instagram.com/thehatchkitchen/" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="site-header">
+  <nav class="nav">
+    <a class="logo" href="index.html">
+      <img class="logo-img" src="favicon.png" alt="Hatch Kitchen">
+      <span class="logo-word">Hatch Kitchen<small>Feel-Good Fuel</small></span>
+    </a>
+    <a class="nav-back" href="index.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to site
+    </a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<div class="camp-hero">
+  <img class="camp-hero-img" src="images/ai-hero.jpg" alt="Hatch Kitchen camp lunches">
+  <div class="camp-hero-overlay"></div>
+  <div class="camp-hero-content">
+    <div class="camp-hero-eyebrow">Summer 2026 · Pico-Robertson</div>
+    <h1>Camp Lunch <em>Orders.</em></h1>
+    <p class="camp-hero-sub">Kosher, made fresh, delivered happy — one less lunch to worry about this summer.</p>
+  </div>
+</div>
+
+<!-- Progress bar -->
+<div class="progress-wrap">
+  <div class="progress-bar">
+    <div class="prog-step active" id="prog-1">1. Your Camp</div>
+    <div class="prog-step" id="prog-2">2. Pick Meals</div>
+    <div class="prog-step" id="prog-3">3. Your Info</div>
+    <div class="prog-step" id="prog-4">4. Payment</div>
+  </div>
+</div>
+
+<!-- Main page area -->
+<div class="page-wrap" id="page-wrap">
+
+  <!-- ============================================================
+       STEP 1 — Camp & Children
+  ============================================================ -->
+  <div class="step-page active" id="step-1">
+
+    <div class="step-main">
+      <div class="notice">
+        <strong>How it works:</strong> Add your children below, select which weeks of camp you need lunches for, then choose meals for each day. Full-week orders (Mon–Fri) get a <strong>$8 discount per child per week</strong>.
+      </div>
+
+      <div class="panel">
+        <div class="eyebrow">Camp Details</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Camp Name <span class="req">*</span></label>
+            <select id="camp-name">
+              <option value="">Select camp…</option>
+              <option>Camp Gan Israel</option>
+              <option>Sinai Akiba Academy</option>
+              <option>Yeshiva Ohr Eliyahu</option>
+              <option>Emek Hebrew Academy</option>
+              <option>Valley Torah High School</option>
+              <option>Pressman Academy</option>
+              <option>Other (enter below)</option>
+            </select>
+          </div>
+          <div class="field" id="camp-other-wrap" style="display:none;">
+            <label>Camp Name (specify)</label>
+            <input type="text" id="camp-other" placeholder="Enter camp name">
+          </div>
+          <div class="field full">
+            <label>Delivery / Pickup Note</label>
+            <input type="text" id="delivery-note" placeholder="e.g. Delivered to camp front gate, Pickups at 8947 W Pico Blvd…">
+          </div>
+        </div>
+      </div>
+
+      <!-- Children -->
+      <div class="eyebrow">Your Children</div>
+      <div id="children-list"></div>
+
+      <button class="btn-add-child" id="add-child-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+        Add a child
+      </button>
+    </div>
+
+    <!-- Summary sidebar -->
+    <div class="step-side">
+      <div class="summary-card">
+        <div class="summary-title">Order Summary</div>
+        <div class="summary-empty" id="summary-empty">Add children and meals to see your order.</div>
+        <div id="summary-content" style="display:none;"></div>
+        <hr class="summary-divider" id="summary-hr" style="display:none;">
+        <div id="summary-total-wrap" style="display:none;">
+          <div class="summary-total">
+            <span class="summary-total-label">Total due</span>
+            <span class="summary-total-amt" id="summary-total-amt">$0.00</span>
+          </div>
+          <div class="summary-meta">Secure checkout on next step</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-main">
+      <div class="btn-nav">
+        <button class="btn btn-primary" id="step1-next" onclick="goToStep(2)">
+          Choose Meals
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- end step-1 -->
+
+
+  <!-- ============================================================
+       STEP 2 — Meal Selection
+  ============================================================ -->
+  <div class="step-page" id="step-2">
+
+    <div class="step-main">
+      <div class="panel">
+        <div class="panel-title"><span class="num">1</span> Select your weeks</div>
+        <div class="notice">
+          <strong>Order cutoff:</strong> Wednesday 11:59 PM for the following week's meals. Locked weeks can no longer be ordered.
+        </div>
+        <div class="week-grid" id="week-grid"></div>
+      </div>
+
+      <div id="meal-builder"></div>
+    </div>
+
+    <div class="step-side">
+      <div class="summary-card">
+        <div class="summary-title">Order Summary</div>
+        <div class="summary-empty" id="summary-empty-2">Select weeks and meals to see totals.</div>
+        <div id="summary-content-2" style="display:none;"></div>
+        <hr class="summary-divider" id="summary-hr-2" style="display:none;">
+        <div id="summary-total-wrap-2" style="display:none;">
+          <div class="summary-total">
+            <span class="summary-total-label">Total due</span>
+            <span class="summary-total-amt" id="summary-total-amt-2">$0.00</span>
+          </div>
+          <div class="summary-meta">Full-week discount applied automatically</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-main">
+      <div class="btn-nav">
+        <button class="btn btn-outline" onclick="goToStep(1)">← Back</button>
+        <button class="btn btn-primary" onclick="goToStep(3)">
+          Your Info
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- end step-2 -->
+
+
+  <!-- ============================================================
+       STEP 3 — Parent Info
+  ============================================================ -->
+  <div class="step-page" id="step-3">
+
+    <div class="step-main">
+      <div class="panel">
+        <div class="panel-title"><span class="num">3</span> Your Information</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>First Name <span class="req">*</span></label>
+            <input type="text" id="p-first" placeholder="Sara" autocomplete="given-name">
+          </div>
+          <div class="field">
+            <label>Last Name <span class="req">*</span></label>
+            <input type="text" id="p-last" placeholder="Cohen" autocomplete="family-name">
+          </div>
+          <div class="field">
+            <label>Email Address <span class="req">*</span></label>
+            <input type="email" id="p-email" placeholder="sara@example.com" autocomplete="email">
+          </div>
+          <div class="field">
+            <label>Phone Number <span class="req">*</span></label>
+            <input type="tel" id="p-phone" placeholder="(310) 555-0100" autocomplete="tel">
+          </div>
+          <div class="field full">
+            <label>Special notes or requests</label>
+            <textarea id="p-notes" placeholder="Anything else we should know…"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span class="num">✶</span> Dietary Restrictions</div>
+        <p class="hint" style="margin-bottom:14px;">All meals are certified kosher. Select any additional restrictions for your family:</p>
+        <div class="allergy-grid">
+          <div class="allergy-chip" data-allergy="Gluten-Free"><span class="icon">🌾</span> Gluten-Free</div>
+          <div class="allergy-chip" data-allergy="Nut-Free"><span class="icon">🥜</span> Nut-Free</div>
+          <div class="allergy-chip" data-allergy="Dairy-Free"><span class="icon">🥛</span> Dairy-Free</div>
+          <div class="allergy-chip" data-allergy="Egg-Free"><span class="icon">🥚</span> Egg-Free</div>
+          <div class="allergy-chip" data-allergy="Soy-Free"><span class="icon">🫘</span> Soy-Free</div>
+          <div class="allergy-chip" data-allergy="Vegetarian"><span class="icon">🥗</span> Vegetarian</div>
+          <div class="allergy-chip" data-allergy="Vegan"><span class="icon">🌿</span> Vegan</div>
+          <div class="allergy-chip" data-allergy="No Avocado"><span class="icon">🥑</span> No Avocado</div>
+        </div>
+        <p class="hint" style="margin-top:14px; background:var(--cream-deep); border-radius:8px; padding:10px 12px;">
+          <strong>Important:</strong> Hatch Kitchen will make every effort to accommodate restrictions, but our kitchen handles all common allergens. For severe allergies, please call us directly at <a href="tel:+14244553195" style="color:var(--gold-dark); font-weight:700;">(424) 455-3195</a>.
+        </p>
+      </div>
+    </div>
+
+    <div class="step-side">
+      <div class="summary-card">
+        <div class="summary-title">Order Summary</div>
+        <div id="summary-content-3"></div>
+        <hr class="summary-divider">
+        <div class="summary-total">
+          <span class="summary-total-label">Total due</span>
+          <span class="summary-total-amt" id="summary-total-amt-3">$0.00</span>
+        </div>
+        <div class="summary-meta" id="summary-meal-count-3"></div>
+      </div>
+    </div>
+
+    <div class="step-main">
+      <div class="btn-nav">
+        <button class="btn btn-outline" onclick="goToStep(2)">← Back</button>
+        <button class="btn btn-primary" onclick="goToStep(4)">
+          Review & Pay
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- end step-3 -->
+
+
+  <!-- ============================================================
+       STEP 4 — Payment
+  ============================================================ -->
+  <div class="step-page" id="step-4">
+
+    <div class="step-main">
+      <!-- Order Review -->
+      <div class="panel">
+        <div class="panel-title"><span class="num">✓</span> Order Review</div>
+        <div id="review-details"></div>
+      </div>
+
+      <!-- Payment -->
+      <div class="panel">
+        <div class="panel-title"><span class="num">💳</span> Secure Payment</div>
+        <div class="notice">
+          Your card is processed securely by <strong>Stripe</strong>. Hatch Kitchen never sees your card number.
+        </div>
+
+        <div class="field" style="margin-bottom:14px;">
+          <label>Card Details <span class="req">*</span></label>
+          <div class="stripe-element-wrap" id="card-element"></div>
+          <div class="stripe-error" id="card-error"></div>
+        </div>
+
+        <div class="stripe-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Secured by Stripe · SSL Encrypted
+        </div>
+      </div>
+
+      <div class="btn-nav">
+        <button class="btn btn-outline" onclick="goToStep(3)">← Back</button>
+        <button class="btn btn-primary" id="pay-btn" onclick="submitPayment()">
+          <span id="pay-btn-text">Pay <span id="pay-btn-amt"></span></span>
+          <span id="pay-btn-spinner" style="display:none;"><span class="spinner"></span></span>
+        </button>
+      </div>
+
+      <p class="hint" style="text-align:center; margin-top:14px;">
+        By placing this order you agree to our <a href="#" style="color:var(--gold-dark); font-weight:600;">cancellation policy</a>. Orders cancelled more than 48 hours before delivery receive a full refund.
+      </p>
+    </div>
+
+    <div class="step-side">
+      <div class="summary-card">
+        <div class="summary-title">Order Summary</div>
+        <div id="summary-content-4"></div>
+        <hr class="summary-divider">
+        <div class="summary-total">
+          <span class="summary-total-label">Charging today</span>
+          <span class="summary-total-amt" id="summary-total-amt-4">$0.00</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end step-4 -->
+
+
+  <!-- ============================================================
+       SUCCESS SCREEN
+  ============================================================ -->
+  <div class="step-page" id="step-success">
+    <div class="success-wrap">
+      <div class="success-hero-box">
+        <div class="success-check">🎉</div>
+        <div class="success-title">Order <em>confirmed!</em></div>
+        <p class="success-sub">Your camp lunches are on the calendar. We'll send a confirmation email to <strong id="success-email" style="color:var(--gold);"></strong> with your full order details.</p>
+      </div>
+
+      <div class="confirm-panel">
+        <div class="confirm-row">
+          <span class="c-label">Order #</span>
+          <span class="c-val" id="confirm-order-id">—</span>
+        </div>
+        <div class="confirm-row">
+          <span class="c-label">Name</span>
+          <span class="c-val" id="confirm-name">—</span>
+        </div>
+        <div class="confirm-row">
+          <span class="c-label">Camp</span>
+          <span class="c-val" id="confirm-camp">—</span>
+        </div>
+        <div class="confirm-row">
+          <span class="c-label">Children</span>
+          <span class="c-val" id="confirm-children">—</span>
+        </div>
+        <div class="confirm-row">
+          <span class="c-label">Weeks ordered</span>
+          <span class="c-val" id="confirm-weeks">—</span>
+        </div>
+        <div class="confirm-row">
+          <span class="c-label">Total meals</span>
+          <span class="c-val" id="confirm-meals">—</span>
+        </div>
+        <div class="confirm-row confirm-total">
+          <span class="c-label">Amount charged</span>
+          <span class="c-val" id="confirm-total">—</span>
+        </div>
+      </div>
+
+      <div class="success-actions">
+        <a href="index.html" class="btn btn-primary">← Back to Hatch Kitchen</a>
+        <a href="menu.html" class="btn btn-outline">View Full Menu</a>
+        <button class="btn btn-outline" onclick="window.print()">🖨 Print Receipt</button>
+      </div>
+
+      <div class="notice" style="margin-top:20px;">
+        <strong>Questions?</strong> Email <a href="mailto:info@thehatchkitchen.com" style="color:var(--gold-dark); font-weight:700;">info@thehatchkitchen.com</a> or call <a href="tel:+14244553195" style="color:var(--gold-dark); font-weight:700;">(424) 455-3195</a>. We're here Sun–Thu 9AM–8PM, Fri 9AM–3PM.
+      </div>
+    </div>
+  </div>
+
+</div><!-- end page-wrap -->
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand-row">
+      <img src="favicon.png" alt="Hatch Kitchen" style="width:28px;height:28px;border-radius:50%;">
+      <span class="footer-brand-name">Hatch Kitchen</span>
+      <span style="color:rgba(245,241,227,.3); font-size:.78rem;">— Camp Lunch Program</span>
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="menu.html">Menu</a>
+      <a href="catering.html">Catering</a>
+      <a href="tel:+14244553195">(424) 455-3195</a>
+    </div>
+    <span style="font-size:.78rem; color:rgba(245,241,227,.3);">© <span id="footer-year">2026</span> Hatch Kitchen. OK Kosher Certified.</span>
+  </div>
+</footer>
+
+
+<script>
+/* ================================================================
+   HATCH KITCHEN — Camp Orders JS
+   ================================================================ */
+'use strict';
+
+// ---------------------------------------------------------------
+// CONFIGURATION
+// ► Step 1: Replace this with your Stripe PUBLISHABLE key
+//   Get it from: https://dashboard.stripe.com/apikeys
+//   Test key starts with: pk_test_
+//   Live key starts with: pk_live_
+// ---------------------------------------------------------------
+const STRIPE_PK = 'pk_test_YOUR_STRIPE_PUBLISHABLE_KEY';
+
+// ► Step 2: This endpoint is your Vercel serverless function.
+//   It works automatically once deployed to Vercel.
+//   For local dev: run `npx vercel dev` in this folder.
+const PAYMENT_ENDPOINT = '/api/create-payment-intent';
+
+// ---------------------------------------------------------------
+// MEAL DATA — Edit this to match your actual weekly menu
+// ---------------------------------------------------------------
+const MEAL_PRICE     = 16;   // Per meal price in dollars
+const FULL_WEEK_DISC = 8;    // Discount for 5-day (full) week per child
+
+const MEAL_IMAGES = {
+  wrap:     'images/meal-wrap.jpg',
+  nuggets:  'images/meal-nuggets.jpg',
+  bowl:     'images/meal-bowl.jpg',
+  smoothie: 'images/meal-smoothie.jpg',
+  rotisserie: 'images/ai-rotisserie.jpg',
+};
+
+// Rotating daily meal schedule — 7 weeks, Mon-Fri
+// Format: { name, desc, img key }
+const WEEKS = [
+  {
+    label: 'Week 1', dates: 'Jun 23 – Jun 27',
+    cutoff: 'Jun 18', cutoffDate: new Date('2026-06-18T23:59:00'),
+    meals: [
+      { day: 'Mon', name: 'Hatch Chicken Wrap', desc: 'Rotisserie chicken, avocado, lettuce, tomato, Hatch sauce', img: 'wrap' },
+      { day: 'Tue', name: 'Crispy Nuggets Meal', desc: 'House-baked nuggets, BNF tots & western dip', img: 'nuggets' },
+      { day: 'Wed', name: 'BBQ Chicken Rice Bowl', desc: 'Pulled dark meat, black beans, jasmine rice, slaw', img: 'bowl' },
+      { day: 'Thu', name: 'Caesar Chicken Wrap', desc: 'Rotisserie chicken, romaine, crunchy noodles, Caesar dressing', img: 'wrap' },
+      { day: 'Fri', name: 'Org-גן-nic Smoothie + Wrap', desc: 'Strawberry-banana smoothie + classic breakfast wrap', img: 'smoothie' },
+    ]
+  },
+  {
+    label: 'Week 2', dates: 'Jun 30 – Jul 4',
+    cutoff: 'Jun 25', cutoffDate: new Date('2026-06-25T23:59:00'),
+    meals: [
+      { day: 'Mon', name: 'Southwest Chicken Salad', desc: 'Romaine, avocado, black beans, quinoa, western sauce', img: 'bowl' },
+      { day: 'Tue', name: 'Chicken Caesar Wrap', desc: 'Rotisserie chicken, romaine & Caesar dressing, spinach tortilla', img: 'wrap' },
+      { day: 'Wed', name: 'Nuggets Meal', desc: 'House-baked nuggets, tots, BBQ or western dip', img: 'nuggets' },
+      { day: 'Thu', name: 'Kids Pasta Bowl', desc: 'Rotisserie chicken, rotini pasta & western sauce', img: 'bowl' },
+      { day: 'Fri', name: 'Island Goals Smoothie + Wrap', desc: 'Pineapple-avocado smoothie + chicken wrap', img: 'smoothie' },
+    ]
+  },
+  {
+    label: 'Week 3', dates: 'Jul 7 – Jul 11',
+    cutoff: 'Jul 2', cutoffDate: new Date('2026-07-02T23:59:00'),
+    meals: [
+      { day: 'Mon', name: 'Hatch Chicken Wrap', desc: 'Rotisserie chicken, avocado, Hatch sauce, spinach tortilla', img: 'wrap' },
+      { day: 'Tue', name: 'BBQ Chicken Bowl', desc: 'Pulled BBQ chicken, black beans, jasmine rice', img: 'bowl' },
+      { day: 'Wed', name: 'Crispy Nuggets', desc: '6-piece baked nuggets, tots, ranch', img: 'nuggets' },
+      { day: 'Thu', name: 'Asian Chicken Salad', desc: 'Cabbage, romaine, sesame dressing, crunchy noodles', img: 'bowl' },
+      { day: 'Fri', name: 'PB&J Smoothie + Wrap', desc: 'Peanut butter-blueberry smoothie + breakfast wrap', img: 'smoothie' },
+    ]
+  },
+  {
+    label: 'Week 4', dates: 'Jul 14 – Jul 18',
+    cutoff: 'Jul 9', cutoffDate: new Date('2026-07-09T23:59:00'),
+    meals: [
+      { day: 'Mon', name: 'Southwest Wrap', desc: 'Scrambled eggs, black beans, peppers, avocado, tots', img: 'wrap' },
+      { day: 'Tue', name: 'Rotisserie Chicken Meal', desc: '¼ chicken, potato wedges, pita, Hatch sauce', img: 'rotisserie' },
+      { day: 'Wed', name: 'Nuggets + Smoothie', desc: 'House-baked nuggets, tots & Org-גן-nic smoothie', img: 'smoothie' },
+      { day: 'Thu', name: 'Kids Pasta Bowl', desc: 'Chicken & rotini pasta, western sauce', img: 'bowl' },
+      { day: 'Fri', name: 'Chicken Wrap Combo', desc: 'Hatch chicken wrap + Island Goals smoothie', img: 'smoothie' },
+    ]
+  },
+  {
+    label: 'Week 5', dates: 'Jul 21 – Jul 25',
+    cutoff: 'Jul 16', cutoffDate: new Date('2026-07-16T23:59:00'),
+    meals: [
+      { day: 'Mon', name: 'Hatch Chicken Wrap', desc: 'Rotisserie chicken, avocado, lettuce, Hatch sauce', img: 'wrap' },
+      { day: 'Tue', name: 'BBQ Rice Bowl', desc: 'BBQ chicken, black beans, jasmine rice, slaw', img: 'bowl' },
+      { day: 'Wed', name: 'Crispy Nuggets Meal', desc: 'Nuggets, tots, ranch & western dip', img: 'nuggets' },
+      { day: 'Thu', name: 'Caesar Wrap', desc: 'Rotisserie chicken, romaine, Caesar, crunchy noodles', img: 'wrap' },
+      { day: 'Fri', name: 'Choco Maca Smoothie + Wrap', desc: 'Chocolate-maca smoothie + classic chicken wrap', img: 'smoothie' },
+    ]
+  },
+  {
+    label: 'Week 6', dates: 'Jul 28 – Aug 1',
+    cutoff: 'Jul 23', cutoffDate: new Date('2026-07-23T23:59:00'),
+    meals: [
+      { day: 'Mon', name: 'Southwest Chicken Salad', desc: 'Romaine, black beans, quinoa, avocado, western sauce', img: 'bowl' },
+      { day: 'Tue', name: 'Chicken Wrap', desc: 'Rotisserie chicken, avocado, Hatch sauce', img: 'wrap' },
+      { day: 'Wed', name: 'Nuggets Meal', desc: 'House-baked nuggets, BNF tots, BBQ dip', img: 'nuggets' },
+      { day: 'Thu', name: 'Rotisserie Quarter Meal', desc: '¼ chicken, wedges, pita & sauce', img: 'rotisserie' },
+      { day: 'Fri', name: 'Island Goals + Wrap', desc: 'Pineapple smoothie + caesar chicken wrap', img: 'smoothie' },
+    ]
+  },
+  {
+    label: 'Week 7', dates: 'Aug 4 – Aug 8',
+    cutoff: 'Jul 30', cutoffDate: new Date('2026-07-30T23:59:00'),
+    meals: [
+      { day: 'Mon', name: 'Hatch Chicken Wrap', desc: 'Rotisserie chicken, all the good stuff', img: 'wrap' },
+      { day: 'Tue', name: 'Kids Pasta Bowl', desc: 'Chicken breast, rotini, western sauce', img: 'bowl' },
+      { day: 'Wed', name: 'Crispy Nuggets', desc: 'House nuggets, tots, ranch', img: 'nuggets' },
+      { day: 'Thu', name: 'BBQ Chicken Bowl', desc: 'Pulled BBQ, rice, black beans, sunset slaw', img: 'bowl' },
+      { day: 'Fri', name: 'PB&J Smoothie + Wrap', desc: 'Peanut butter smoothie + breakfast wrap — the farewell special', img: 'smoothie' },
+    ]
+  },
+];
+
+// ---------------------------------------------------------------
+// STATE
+// ---------------------------------------------------------------
+let children = [];       // [{ id, name, grade, allergies }]
+let selections = {};     // { childId: { weekIdx: { dayIdx: boolean } } }
+let parentInfo = {};
+let currentStep = 1;
+let stripe, cardElement;
+
+// ---------------------------------------------------------------
+// INIT
+// ---------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+  // Stripe init
+  if (STRIPE_PK && !STRIPE_PK.includes('YOUR_')) {
+    stripe = Stripe(STRIPE_PK);
+    const elements = stripe.elements({
+      fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&display=swap' }]
+    });
+    cardElement = elements.create('card', {
+      style: {
+        base: {
+          fontFamily: '"Hanken Grotesk", sans-serif',
+          fontSize: '15px',
+          color: '#121110',
+          '::placeholder': { color: '#a8a59e' },
+        },
+        invalid: { color: '#B91C1C' }
+      }
+    });
+    cardElement.on('ready', () => cardElement.mount('#card-element'));
+    cardElement.on('focus', () => document.getElementById('card-element').parentElement.classList.add('focused'));
+    cardElement.on('blur',  () => document.getElementById('card-element').parentElement.classList.remove('focused'));
+    cardElement.on('change', e => {
+      document.getElementById('card-error').textContent = e.error ? e.error.message : '';
+      if (e.error) document.getElementById('card-element').parentElement.classList.add('error');
+      else document.getElementById('card-element').parentElement.classList.remove('error');
+    });
+  } else {
+    // Demo mode — show placeholder
+    document.getElementById('card-element').innerHTML =
+      '<div style="font-family:var(--f-mono);font-size:.82rem;color:rgba(18,17,16,.4);padding:4px 0;">⚠ Add your Stripe publishable key to activate live payments</div>';
+  }
+
+  // Camp select
+  document.getElementById('camp-name').addEventListener('change', e => {
+    document.getElementById('camp-other-wrap').style.display =
+      e.target.value === 'Other (enter below)' ? 'block' : 'none';
+  });
+
+  // Add child button
+  document.getElementById('add-child-btn').addEventListener('click', addChild);
+
+  // Allergy chips
+  document.querySelectorAll('.allergy-chip').forEach(chip => {
+    chip.addEventListener('click', () => chip.classList.toggle('on'));
+  });
+
+  // Build week grid
+  buildWeekGrid();
+
+  // Render initial empty children
+  addChild();
+
+  renderSummary();
+});
+
+// ---------------------------------------------------------------
+// NAVIGATION
+// ---------------------------------------------------------------
+function goToStep(n) {
+  if (n === 2 && !validateStep1()) return;
+  if (n === 3 && !validateStep2()) return;
+  if (n === 4 && !validateStep3()) return;
+
+  currentStep = n;
+  document.querySelectorAll('.step-page').forEach(p => p.classList.remove('active'));
+  document.getElementById(`step-${n === 'success' ? 'success' : n}`).classList.add('active');
+
+  // Update progress
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById(`prog-${i}`);
+    el.classList.remove('active', 'done');
+    if (i < n) el.classList.add('done');
+    else if (i === n) el.classList.add('active');
+  }
+
+  // Populate review on step 4
+  if (n === 4) buildReview();
+
+  // Scroll to top of main
+  document.getElementById('page-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  renderSummary();
+}
+
+// ---------------------------------------------------------------
+// CHILDREN
+// ---------------------------------------------------------------
+let childIdCounter = 0;
+function addChild() {
+  const id = ++childIdCounter;
+  children.push({ id, name: '', grade: '' });
+  selections[id] = {};
+  renderChildren();
+}
+
+function removeChild(id) {
+  children = children.filter(c => c.id !== id);
+  delete selections[id];
+  renderChildren();
+  renderMealBuilder();
+  renderSummary();
+}
+
+function renderChildren() {
+  const list = document.getElementById('children-list');
+  if (children.length === 0) {
+    list.innerHTML = '<p class="hint" style="text-align:center;padding:16px 0;color:var(--ink-soft);">No children added yet.</p>';
+    return;
+  }
+  list.innerHTML = children.map((c, idx) => `
+    <div class="child-card">
+      <div class="child-card-header">
+        <div class="child-badge">${idx + 1}</div>
+        <div>
+          <div class="child-name">${c.name || `Child ${idx + 1}`}</div>
+          <div class="child-meta">${c.grade || 'Grade not set'}</div>
+        </div>
+        ${children.length > 1 ? `<button class="child-remove" onclick="removeChild(${c.id})">Remove</button>` : ''}
+      </div>
+      <div class="child-body">
+        <div class="form-grid">
+          <div class="field">
+            <label>Child's Name <span class="req">*</span></label>
+            <input type="text" placeholder="e.g. Ari Cohen" value="${c.name}"
+              oninput="updateChild(${c.id},'name',this.value)" autocomplete="off">
+          </div>
+          <div class="field">
+            <label>Grade / Age Group</label>
+            <select onchange="updateChild(${c.id},'grade',this.value)">
+              <option value="" ${!c.grade ? 'selected' : ''}>Select grade…</option>
+              <option ${c.grade==='Pre-K'?'selected':''}>Pre-K</option>
+              <option ${c.grade==='Kindergarten'?'selected':''}>Kindergarten</option>
+              <option ${c.grade==='1st Grade'?'selected':''}>1st Grade</option>
+              <option ${c.grade==='2nd Grade'?'selected':''}>2nd Grade</option>
+              <option ${c.grade==='3rd Grade'?'selected':''}>3rd Grade</option>
+              <option ${c.grade==='4th Grade'?'selected':''}>4th Grade</option>
+              <option ${c.grade==='5th Grade'?'selected':''}>5th Grade</option>
+              <option ${c.grade==='6th Grade'?'selected':''}>6th Grade</option>
+              <option ${c.grade==='7th Grade'?'selected':''}>7th Grade</option>
+              <option ${c.grade==='8th Grade'?'selected':''}>8th Grade</option>
+              <option ${c.grade==='High School'?'selected':''}>High School</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateChild(id, field, val) {
+  const c = children.find(c => c.id === id);
+  if (c) {
+    c[field] = val;
+    // Update display name in header without full re-render
+    renderChildren();
+    renderSummary();
+  }
+}
+
+// ---------------------------------------------------------------
+// WEEK GRID
+// ---------------------------------------------------------------
+function buildWeekGrid() {
+  const grid = document.getElementById('week-grid');
+  const now  = new Date();
+
+  grid.innerHTML = WEEKS.map((w, i) => {
+    const locked   = now > w.cutoffDate;
+    const msLeft   = w.cutoffDate - now;
+    const daysLeft = Math.floor(msLeft / 86400000);
+    const hoursLeft= Math.floor((msLeft % 86400000) / 3600000);
+    let countdown  = '', cdClass = '';
+    if (!locked) {
+      if (daysLeft > 2) { countdown = `${daysLeft}d left to order`; cdClass = ''; }
+      else if (daysLeft >= 1) { countdown = `${daysLeft}d ${hoursLeft}h — order soon`; cdClass = 'urgent'; }
+      else { countdown = `${hoursLeft}h left — order now!`; cdClass = 'critical'; }
+    }
+    return `
+      <div class="week-row ${locked ? 'locked' : ''}" id="week-row-${i}" onclick="${locked ? '' : `toggleWeek(${i})`}">
+        <div class="week-num">WK ${i + 1}</div>
+        <div class="week-dates">${w.label}<br><span style="font-weight:500;font-size:.82rem;color:inherit;opacity:.7;">${w.dates}</span></div>
+        <div class="week-right">
+          <span class="week-cutoff">Cutoff: ${w.cutoff}</span>
+          ${locked
+            ? '<span class="week-countdown critical">Closed</span>'
+            : `<span class="week-countdown ${cdClass}">${countdown}</span>`}
+        </div>
+        <div class="week-check">${locked ? '🔒' : ''}</div>
+      </div>`;
+  }).join('');
+}
+
+function toggleWeek(weekIdx) {
+  const row = document.getElementById(`week-row-${weekIdx}`);
+  const isSelected = row.classList.contains('selected');
+  row.classList.toggle('selected');
+
+  // Update check mark
+  row.querySelector('.week-check').textContent = isSelected ? '' : '✓';
+
+  // If deselecting, clear all child selections for this week
+  if (isSelected) {
+    children.forEach(c => { if (selections[c.id]) selections[c.id][weekIdx] = {}; });
+  }
+
+  renderMealBuilder();
+  renderSummary();
+}
+
+function getSelectedWeeks() {
+  return WEEKS.map((_, i) => i).filter(i =>
+    document.getElementById(`week-row-${i}`)?.classList.contains('selected')
+  );
+}
+
+// ---------------------------------------------------------------
+// MEAL BUILDER
+// ---------------------------------------------------------------
+function renderMealBuilder() {
+  const builder     = document.getElementById('meal-builder');
+  const selWeeks    = getSelectedWeeks();
+  if (!selWeeks.length || !children.length) {
+    builder.innerHTML = '';
+    return;
+  }
+
+  builder.innerHTML = children.map((child, ci) => `
+    <div class="panel" style="padding:0;overflow:hidden;margin-bottom:20px;">
+      <div style="padding:18px 22px 14px;background:var(--paper);border-bottom:1px solid var(--line-soft);">
+        <div class="panel-title" style="margin-bottom:0;">
+          <span class="num">${ci + 1}</span>
+          ${child.name || `Child ${ci + 1}`}
+        </div>
+      </div>
+      ${selWeeks.map(wi => renderChildWeek(child, wi)).join('')}
+    </div>
+  `).join('');
+}
+
+function renderChildWeek(child, wi) {
+  const week = WEEKS[wi];
+  if (!selections[child.id][wi]) selections[child.id][wi] = {};
+  const sel  = selections[child.id][wi];
+  const count= Object.values(sel).filter(Boolean).length;
+  const isFullWeek = count === 5;
+  const subtotal   = count * MEAL_PRICE;
+  const discount   = isFullWeek ? FULL_WEEK_DISC : 0;
+
+  return `
+    <div class="child-week-block" id="cwb-${child.id}-${wi}">
+      <div class="child-week-header">
+        <span class="child-week-title">Week ${wi+1} · ${week.dates}</span>
+        <span class="child-week-status ${isFullWeek ? 'full-week' : ''}">
+          ${count}/5 days${isFullWeek ? ' 🎉 Full-week discount!' : ''}
+        </span>
+      </div>
+      <div class="week-actions-row">
+        <button class="btn-select-all primary" onclick="selectAllDays(${child.id},${wi})">All 5 days</button>
+        <button class="btn-select-all" onclick="clearAllDays(${child.id},${wi})">None</button>
+      </div>
+      ${week.meals.map((meal, di) => `
+        <div class="meal-day-row ${sel[di] ? 'selected' : ''}" id="mdr-${child.id}-${wi}-${di}">
+          <div class="meal-toggle-col" onclick="toggleMeal(${child.id},${wi},${di})">
+            <div class="meal-checkbox ${sel[di] ? 'checked' : ''}" id="mchk-${child.id}-${wi}-${di}"></div>
+          </div>
+          <div class="meal-img-col" onclick="toggleMeal(${child.id},${wi},${di})">
+            <img src="${MEAL_IMAGES[meal.img]}" alt="${meal.name}" loading="lazy">
+          </div>
+          <div class="meal-info-col" onclick="toggleMeal(${child.id},${wi},${di})">
+            <div class="meal-day-label">${meal.day}</div>
+            <div class="meal-name">${meal.name}</div>
+            <div class="meal-desc">${meal.desc}</div>
+          </div>
+          <div class="meal-price-col">$${MEAL_PRICE}</div>
+        </div>
+      `).join('')}
+      <div class="week-subtotal">
+        <span class="week-subtotal-label">${count > 0 ? `${count} meal${count>1?'s':''} — Week ${wi+1} subtotal` : 'No meals selected'}</span>
+        <span class="week-subtotal-amt">${count > 0 ? '$'+subtotal.toFixed(2) : '—'}</span>
+      </div>
+      ${isFullWeek ? `
+        <div class="week-discount-row">
+          <span class="week-discount-label">🎁 Full-week discount</span>
+          <span class="week-discount-amt">-$${FULL_WEEK_DISC}.00</span>
+        </div>` : ''}
+    </div>`;
+}
+
+function toggleMeal(childId, wi, di) {
+  if (!selections[childId][wi]) selections[childId][wi] = {};
+  selections[childId][wi][di] = !selections[childId][wi][di];
+
+  // Re-render just this child-week block
+  const child = children.find(c => c.id === childId);
+  const block = document.getElementById(`cwb-${childId}-${wi}`);
+  if (block && child) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = renderChildWeek(child, wi);
+    block.replaceWith(tmp.firstElementChild);
+  }
+  renderSummary();
+}
+
+function selectAllDays(childId, wi) {
+  if (!selections[childId][wi]) selections[childId][wi] = {};
+  for (let d = 0; d < 5; d++) selections[childId][wi][d] = true;
+  const child = children.find(c => c.id === childId);
+  const block = document.getElementById(`cwb-${childId}-${wi}`);
+  if (block && child) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = renderChildWeek(child, wi);
+    block.replaceWith(tmp.firstElementChild);
+  }
+  renderSummary();
+}
+
+function clearAllDays(childId, wi) {
+  if (selections[childId]) selections[childId][wi] = {};
+  const child = children.find(c => c.id === childId);
+  const block = document.getElementById(`cwb-${childId}-${wi}`);
+  if (block && child) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = renderChildWeek(child, wi);
+    block.replaceWith(tmp.firstElementChild);
+  }
+  renderSummary();
+}
+
+// ---------------------------------------------------------------
+// ORDER TOTALS
+// ---------------------------------------------------------------
+function computeTotals() {
+  let subtotal = 0, discount = 0, totalMeals = 0;
+  const lines = [];
+
+  children.forEach(child => {
+    const childSel = selections[child.id] || {};
+    let childMeals = 0, childDisc = 0;
+
+    Object.entries(childSel).forEach(([wi, days]) => {
+      const count = Object.values(days).filter(Boolean).length;
+      if (!count) return;
+      const week = WEEKS[parseInt(wi)];
+      const isFullWeek = count === 5;
+      const disc = isFullWeek ? FULL_WEEK_DISC : 0;
+      childMeals += count;
+      childDisc  += disc;
+      subtotal   += count * MEAL_PRICE;
+      discount   += disc;
+      lines.push({
+        label: `${child.name || 'Child'} — ${week.label}`,
+        meals: count,
+        amount: count * MEAL_PRICE,
+        discount: disc,
+        weekLabel: week.dates
+      });
+    });
+    totalMeals += childMeals;
+  });
+
+  const total = subtotal - discount;
+  return { subtotal, discount, total, totalMeals, lines };
+}
+
+function renderSummary() {
+  const { subtotal, discount, total, totalMeals, lines } = computeTotals();
+
+  // Update both sidebars
+  ['', '-2', '-3', '-4'].forEach(suffix => {
+    const emptyEl   = document.getElementById(`summary-empty${suffix}`);
+    const contentEl = document.getElementById(`summary-content${suffix}`);
+    const hrEl      = document.getElementById(`summary-hr${suffix}`);
+    const totalWrap = document.getElementById(`summary-total-wrap${suffix}`);
+    const totalAmt  = document.getElementById(`summary-total-amt${suffix}`);
+    const mealCount = document.getElementById(`summary-meal-count${suffix}`);
+
+    if (!contentEl) return;
+
+    if (lines.length === 0) {
+      if (emptyEl) emptyEl.style.display = '';
+      contentEl.style.display = 'none';
+      if (hrEl) hrEl.style.display = 'none';
+      if (totalWrap) totalWrap.style.display = 'none';
+      return;
+    }
+
+    if (emptyEl) emptyEl.style.display = 'none';
+    contentEl.style.display = '';
+    if (hrEl) hrEl.style.display = '';
+    if (totalWrap) totalWrap.style.display = '';
+
+    contentEl.innerHTML = lines.map(l => `
+      <div class="summary-line">
+        <span class="s-label">${l.label}<br><span style="font-size:.72rem;opacity:.55;">${l.weekLabel} · ${l.meals} meal${l.meals>1?'s':''}</span></span>
+        <span class="s-val">$${l.amount.toFixed(2)}</span>
+      </div>
+      ${l.discount ? `<div class="summary-line summary-discount">
+        <span class="s-label">Full-week discount</span>
+        <span class="s-val">-$${l.discount.toFixed(2)}</span>
+      </div>` : ''}
+    `).join('');
+
+    if (totalAmt) totalAmt.textContent = `$${total.toFixed(2)}`;
+    if (mealCount) mealCount.textContent = `${totalMeals} meal${totalMeals !== 1 ? 's' : ''}`;
+  });
+
+  // Pay button amount
+  const payAmt = document.getElementById('pay-btn-amt');
+  if (payAmt) payAmt.textContent = `$${total.toFixed(2)}`;
+}
+
+// ---------------------------------------------------------------
+// STEP VALIDATION
+// ---------------------------------------------------------------
+function validateStep1() {
+  if (!children.length) { alert('Please add at least one child.'); return false; }
+  const missing = children.find(c => !c.name.trim());
+  if (missing) { alert(`Please enter a name for Child ${children.indexOf(missing) + 1}.`); return false; }
+  const camp = document.getElementById('camp-name').value;
+  if (!camp) { alert('Please select a camp.'); return false; }
+  if (camp === 'Other (enter below)' && !document.getElementById('camp-other').value.trim()) {
+    alert('Please enter the camp name.'); return false;
+  }
+  return true;
+}
+
+function validateStep2() {
+  const selWeeks = getSelectedWeeks();
+  if (!selWeeks.length) { alert('Please select at least one week.'); return false; }
+  const { totalMeals } = computeTotals();
+  if (!totalMeals) { alert('Please select at least one meal.'); return false; }
+  return true;
+}
+
+function validateStep3() {
+  const first = document.getElementById('p-first').value.trim();
+  const last  = document.getElementById('p-last').value.trim();
+  const email = document.getElementById('p-email').value.trim();
+  const phone = document.getElementById('p-phone').value.trim();
+  if (!first || !last) { alert('Please enter your full name.'); return false; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Please enter a valid email.'); return false; }
+  if (!phone) { alert('Please enter your phone number.'); return false; }
+  parentInfo = { first, last, email, phone,
+    notes: document.getElementById('p-notes').value.trim(),
+    allergies: [...document.querySelectorAll('.allergy-chip.on')].map(c => c.dataset.allergy)
+  };
+  return true;
+}
+
+// ---------------------------------------------------------------
+// REVIEW SCREEN
+// ---------------------------------------------------------------
+function buildReview() {
+  const { lines, subtotal, discount, total } = computeTotals();
+  const camp = document.getElementById('camp-name').value === 'Other (enter below)'
+    ? document.getElementById('camp-other').value
+    : document.getElementById('camp-name').value;
+
+  document.getElementById('review-details').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;">
+      <div>
+        <div class="eyebrow" style="margin-bottom:8px;">Parent</div>
+        <strong>${parentInfo.first} ${parentInfo.last}</strong><br>
+        <span style="color:var(--ink-soft);font-size:.9rem;">${parentInfo.email}</span><br>
+        <span style="color:var(--ink-soft);font-size:.9rem;">${parentInfo.phone}</span>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:8px;">Camp</div>
+        <strong>${camp}</strong><br>
+        ${children.map(c => `<span style="color:var(--ink-soft);font-size:.9rem;">· ${c.name}${c.grade ? ' ('+c.grade+')' : ''}</span>`).join('<br>')}
+      </div>
+    </div>
+    ${parentInfo.allergies.length ? `<div class="notice" style="margin-bottom:14px;"><strong>Dietary notes:</strong> ${parentInfo.allergies.join(', ')}</div>` : ''}
+    ${parentInfo.notes ? `<div class="notice" style="margin-bottom:14px;"><strong>Notes:</strong> ${parentInfo.notes}</div>` : ''}
+    <table style="width:100%;border-collapse:collapse;font-size:.9rem;">
+      <thead>
+        <tr style="background:var(--cream-deep);">
+          <th style="padding:8px 12px;text-align:left;font-family:var(--f-mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);">Item</th>
+          <th style="padding:8px 12px;text-align:right;font-family:var(--f-mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${lines.map(l => `
+          <tr style="border-bottom:1px solid var(--line-soft);">
+            <td style="padding:10px 12px;color:var(--ink);">${l.label}<br><span style="font-size:.78rem;color:var(--ink-soft);">${l.weekLabel} · ${l.meals} meal${l.meals>1?'s':''}</span></td>
+            <td style="padding:10px 12px;text-align:right;font-family:var(--f-mono);font-weight:600;">$${l.amount.toFixed(2)}</td>
+          </tr>
+          ${l.discount ? `<tr style="border-bottom:1px solid var(--line-soft);background:var(--green-bg);">
+            <td style="padding:6px 12px 6px 20px;font-size:.82rem;color:var(--green-ok);">↳ Full-week discount</td>
+            <td style="padding:6px 12px;text-align:right;font-family:var(--f-mono);font-weight:700;color:var(--green-ok);">-$${l.discount.toFixed(2)}</td>
+          </tr>` : ''}
+        `).join('')}
+      </tbody>
+      <tfoot>
+        ${discount > 0 ? `<tr style="background:var(--cream-deep);">
+          <td style="padding:10px 12px;font-weight:700;font-size:.92rem;">Subtotal</td>
+          <td style="padding:10px 12px;text-align:right;font-family:var(--f-mono);font-weight:700;">$${subtotal.toFixed(2)}</td>
+        </tr>
+        <tr style="background:var(--green-bg);">
+          <td style="padding:8px 12px;color:var(--green-ok);font-weight:700;font-size:.88rem;">Total Savings 🎉</td>
+          <td style="padding:8px 12px;text-align:right;font-family:var(--f-mono);font-weight:700;color:var(--green-ok);">-$${discount.toFixed(2)}</td>
+        </tr>` : ''}
+        <tr style="background:var(--ink);">
+          <td style="padding:14px 12px;font-family:var(--f-display);font-weight:800;color:var(--cream);">Total Due</td>
+          <td style="padding:14px 12px;text-align:right;font-family:var(--f-display);font-size:1.35rem;font-weight:800;color:var(--gold);">$${total.toFixed(2)}</td>
+        </tr>
+      </tfoot>
+    </table>
+  `;
+  renderSummary();
+}
+
+// ---------------------------------------------------------------
+// PAYMENT
+// ---------------------------------------------------------------
+async function submitPayment() {
+  const { total } = computeTotals();
+  const payBtn  = document.getElementById('pay-btn');
+  const payText = document.getElementById('pay-btn-text');
+  const paySpinner = document.getElementById('pay-btn-spinner');
+
+  payBtn.disabled = true;
+  payText.style.display = 'none';
+  paySpinner.style.display = '';
+
+  // Demo / test mode (no real key)
+  if (!stripe || !cardElement) {
+    await delay(1500);
+    showSuccess({ id: 'DEMO-' + Math.random().toString(36).substr(2,8).toUpperCase() });
+    return;
+  }
+
+  try {
+    // 1. Create PaymentIntent on server
+    const camp = document.getElementById('camp-name').value === 'Other (enter below)'
+      ? document.getElementById('camp-other').value
+      : document.getElementById('camp-name').value;
+
+    const intentRes = await fetch(PAYMENT_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: Math.round(total * 100),   // in cents
+        currency: 'usd',
+        metadata: {
+          customer_name: `${parentInfo.first} ${parentInfo.last}`,
+          customer_email: parentInfo.email,
+          camp,
+          children: children.map(c => c.name).join(', '),
+        }
+      })
+    });
+
+    if (!intentRes.ok) throw new Error('Could not create payment session. Please try again.');
+    const { clientSecret } = await intentRes.json();
+
+    // 2. Confirm card payment
+    const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: cardElement,
+        billing_details: {
+          name: `${parentInfo.first} ${parentInfo.last}`,
+          email: parentInfo.email,
+          phone: parentInfo.phone,
+        }
+      }
+    });
+
+    if (error) {
+      document.getElementById('card-error').textContent = error.message;
+      payBtn.disabled = false;
+      payText.style.display = '';
+      paySpinner.style.display = 'none';
+      return;
+    }
+
+    showSuccess(paymentIntent);
+
+  } catch (err) {
+    document.getElementById('card-error').textContent = err.message || 'Payment failed. Please try again.';
+    payBtn.disabled = false;
+    payText.style.display = '';
+    paySpinner.style.display = 'none';
+  }
+}
+
+function showSuccess(intent) {
+  const { total, totalMeals } = computeTotals();
+  const camp = document.getElementById('camp-name').value === 'Other (enter below)'
+    ? document.getElementById('camp-other').value
+    : document.getElementById('camp-name').value;
+
+  document.getElementById('success-email').textContent    = parentInfo.email || 'your email';
+  document.getElementById('confirm-order-id').textContent = intent.id || '—';
+  document.getElementById('confirm-name').textContent     = `${parentInfo.first} ${parentInfo.last}`;
+  document.getElementById('confirm-camp').textContent     = camp;
+  document.getElementById('confirm-children').textContent = children.map(c => c.name).join(', ');
+  document.getElementById('confirm-weeks').textContent    = getSelectedWeeks().map(i => WEEKS[i].label).join(', ');
+  document.getElementById('confirm-meals').textContent    = `${totalMeals} meal${totalMeals !== 1 ? 's' : ''}`;
+  document.getElementById('confirm-total').textContent    = `$${total.toFixed(2)}`;
+
+  // Hide progress, show success
+  document.querySelector('.progress-wrap').style.display = 'none';
+  document.querySelectorAll('.step-page').forEach(p => p.classList.remove('active'));
+  document.getElementById('step-success').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+</script>
+
+</body>
+</html>

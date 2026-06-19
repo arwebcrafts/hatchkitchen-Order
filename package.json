@@ -1,0 +1,15 @@
+{
+  "name": "hatch-kitchen",
+  "version": "1.0.0",
+  "description": "Hatch Kitchen website + camp lunch ordering system",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "stripe": "^14.21.0"
+  },
+  "engines": {
+    "node": ">=18.x"
+  }
+}
