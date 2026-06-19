@@ -961,13 +961,10 @@ input, select, textarea { font: inherit; }
           <div class="field">
             <label>Camp Name <span class="req">*</span></label>
             <select id="camp-name">
-              <option value="">Select camp…</option>
-              <option>Camp Gan Israel</option>
-              <option>Sinai Akiba Academy</option>
-              <option>Yeshiva Ohr Eliyahu</option>
-              <option>Emek Hebrew Academy</option>
-              <option>Valley Torah High School</option>
-              <option>Pressman Academy</option>
+              <option value="">— Select camp —</option>
+              <option>Machne Maimo</option>
+              <option>Hillel Day Camp</option>
+              <option>Moe's Camp</option>
               <option>Other (enter below)</option>
             </select>
           </div>
@@ -1530,12 +1527,17 @@ function renderChildren() {
         <div class="form-grid">
           <div class="field">
             <label>Child's Name <span class="req">*</span></label>
-            <input type="text" placeholder="e.g. Ari Cohen" value="${c.name}"
-              oninput="updateChild(${c.id},'name',this.value)" autocomplete="off">
+            <input type="text"
+              id="child-name-${c.id}"
+              placeholder="e.g. Ari Cohen"
+              value="${c.name}"
+              autocomplete="off"
+              oninput="updateChildName(${c.id}, this.value)"
+              onblur="updateChildNameFinal(${c.id})">
           </div>
           <div class="field">
             <label>Grade / Age Group</label>
-            <select onchange="updateChild(${c.id},'grade',this.value)">
+            <select onchange="updateChildGrade(${c.id}, this.value)">
               <option value="" ${!c.grade ? 'selected' : ''}>Select grade…</option>
               <option ${c.grade==='Pre-K'?'selected':''}>Pre-K</option>
               <option ${c.grade==='Kindergarten'?'selected':''}>Kindergarten</option>
@@ -1556,12 +1558,41 @@ function renderChildren() {
   `).join('');
 }
 
-function updateChild(id, field, val) {
+// Called on every keystroke — only updates data + header text, NO full re-render
+// This prevents the input losing focus after each character typed
+function updateChildName(id, val) {
+  const c = children.find(c => c.id === id);
+  if (!c) return;
+  c.name = val;
+  // Update just the visible header name in place
+  const card = document.getElementById(`child-name-${id}`);
+  if (card) {
+    const header = card.closest('.child-card').querySelector('.child-name');
+    if (header) header.textContent = val || `Child ${children.indexOf(c) + 1}`;
+  }
+  renderSummary();
+}
+
+// Called on blur (when user leaves the field) — safe to refresh header
+function updateChildNameFinal(id) {
+  const c = children.find(c => c.id === id);
+  if (!c) return;
+  const input = document.getElementById(`child-name-${id}`);
+  if (input) c.name = input.value;
+  renderSummary();
+}
+
+// Grade change — full re-render is fine since select doesn't lose focus the same way
+function updateChildGrade(id, val) {
   const c = children.find(c => c.id === id);
   if (c) {
-    c[field] = val;
-    // Update display name in header without full re-render
-    renderChildren();
+    c.grade = val;
+    // Update the grade display in the header
+    const input = document.getElementById(`child-name-${id}`);
+    if (input) {
+      const header = input.closest('.child-card').querySelector('.child-meta');
+      if (header) header.textContent = val || 'Grade not set';
+    }
     renderSummary();
   }
 }

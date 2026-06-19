@@ -313,6 +313,23 @@ p  { color: var(--ink-soft); }
 .nav-links a[aria-current="page"] { color: var(--gold); }
 .nav-links a[aria-current="page"]::after { width: 100%; }
 
+/* Camp Orders — gold pill badge in nav */
+.nav-links a[href="camp-orders.html"] {
+  background:    var(--gold);
+  color:         var(--ink) !important;
+  padding:       5px 13px;
+  border-radius: 999px;
+  font-weight:   700;
+  font-size:     .86rem;
+  transition:    background .2s ease, transform .2s ease;
+}
+.nav-links a[href="camp-orders.html"]::after { display: none; }
+.nav-links a[href="camp-orders.html"]:hover {
+  background:  var(--gold-dark);
+  color:       var(--cream) !important;
+  transform:   translateY(-1px);
+}
+
 .nav-cta { display: flex; align-items: center; gap: 14px; }
 
 .nav-toggle {
