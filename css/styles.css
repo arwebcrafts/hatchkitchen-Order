@@ -369,7 +369,7 @@ p  { color: var(--ink-soft); }
     gap:        30px;
     transform:  translateX(100%);
     transition: transform .3s ease;
-    z-index:    49;
+    z-index:    999;
   }
   .nav-links[data-open="true"] { transform: translateX(0); }
   .nav-links a {
@@ -377,7 +377,7 @@ p  { color: var(--ink-soft); }
     font-size:   1.6rem;
     color:       var(--cream);
   }
-  .nav-toggle { display: flex; order: 3; z-index: 51; }
+  .nav-toggle { display: flex; order: 3; z-index: 1000; }
   .nav-cta    { order: 2; }
   .logo       { order: 1; }
 }
