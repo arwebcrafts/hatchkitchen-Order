@@ -252,16 +252,12 @@ p  { color: var(--ink-soft); }
 .site-header {
   position:         sticky;
   top:              0;
-  z-index:          50;
+  z-index:          1000;
   background:       rgba(18,17,16,.96);
   backdrop-filter:  blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom:    1px solid rgba(245,241,227,.1);
   transition:       box-shadow .3s ease;
-}
-/* Raise header z-index above topbar when mobile menu is open */
-.site-header:has(.nav-links[data-open="true"]) {
-  z-index: 1000;
 }
 .site-header.scrolled {
   box-shadow: 0 4px 24px -8px rgba(0,0,0,.45);
