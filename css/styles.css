@@ -259,6 +259,10 @@ p  { color: var(--ink-soft); }
   border-bottom:    1px solid rgba(245,241,227,.1);
   transition:       box-shadow .3s ease;
 }
+/* Raise header z-index above topbar when mobile menu is open */
+.site-header:has(.nav-links[data-open="true"]) {
+  z-index: 1000;
+}
 .site-header.scrolled {
   box-shadow: 0 4px 24px -8px rgba(0,0,0,.45);
 }
@@ -428,7 +432,8 @@ p  { color: var(--ink-soft); }
 
 .hero-inner {
   position: relative;
-  padding:  120px 0 72px;
+  padding-top: 120px;
+  padding-bottom: 72px;
   width:    100%;
 }
 .hero-kicker {
@@ -1164,16 +1169,28 @@ footer { background: var(--ink); color: rgba(251,243,230,.72); padding-top: 70px
 @media (max-width: 640px) {
   section        { padding: 64px 0; }
   .section-tight { padding: 48px 0; }
-  .hero          { min-height: 90vh; }
-  .hero-inner    { padding: 80px 0 48px; }
-  .hero-stats    { gap: 22px; margin-top: 36px; padding-top: 22px; }
+  .hero          { min-height: auto; padding-top: 20px; }
+  .hero-inner    { padding-top: 80px; padding-bottom: 40px; }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px 20px;
+    margin-top: 28px;
+    padding-top: 20px;
+  }
   .menu-cta-banner { padding: 36px 28px; }
   .spotlight-copy { padding: 28px 24px; }
   .loc-card       { padding: 28px 22px; }
 }
 
+@media (max-width: 480px) {
+  .hero h1 { font-size: 2.05rem; }
+  .hero-sub { font-size: 0.98rem; }
+  .hero-stats { gap: 12px 16px; }
+  .hero-stat strong { font-size: 1.15rem; }
+}
+
 @media (max-width: 420px) {
-  .hero h1 { font-size: 2.6rem; }
   .badge-row { flex-direction: column; }
 }
 
