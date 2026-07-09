@@ -153,6 +153,25 @@ input, select, textarea { font: inherit; }
   transition: color .15s;
 }
 .nav-back:hover { color: var(--gold); }
+.nav-order-link {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--f-mono);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  background: #4F6B3D;
+  color: var(--cream);
+  padding: 7px 14px;
+  border-radius: 999px;
+  transition: background .15s, transform .15s;
+}
+.nav-order-link:hover { background: #33431F; transform: translateY(-1px); }
+.nav-order-link.is-active {
+  background: var(--gold);
+  color: var(--ink);
+}
 
 /* ---- Hero Banner ---- */
 .camp-hero {
@@ -918,6 +937,8 @@ input, select, textarea { font: inherit; }
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
       Back to site
     </a>
+    <a class="nav-order-link" href="village-orders.html">Village Dinners</a>
+    <a class="nav-order-link is-active" href="camp-orders.html">Camp Orders</a>
   </nav>
 </header>
 

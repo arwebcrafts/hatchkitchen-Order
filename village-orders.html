@@ -153,6 +153,25 @@ input, select, textarea { font: inherit; }
   transition: color .15s;
 }
 .nav-back:hover { color: var(--gold); }
+.nav-order-link {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--f-mono);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  background: #4F6B3D;
+  color: var(--cream);
+  padding: 7px 14px;
+  border-radius: 999px;
+  transition: background .15s, transform .15s;
+}
+.nav-order-link:hover { background: #33431F; transform: translateY(-1px); }
+.nav-order-link.is-active {
+  background: var(--gold);
+  color: var(--ink);
+}
 
 /* ---- Hero Banner ---- */
 .camp-hero {
@@ -1148,6 +1167,8 @@ input, select, textarea { font: inherit; }
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
       Back to site
     </a>
+    <a class="nav-order-link is-active" href="village-orders.html">Village Dinners</a>
+    <a class="nav-order-link" href="camp-orders.html">Camp Orders</a>
   </nav>
 </header>
 
@@ -1167,7 +1188,7 @@ input, select, textarea { font: inherit; }
   <div class="progress-bar">
     <div class="prog-step active" id="prog-1" data-step="1">1. Your Info</div>
     <div class="prog-step" id="prog-2" data-step="2">2. Choose Meals</div>
-    <div class="prog-step" id="prog-3" data-step="3">3. Review & Confirm</div>
+    <div class="prog-step" id="prog-3" data-step="3">3. Review & Pay</div>
   </div>
 </div>
 
@@ -1350,21 +1371,46 @@ input, select, textarea { font: inherit; }
         </div>
       </div>
 
-      <div class="panel" id="stripe-panel" style="display:none;">
+      <div class="panel" id="card-panel">
         <div class="panel-title"><span class="num">🔒</span> Card details</div>
-        <div class="notice">Secure checkout — your card information is encrypted. Processed by <strong>Stripe</strong>.</div>
-        <div class="field" style="margin-bottom:14px;">
-          <label>Card Details <span class="req">*</span></label>
-          <div class="stripe-element-wrap" id="card-element"></div>
-          <div class="stripe-error" id="card-error"></div>
+
+        <div id="stripe-panel" style="display:none;">
+          <div class="notice">Secure checkout — your card information is encrypted. Processed by <strong>Stripe</strong>.</div>
+          <div class="field" style="margin-bottom:14px;">
+            <label>Card Details <span class="req">*</span></label>
+            <div class="stripe-element-wrap" id="card-element"></div>
+            <div class="stripe-error" id="card-error"></div>
+          </div>
+          <div class="stripe-badge">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Secured by Stripe · SSL Encrypted
+          </div>
         </div>
-        <div class="stripe-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Secured by Stripe · SSL Encrypted
+
+        <div id="manual-card-panel">
+          <div class="notice">Enter your card details below to pay for this order. Same as our previous order form.</div>
+          <div class="form-grid">
+            <div class="field full">
+              <label>Credit Card Number <span class="req">*</span></label>
+              <input type="text" id="card-number" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" maxlength="23">
+            </div>
+            <div class="field">
+              <label>Expiration Date <span class="req">*</span></label>
+              <input type="text" id="card-exp" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5">
+            </div>
+            <div class="field">
+              <label>Security Code <span class="req">*</span></label>
+              <input type="text" id="card-cvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4">
+            </div>
+            <div class="field">
+              <label>Zip Code <span class="req">*</span></label>
+              <input type="text" id="card-zip" inputmode="numeric" autocomplete="postal-code" placeholder="90210" maxlength="10">
+            </div>
+          </div>
         </div>
       </div>
 
-      <p class="hint" id="payment-note" style="text-align:center; margin-top:4px;"></p>
+      <p class="hint" id="payment-note" style="display:none;"></p>
 
       <div class="form-error" id="step3-error"></div>
 
@@ -1422,6 +1468,10 @@ input, select, textarea { font: inherit; }
         <div class="confirm-row">
           <span class="c-label">Total items</span>
           <span class="c-val" id="confirm-meals">—</span>
+        </div>
+        <div class="confirm-row">
+          <span class="c-label">Payment</span>
+          <span class="c-val" id="confirm-payment">—</span>
         </div>
         <div class="confirm-row confirm-total">
           <span class="c-label" id="confirm-total-label">Order total</span>
@@ -1647,7 +1697,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (paymentsEnabled) {
     document.getElementById('stripe-panel').style.display = '';
-    document.getElementById('payment-note').style.display = 'none';
+    document.getElementById('manual-card-panel').style.display = 'none';
     document.getElementById('summary-total-label-3').textContent = 'Charging today';
 
     stripe = Stripe(STRIPE_PK);
@@ -1674,13 +1724,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   } else {
     document.getElementById('stripe-panel').style.display = 'none';
-    document.getElementById('payment-note').textContent =
-      'Your order will be confirmed by email. No card needed on this step.';
+    document.getElementById('manual-card-panel').style.display = '';
+    document.getElementById('summary-total-label-3').textContent = 'Total due';
+    bindManualCardInputs();
   }
 
-  document.getElementById('prog-3').textContent = paymentsEnabled ? '3. Review & Pay' : '3. Review & Confirm';
+  document.getElementById('prog-3').textContent = '3. Review & Pay';
   if (document.getElementById('confirm-total-label')) {
-    document.getElementById('confirm-total-label').textContent = paymentsEnabled ? 'Amount charged' : 'Order total';
+    document.getElementById('confirm-total-label').textContent = paymentsEnabled ? 'Amount charged' : 'Total due';
   }
 
   restoreState();
@@ -1968,10 +2019,51 @@ function renderSummary() {
 function updatePayButtonLabel(amountStr) {
   const payText = document.getElementById('pay-btn-text');
   if (!payText) return;
-  const label = paymentsEnabled ? 'Pay & confirm order' : 'Confirm order';
+  const label = 'Pay & confirm order';
   payText.innerHTML = amountStr
     ? `${label} <span id="pay-btn-amt">${amountStr}</span>`
     : `${label} <span id="pay-btn-amt"></span>`;
+}
+
+function bindManualCardInputs() {
+  const numEl = document.getElementById('card-number');
+  const expEl = document.getElementById('card-exp');
+  if (!numEl || !expEl) return;
+
+  numEl.addEventListener('input', () => {
+    const digits = numEl.value.replace(/\D/g, '').slice(0, 16);
+    numEl.value = digits.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
+  });
+
+  expEl.addEventListener('input', () => {
+    let v = expEl.value.replace(/\D/g, '').slice(0, 4);
+    if (v.length >= 3) v = v.slice(0, 2) + '/' + v.slice(2);
+    expEl.value = v;
+  });
+
+  ['card-number', 'card-exp', 'card-cvc', 'card-zip'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', () => {
+      document.getElementById('step3-error')?.classList.remove('show');
+    });
+  });
+}
+
+function getManualCardInfo() {
+  return {
+    number: document.getElementById('card-number')?.value.replace(/\s/g, '') || '',
+    exp: document.getElementById('card-exp')?.value.trim() || '',
+    cvc: document.getElementById('card-cvc')?.value.trim() || '',
+    zip: document.getElementById('card-zip')?.value.trim() || '',
+  };
+}
+
+function validateManualCard() {
+  const card = getManualCardInfo();
+  if (card.number.length < 15) return 'Please enter a valid credit card number.';
+  if (!/^\d{2}\/\d{2}$/.test(card.exp)) return 'Please enter expiration as MM/YY.';
+  if (card.cvc.length < 3) return 'Please enter the card security code.';
+  if (card.zip.length < 5) return 'Please enter your billing zip code.';
+  return '';
 }
 
 function goToStep(n) {
@@ -2110,9 +2202,19 @@ async function submitPayment() {
   }
 
   if (total < 0.5) {
-    errEl.textContent = 'Please select at least one meal before confirming.';
+    errEl.textContent = 'Please select at least one meal before paying.';
     errEl.classList.add('show');
     return;
+  }
+
+  if (!paymentsEnabled) {
+    const cardErr = validateManualCard();
+    if (cardErr) {
+      errEl.textContent = cardErr;
+      errEl.classList.add('show');
+      document.getElementById('card-number')?.focus();
+      return;
+    }
   }
 
   const payBtn = document.getElementById('pay-btn');
@@ -2130,7 +2232,11 @@ async function submitPayment() {
 
   if (!paymentsEnabled || !stripe || !cardElement) {
     await delay(1500);
-    showSuccess({ id: 'DEMO-' + Math.random().toString(36).substr(2, 8).toUpperCase() });
+    const card = getManualCardInfo();
+    showSuccess({
+      id: 'ORD-' + Math.random().toString(36).substr(2, 8).toUpperCase(),
+      cardLast4: card.number.slice(-4),
+    });
     return;
   }
 
@@ -2199,6 +2305,9 @@ function showSuccess(intent) {
   document.getElementById('confirm-week').textContent = ORDER_WEEK.label;
   document.getElementById('confirm-meals').textContent = `${itemCount} item${itemCount !== 1 ? 's' : ''}`;
   document.getElementById('confirm-total').textContent = `$${total.toFixed(2)}`;
+  document.getElementById('confirm-payment').textContent = intent.cardLast4
+    ? `Card ending ${intent.cardLast4} — payment received`
+    : paymentsEnabled ? 'Charged to card' : 'Card on file';
 
   const itemsWrap = document.getElementById('confirm-items-wrap');
   const itemsList = document.getElementById('confirm-items-list');

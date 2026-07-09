@@ -330,6 +330,23 @@ p  { color: var(--ink-soft); }
   transform:   translateY(-1px);
 }
 
+/* Village Dinners — sage pill badge in nav */
+.nav-links a[href="village-orders.html"] {
+  background:    #4F6B3D;
+  color:         var(--cream) !important;
+  padding:       5px 13px;
+  border-radius: 999px;
+  font-weight:   700;
+  font-size:     .86rem;
+  transition:    background .2s ease, transform .2s ease;
+}
+.nav-links a[href="village-orders.html"]::after { display: none; }
+.nav-links a[href="village-orders.html"]:hover {
+  background:  #33431F;
+  color:       var(--cream) !important;
+  transform:   translateY(-1px);
+}
+
 .nav-cta { display: flex; align-items: center; gap: 14px; }
 
 .nav-toggle {
