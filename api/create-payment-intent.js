@@ -1,6 +1,6 @@
 // api/create-payment-intent.js
 // ─────────────────────────────────────────────────────────────
-// Vercel Serverless Function — Hatch Kitchen Camp Orders
+// Vercel Serverless Function — Hatch Kitchen Orders (Camp + Village)
 // Creates a Stripe PaymentIntent on the server side (required by Stripe)
 //
 // ENV VARS required in Vercel dashboard:
@@ -14,6 +14,7 @@ module.exports = async function handler(req, res) {
   const allowedOrigins = [
     'https://www.thehatchkitchen.com',
     'https://thehatchkitchen.com',
+    'https://hatch-the-village.netlify.app',
     'http://localhost:3000',
     'http://127.0.0.1:5500',
     'http://localhost:5500',
@@ -47,16 +48,20 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid amount' });
     }
 
+    const isVillage = metadata.source === 'hatch-village-orders' || metadata.order_type === 'village-dinner';
+
     // Create the PaymentIntent
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency,
       automatic_payment_methods: { enabled: true },
       metadata: {
-        source: 'hatch-camp-orders',
+        source: metadata.source || 'hatch-camp-orders',
         ...metadata,
       },
-      description: `Hatch Kitchen — Camp Lunch Order`,
+      description: isVillage
+        ? `Hatch Kitchen — Meals at the Village (${metadata.week || 'Weekly Dinner'})`
+        : `Hatch Kitchen — Camp Lunch Order`,
       receipt_email: metadata.customer_email || undefined,
     });
 
