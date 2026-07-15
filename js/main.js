@@ -102,37 +102,35 @@
     }
   });
 
-  /* ---------- Menu Tabs (active on scroll) ---------- */
+  /* ---------- Menu Tabs (marquee + active on scroll) ---------- */
   const menuTabs     = $$('.menu-tab');
   const menuSections = $$('.menu-category[id]');
 
   if (menuTabs.length && menuSections.length) {
-    // Tab click → smooth scroll
+    const setActiveTab = (href) => {
+      menuTabs.forEach(t => {
+        t.setAttribute('aria-current', t.getAttribute('href') === href ? 'true' : 'false');
+      });
+    };
+
     menuTabs.forEach(tab => {
       tab.addEventListener('click', e => {
         e.preventDefault();
-        const targetId = tab.getAttribute('href')?.slice(1);
+        const href     = tab.getAttribute('href');
+        const targetId = href?.slice(1);
         const target   = targetId ? document.getElementById(targetId) : null;
         if (target) {
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-        setActiveTab(tab);
+        if (href) setActiveTab(href);
       });
     });
-
-    // Scroll → update active tab
-    const setActiveTab = (activeTab) => {
-      menuTabs.forEach(t => t.setAttribute('aria-current', 'false'));
-      activeTab.setAttribute('aria-current', 'true');
-    };
 
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            const id        = entry.target.id;
-            const matchTab  = menuTabs.find(t => t.getAttribute('href') === `#${id}`);
-            if (matchTab) setActiveTab(matchTab);
+            setActiveTab(`#${entry.target.id}`);
           }
         });
       },

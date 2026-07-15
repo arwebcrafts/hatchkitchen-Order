@@ -50,19 +50,19 @@ module.exports = async function handler(req, res) {
 
     const isVillage = metadata.source === 'hatch-village-orders' || metadata.order_type === 'village-dinner';
 
-    // Create the PaymentIntent
+    // Card Element + confirmCardPayment needs payment_method_types: ['card']
+    // (automatic_payment_methods is for Payment Element flows)
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency,
-      automatic_payment_methods: { enabled: true },
+      payment_method_types: ['card'],
       metadata: {
         source: metadata.source || 'hatch-camp-orders',
-        ...metadata,
+        ...flattenMetadata(metadata),
       },
       description: isVillage
         ? `Hatch Kitchen — Meals at the Village (${metadata.week || 'Weekly Dinner'})`
-        : `Hatch Kitchen — Camp Lunch Order`,
-      receipt_email: metadata.customer_email || undefined,
+        : `Hatch Kitchen — Camp Lunch Order (${metadata.customer_name || 'parent'})`,
     });
 
     // Return only the client secret (never the full intent)
@@ -73,3 +73,14 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: err.message || 'Payment setup failed' });
   }
 };
+
+// Stripe metadata values must be strings (max 500 chars each)
+function flattenMetadata(meta) {
+  const out = {};
+  Object.entries(meta || {}).forEach(([key, val]) => {
+    if (val == null || key === 'source') return;
+    const str = typeof val === 'string' ? val : String(val);
+    out[key] = str.slice(0, 500);
+  });
+  return out;
+}

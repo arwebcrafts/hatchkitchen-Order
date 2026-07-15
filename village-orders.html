@@ -17,10 +17,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meals at the Village | Hatch Kitchen — Weekly Dinner Program</title>
-<meta name="description" content="Order weekly dinners from Hatch Kitchen's Meals at the Village program. Fresh, protein-packed grab-and-go meals with pickup in the #303 refrigerator.">
+<title>Meals at the Village | Weekly Kosher Dinners | Hatch Kitchen</title>
+<meta name="description" content="Order weekly kosher dinners from Hatch Kitchen's Meals at the Village program. Fresh, protein-packed grab-and-go meals with pickup in the #303 refrigerator.">
+<meta name="keywords" content="Meals at the Village, kosher weekly dinners Los Angeles, Hatch Kitchen village orders, kosher meal program Pico-Robertson">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://www.thehatchkitchen.com/village-orders.html">
 <link rel="icon" href="favicon.png" type="image/png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#4F6B3D">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hatch Kitchen">
+<meta property="og:title" content="Meals at the Village | Hatch Kitchen">
+<meta property="og:description" content="Weekly kosher dinners with #303 refrigerator pickup. Order online from Hatch Kitchen.">
+<meta property="og:image" content="https://www.thehatchkitchen.com/images/meal-bowl.jpg">
+<meta property="og:url" content="https://www.thehatchkitchen.com/village-orders.html">
+<meta name="twitter:card" content="summary_large_image">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1167,6 +1178,7 @@ input, select, textarea { font: inherit; }
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
       Back to site
     </a>
+    <a class="nav-order-link" href="menu.html">Menu</a>
     <a class="nav-order-link is-active" href="village-orders.html">Village Dinners</a>
     <a class="nav-order-link" href="camp-orders.html">Camp Orders</a>
   </nav>
@@ -1445,7 +1457,7 @@ input, select, textarea { font: inherit; }
       <div class="success-hero-box">
         <div class="success-check">✓</div>
         <div class="success-title">You're all <em>set!</em></div>
-        <p class="success-sub">A confirmation has been sent to <strong id="success-email" style="color:var(--gold);"></strong>. Questions? Email <a href="mailto:info@thehatchkitchen.com" style="color:var(--gold);">info@thehatchkitchen.com</a></p>
+        <p class="success-sub">Order confirmed. A confirmation email is on its way. Questions? Email <a href="mailto:info@thehatchkitchen.com" style="color:var(--gold);">info@thehatchkitchen.com</a></p>
       </div>
 
       <div class="confirm-panel">
@@ -1521,8 +1533,9 @@ input, select, textarea { font: inherit; }
    ================================================================ */
 'use strict';
 
-const STRIPE_PK = 'pk_test_YOUR_STRIPE_PUBLISHABLE_KEY';
+const STRIPE_PK = 'pk_live_51TWjEHHMqcxiN2xT842JWnIIIZee7ZxpUBh0hPDvaKgtnovvbhbW5kPG7YKiclZilDOPLTIQDew0iKEIr8qqiVGq00rSvNtj7P';
 const PAYMENT_ENDPOINT = '/api/create-payment-intent';
+const NOTIFY_ENDPOINT  = '/api/notify-order';
 const paymentsEnabled = STRIPE_PK && !STRIPE_PK.includes('YOUR_');
 const STORAGE_KEY = 'hatch-village-order';
 
@@ -1535,28 +1548,51 @@ const ORDER_WEEK = {
 };
 
 const MEAL_IMAGES = {
-  pasta:    'images/meal-bowl.jpg',
-  bowl:     'images/meal-bowl.jpg',
-  nuggets:  'images/meal-nuggets.jpg',
-  wrap:     'images/meal-wrap.jpg',
-  salad:    'images/ai-salad.jpg',
-  rotisserie: 'images/ai-rotisserie.jpg',
-  taco:     'images/ai-wrap.jpg',
-  sandwich: 'images/ai-wrap.jpg',
-  shabbat:  'images/family-story.jpg',
-  default:  'images/ai-hero.jpg',
+  pasta:      'images/menu/kids-pasta-and-chicken-bowl-dd6e78d2f807.jpg',
+  bowl:       'images/menu/bbq-chicken-rice-bowl-fc5e9ea58ee5.jpg',
+  nuggets:    'images/menu/hatch-chicken-nuggets-6-pc-be40ed407135.jpg',
+  wrap:       'images/menu/hatch-chicken-wrap-9a18edd093fa.jpg',
+  salad:      'images/menu/southwest-chicken-salad-4c6c26d86cb2.jpg',
+  asian:      'images/menu/asian-chicken-salad-6fb655d95f2a.jpg',
+  caesar:     'images/menu/chicken-caesar-salad-708c75ff249e.jpg',
+  caesarWrap: 'images/menu/chicken-caesar-wrap-1f8c550f0b82.jpg',
+  thai:       'images/menu/thai-garden-salad-b9de37d4288d.jpg',
+  quinoa:     'images/menu/veggie-quinoa-power-bowl-587890e05267.jpg',
+  quesadilla: 'images/menu/cheesy-quesadilla-82ba34c4e5ee.jpg',
+  wings:      'images/menu/bbq-chicken-wings-d57f0e049978.jpg',
+  sandwich:   'images/menu/pulled-bbq-chicken-sandwich-982479d4114a.jpg',
+  rotisserie: 'images/menu/1-4-chicken-leg-thigh-meal-78bb278aed10.jpg',
+  soup:       'images/menu/chicken-noodle-soup-16-oz-cold-grab-n-go-ec6fa81a4761.jpg',
+  taco:       'images/menu/steak-veggie-wrap-88f4215236f3.jpg',
+  asianWrap:  'images/menu/asian-chicken-wrap-a21ea7bd0c13.jpg',
+  swWrap:     'images/menu/asian-chicken-wrap-a21ea7bd0c13.jpg',
+  shabbat:    'images/family-story.jpg',
+  default:    'images/ai-hero.jpg',
 };
 
 function resolveMealImage(name) {
   const n = name.toLowerCase();
   if (n.includes('shabbat')) return MEAL_IMAGES.shabbat;
   if (n.includes('nugget') || n.includes('tater tot')) return MEAL_IMAGES.nuggets;
-  if (n.includes('wrap') || n.includes('ebc') || n.includes('burrito') || n.includes('quesadilla')) return MEAL_IMAGES.wrap;
-  if (n.includes('salad') || n.includes('thai garden')) return MEAL_IMAGES.salad;
-  if (n.includes('quinoa') || n.includes('rice bowl') || n.includes('pasta') || n.includes('rotini') || n.includes('soup')) return MEAL_IMAGES.bowl;
+  if (n.includes('quesadilla')) return MEAL_IMAGES.quesadilla;
+  if (n.includes('veggie quinoa') || n.includes('quinoa')) return MEAL_IMAGES.quinoa;
+  if (n.includes('thai garden')) return MEAL_IMAGES.thai;
+  if (n.includes('asian chicken salad')) return MEAL_IMAGES.asian;
+  if (n.includes('asian chicken wrap')) return MEAL_IMAGES.asianWrap;
+  if (n.includes('southwest chicken wrap')) return MEAL_IMAGES.swWrap;
+  if (n.includes('southwest')) return MEAL_IMAGES.salad;
+  if (n.includes('chicken caesar wrap') || (n.includes('caesar') && n.includes('wrap'))) return MEAL_IMAGES.caesarWrap;
+  if (n.includes('caesar')) return MEAL_IMAGES.caesar;
+  if (n.includes('bbq chicken and rice') || n.includes('rice bowl')) return MEAL_IMAGES.bowl;
+  if (n.includes('pulled bbq') || n.includes('sandwich')) return MEAL_IMAGES.sandwich;
+  if (n.includes('wing')) return MEAL_IMAGES.wings;
+  if (n.includes('soup')) return MEAL_IMAGES.soup;
   if (n.includes('taco')) return MEAL_IMAGES.taco;
-  if (n.includes('sandwich') || n.includes('brisket')) return MEAL_IMAGES.sandwich;
-  if (n.includes('wing') || n.includes('rotisserie') || n.includes('chicken leg') || n.includes('chicken breast')) return MEAL_IMAGES.rotisserie;
+  if (n.includes('ebc wrap') || n.includes('avocado wrap') || n.includes('burrito') || n.includes('wrap')) return MEAL_IMAGES.wrap;
+  if (n.includes('salad')) return MEAL_IMAGES.salad;
+  if (n.includes('pasta') || n.includes('rotini')) return MEAL_IMAGES.pasta;
+  if (n.includes('brisket')) return MEAL_IMAGES.sandwich;
+  if (n.includes('rotisserie') || n.includes('chicken leg') || n.includes('chicken breast') || n.includes('shredded chicken')) return MEAL_IMAGES.rotisserie;
   return MEAL_IMAGES.default;
 }
 
@@ -1670,7 +1706,7 @@ let selections = {};
 let residentInfo = {};
 let contactInfo = {};
 let currentStep = 1;
-let stripe, cardElement;
+let stripe, cardElement, cardMounted = false;
 let orderLocked = false;
 
 function getItemById(id) {
@@ -1715,12 +1751,11 @@ document.addEventListener('DOMContentLoaded', () => {
         invalid: { color: '#B91C1C' },
       },
     });
-    cardElement.on('ready', () => cardElement.mount('#card-element'));
-    cardElement.on('focus', () => document.getElementById('card-element').parentElement.classList.add('focused'));
-    cardElement.on('blur', () => document.getElementById('card-element').parentElement.classList.remove('focused'));
+    cardElement.on('focus', () => document.getElementById('card-element').classList.add('focused'));
+    cardElement.on('blur', () => document.getElementById('card-element').classList.remove('focused'));
     cardElement.on('change', e => {
       document.getElementById('card-error').textContent = e.error ? e.error.message : '';
-      document.getElementById('card-element').parentElement.classList.toggle('error', !!e.error);
+      document.getElementById('card-element').classList.toggle('error', !!e.error);
     });
   } else {
     document.getElementById('stripe-panel').style.display = 'none';
@@ -2085,8 +2120,17 @@ function goToStep(n) {
     else if (i === n) el.classList.add('active');
   }
 
+  if (n === 3) mountCardElement();
+
   document.getElementById('page-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
   renderSummary();
+}
+
+function mountCardElement() {
+  if (!cardElement || cardMounted) return;
+  if (!document.getElementById('card-element')) return;
+  cardElement.mount('#card-element');
+  cardMounted = true;
 }
 
 function saveStep1() {
@@ -2286,6 +2330,7 @@ async function submitPayment() {
       return;
     }
 
+    await notifyOwnerOfOrder(paymentIntent);
     showSuccess(paymentIntent);
   } catch (err) {
     errEl.textContent = err.message || 'Payment failed. Please try again.';
@@ -2296,9 +2341,51 @@ async function submitPayment() {
   }
 }
 
+async function notifyOwnerOfOrder(paymentIntent) {
+  if (!paymentIntent || !paymentIntent.id || String(paymentIntent.id).startsWith('ORD-')) return;
+
+  const { lines, total, itemCount } = computeTotals();
+  const raffleBits = [
+    document.getElementById('raffle-improve')?.value.trim(),
+    document.getElementById('raffle-dislike')?.value.trim(),
+    document.getElementById('raffle-enjoy')?.value.trim(),
+  ].filter(Boolean);
+
+  try {
+    await fetch(NOTIFY_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        paymentIntentId: paymentIntent.id,
+        order: {
+          type: 'Village dinner order',
+          customerName: `${contactInfo.first} ${contactInfo.last}`,
+          customerEmail: contactInfo.email,
+          customerPhone: contactInfo.phone,
+          extraContact: `Resident: ${residentInfo.first} ${residentInfo.last}`,
+          week: `${ORDER_WEEK.label} (${ORDER_WEEK.dates})`,
+          allergies: residentInfo.allergies || '',
+          specialRequests: residentInfo.requests || '',
+          items: lines.map(l => ({
+            label: l.label,
+            detail: l.section,
+            amount: l.amount,
+          })),
+          notes: [
+            `Items: ${itemCount}`,
+            `Charged: $${total.toFixed(2)}`,
+            raffleBits.length ? `Raffle notes:\n${raffleBits.join('\n')}` : null,
+          ].filter(Boolean).join('\n'),
+        },
+      }),
+    });
+  } catch (err) {
+    console.warn('[notify-order]', err);
+  }
+}
+
 function showSuccess(intent) {
   const { lines, total, itemCount } = computeTotals();
-  document.getElementById('success-email').textContent = contactInfo.email || 'your email';
   document.getElementById('confirm-order-id').textContent = intent.id || '—';
   document.getElementById('confirm-resident').textContent = `${residentInfo.first} ${residentInfo.last}`;
   document.getElementById('confirm-contact').textContent = `${contactInfo.first} ${contactInfo.last} · ${contactInfo.email}`;

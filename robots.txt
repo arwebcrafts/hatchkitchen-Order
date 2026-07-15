@@ -1,4 +1,45 @@
+# Hatch Kitchen (https://www.thehatchkitchen.com)
+# Local kosher restaurant in Pico-Robertson, Los Angeles
+
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /node_modules/
+Disallow: /.env
+Disallow: /.env.example
+Disallow: /.git/
+
+# AI search crawlers (ChatGPT, Claude, Perplexity, Gemini)
+# Allow so Hatch Kitchen can appear in AI answers and local recommendations
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Block pure training scrapers (keeps content available for search bots above)
+User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
 
 Sitemap: https://www.thehatchkitchen.com/sitemap.xml

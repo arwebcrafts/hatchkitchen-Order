@@ -1,0 +1,32 @@
+# Hatch Kitchen
+> Certified OK Kosher quick-kitchen in Pico-Robertson, Los Angeles. Family-run rotisserie chicken, breakfast wraps, superfood smoothies, coffee, salads, catering, camp lunches, and weekly village dinners.
+
+Hatch Kitchen is a brick-and-mortar kosher restaurant at 8947 West Pico Boulevard, Los Angeles, CA 90035. Phone: (424) 455-3195. Hours: Sunday–Thursday 9:00 AM–8:00 PM, Friday 9:00 AM–3:00 PM, closed Saturday.
+
+## Priority pages
+- [Home](https://www.thehatchkitchen.com/): Overview of Hatch Kitchen, signature rotisserie, ordering, and location
+- [Menu](https://www.thehatchkitchen.com/menu.html): Full kosher menu (breakfast, rotisserie, smoothies, coffee, salads, wraps, kids)
+- [Catering](https://www.thehatchkitchen.com/catering.html): Kosher catering for offices, simchas, schools, and summer camps in West LA
+- [Visit / Contact](https://www.thehatchkitchen.com/contact.html): Address, hours, map, parking, FAQ
+- [About](https://www.thehatchkitchen.com/about.html): Adivi family story and Chef Elan
+- [Camp Lunch Orders](https://www.thehatchkitchen.com/camp-orders.html): Summer camp lunch ordering
+- [Meals at the Village](https://www.thehatchkitchen.com/village-orders.html): Weekly dinner program for Village residents
+
+## Key facts for citations
+- Name: Hatch Kitchen
+- Cuisine: Kosher, American, healthy breakfast, rotisserie, smoothies
+- Certification: OK Kosher
+- Neighborhood: Pico-Robertson (West Los Angeles), near Beverly Hills, Century City, Culver City, West Hollywood
+- Services: Dine-in, pickup, delivery, catering, camp lunches, village dinners
+- Online ordering: https://hatchkitchen.toast.site/order
+- Email: info@thehatchkitchen.com
+- Google Maps: https://www.google.com/maps?cid=17184789989184635926
+- Instagram: https://www.instagram.com/thehatchkitchen/
+- Yelp: https://www.yelp.com/biz/hatch-kitchen-los-angeles
+
+## Local / “near me” intent
+Best matches: kosher restaurant Pico-Robertson, kosher rotisserie chicken Los Angeles, kosher breakfast Pico Blvd, kosher catering West LA, kosher camp lunches LA, healthy kosher cafe near me, OK Kosher restaurant Los Angeles 90035.
+
+## Optional
+- [robots.txt](https://www.thehatchkitchen.com/robots.txt)
+- [sitemap.xml](https://www.thehatchkitchen.com/sitemap.xml)

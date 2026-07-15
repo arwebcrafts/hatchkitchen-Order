@@ -17,10 +17,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Camp Lunch Orders | Hatch Kitchen — Summer 2026</title>
-<meta name="description" content="Order kosher summer camp lunches from Hatch Kitchen. Fresh daily meals delivered to your camper — rotisserie chicken, wraps, nuggets, smoothies and more.">
+<title>Kosher Camp Lunch Orders | Summer 2026 | Hatch Kitchen Los Angeles</title>
+<meta name="description" content="Order OK Kosher summer camp lunches from Hatch Kitchen in Pico-Robertson. Fresh daily meals for campers: rotisserie chicken, wraps, nuggets, smoothies and more.">
+<meta name="keywords" content="kosher camp lunch Los Angeles, summer camp catering Pico-Robertson, kosher kids lunch LA, Hatch Kitchen camp orders">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://www.thehatchkitchen.com/camp-orders.html">
 <link rel="icon" href="favicon.png" type="image/png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#4F6B3D">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hatch Kitchen">
+<meta property="og:title" content="Kosher Camp Lunch Orders | Hatch Kitchen">
+<meta property="og:description" content="OK Kosher summer camp lunches from Pico-Robertson. Order online for the 2026 season.">
+<meta property="og:image" content="https://www.thehatchkitchen.com/images/ai-catering.jpg">
+<meta property="og:url" content="https://www.thehatchkitchen.com/camp-orders.html">
+<meta name="twitter:card" content="summary_large_image">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -937,6 +948,7 @@ input, select, textarea { font: inherit; }
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
       Back to site
     </a>
+    <a class="nav-order-link" href="menu.html">Menu</a>
     <a class="nav-order-link" href="village-orders.html">Village Dinners</a>
     <a class="nav-order-link is-active" href="camp-orders.html">Camp Orders</a>
   </nav>
@@ -1229,7 +1241,7 @@ input, select, textarea { font: inherit; }
       <div class="success-hero-box">
         <div class="success-check">🎉</div>
         <div class="success-title">Order <em>confirmed!</em></div>
-        <p class="success-sub">Your camp lunches are on the calendar. We'll send a confirmation email to <strong id="success-email" style="color:var(--gold);"></strong> with your full order details.</p>
+        <p class="success-sub">Your camp lunches are on the calendar. A confirmation email is on its way. Questions? Email <a href="mailto:info@thehatchkitchen.com" style="color:var(--gold);">info@thehatchkitchen.com</a> or call <a href="tel:+14244553195" style="color:var(--gold);">(424) 455-3195</a>.</p>
       </div>
 
       <div class="confirm-panel">
@@ -1309,12 +1321,13 @@ input, select, textarea { font: inherit; }
 //   Test key starts with: pk_test_
 //   Live key starts with: pk_live_
 // ---------------------------------------------------------------
-const STRIPE_PK = 'pk_test_YOUR_STRIPE_PUBLISHABLE_KEY';
+const STRIPE_PK = 'pk_live_51TWjEHHMqcxiN2xT842JWnIIIZee7ZxpUBh0hPDvaKgtnovvbhbW5kPG7YKiclZilDOPLTIQDew0iKEIr8qqiVGq00rSvNtj7P';
 
 // ► Step 2: This endpoint is your Vercel serverless function.
 //   It works automatically once deployed to Vercel.
 //   For local dev: run `npx vercel dev` in this folder.
 const PAYMENT_ENDPOINT = '/api/create-payment-intent';
+const NOTIFY_ENDPOINT  = '/api/notify-order';
 
 // ---------------------------------------------------------------
 // MEAL DATA — Edit this to match your actual weekly menu
@@ -1323,11 +1336,17 @@ const MEAL_PRICE     = 16;   // Per meal price in dollars
 const FULL_WEEK_DISC = 8;    // Discount for 5-day (full) week per child
 
 const MEAL_IMAGES = {
-  wrap:     'images/meal-wrap.jpg',
-  nuggets:  'images/meal-nuggets.jpg',
-  bowl:     'images/meal-bowl.jpg',
-  smoothie: 'images/meal-smoothie.jpg',
-  rotisserie: 'images/ai-rotisserie.jpg',
+  wrap:       'images/menu/hatch-chicken-wrap-9a18edd093fa.jpg',
+  nuggets:    'images/menu/hatch-chicken-nuggets-6-pc-be40ed407135.jpg',
+  bowl:       'images/menu/bbq-chicken-rice-bowl-fc5e9ea58ee5.jpg',
+  smoothie:   'images/menu/org-nic-02ea86ac0884.jpg',
+  rotisserie: 'images/menu/1-4-chicken-leg-thigh-meal-78bb278aed10.jpg',
+  salad:      'images/menu/southwest-chicken-salad-4c6c26d86cb2.jpg',
+  caesar:     'images/menu/chicken-caesar-wrap-1f8c550f0b82.jpg',
+  island:     'images/menu/island-goals-47dc2987f03c.jpg',
+  choco:      'images/menu/choco-maca-1d7945d04bd7.jpg',
+  asian:      'images/menu/asian-chicken-salad-6fb655d95f2a.jpg',
+  pasta:      'images/menu/kids-pasta-and-chicken-bowl-dd6e78d2f807.jpg',
 };
 
 // Rotating daily meal schedule — 7 weeks, Mon-Fri
@@ -1338,9 +1357,9 @@ const WEEKS = [
     cutoff: 'Jun 18', cutoffDate: new Date('2026-06-18T23:59:00'),
     meals: [
       { day: 'Mon', name: 'Hatch Chicken Wrap', desc: 'Rotisserie chicken, avocado, lettuce, tomato, Hatch sauce', img: 'wrap' },
-      { day: 'Tue', name: 'Crispy Nuggets Meal', desc: 'House-baked nuggets, BNF tots & western dip', img: 'nuggets' },
+      { day: 'Tue', img: 'nuggets', desc: 'House-baked nuggets, BNF tots & western dip', img: 'nuggets' },
       { day: 'Wed', name: 'BBQ Chicken Rice Bowl', desc: 'Pulled dark meat, black beans, jasmine rice, slaw', img: 'bowl' },
-      { day: 'Thu', name: 'Caesar Chicken Wrap', desc: 'Rotisserie chicken, romaine, crunchy noodles, Caesar dressing', img: 'wrap' },
+      { day: 'Thu', name: 'Caesar Chicken Wrap', desc: 'Rotisserie chicken, romaine, crunchy noodles, Caesar dressing', img: 'caesar' },
       { day: 'Fri', name: 'Org-גן-nic Smoothie + Wrap', desc: 'Strawberry-banana smoothie + classic breakfast wrap', img: 'smoothie' },
     ]
   },
@@ -1348,11 +1367,11 @@ const WEEKS = [
     label: 'Week 2', dates: 'Jun 30 – Jul 4',
     cutoff: 'Jun 25', cutoffDate: new Date('2026-06-25T23:59:00'),
     meals: [
-      { day: 'Mon', name: 'Southwest Chicken Salad', desc: 'Romaine, avocado, black beans, quinoa, western sauce', img: 'bowl' },
-      { day: 'Tue', name: 'Chicken Caesar Wrap', desc: 'Rotisserie chicken, romaine & Caesar dressing, spinach tortilla', img: 'wrap' },
+      { day: 'Mon', name: 'Southwest Chicken Salad', desc: 'Romaine, avocado, black beans, quinoa, western sauce', img: 'salad' },
+      { day: 'Tue', name: 'Chicken Caesar Wrap', desc: 'Rotisserie chicken, romaine & Caesar dressing, spinach tortilla', img: 'caesar' },
       { day: 'Wed', name: 'Nuggets Meal', desc: 'House-baked nuggets, tots, BBQ or western dip', img: 'nuggets' },
-      { day: 'Thu', name: 'Kids Pasta Bowl', desc: 'Rotisserie chicken, rotini pasta & western sauce', img: 'bowl' },
-      { day: 'Fri', name: 'Island Goals Smoothie + Wrap', desc: 'Pineapple-avocado smoothie + chicken wrap', img: 'smoothie' },
+      { day: 'Thu', name: 'Kids Pasta Bowl', desc: 'Rotisserie chicken, rotini pasta & western sauce', img: 'pasta' },
+      { day: 'Fri', name: 'Island Goals Smoothie + Wrap', desc: 'Pineapple-avocado smoothie + chicken wrap', img: 'island' },
     ]
   },
   {
@@ -1362,7 +1381,7 @@ const WEEKS = [
       { day: 'Mon', name: 'Hatch Chicken Wrap', desc: 'Rotisserie chicken, avocado, Hatch sauce, spinach tortilla', img: 'wrap' },
       { day: 'Tue', name: 'BBQ Chicken Bowl', desc: 'Pulled BBQ chicken, black beans, jasmine rice', img: 'bowl' },
       { day: 'Wed', name: 'Crispy Nuggets', desc: '6-piece baked nuggets, tots, ranch', img: 'nuggets' },
-      { day: 'Thu', name: 'Asian Chicken Salad', desc: 'Cabbage, romaine, sesame dressing, crunchy noodles', img: 'bowl' },
+      { day: 'Thu', name: 'Asian Chicken Salad', desc: 'Cabbage, romaine, sesame dressing, crunchy noodles', img: 'asian' },
       { day: 'Fri', name: 'PB&J Smoothie + Wrap', desc: 'Peanut butter-blueberry smoothie + breakfast wrap', img: 'smoothie' },
     ]
   },
@@ -1373,7 +1392,7 @@ const WEEKS = [
       { day: 'Mon', name: 'Southwest Wrap', desc: 'Scrambled eggs, black beans, peppers, avocado, tots', img: 'wrap' },
       { day: 'Tue', name: 'Rotisserie Chicken Meal', desc: '¼ chicken, potato wedges, pita, Hatch sauce', img: 'rotisserie' },
       { day: 'Wed', name: 'Nuggets + Smoothie', desc: 'House-baked nuggets, tots & Org-גן-nic smoothie', img: 'smoothie' },
-      { day: 'Thu', name: 'Kids Pasta Bowl', desc: 'Chicken & rotini pasta, western sauce', img: 'bowl' },
+      { day: 'Thu', name: 'Kids Pasta Bowl', desc: 'Chicken & rotini pasta, western sauce', img: 'pasta' },
       { day: 'Fri', name: 'Chicken Wrap Combo', desc: 'Hatch chicken wrap + Island Goals smoothie', img: 'smoothie' },
     ]
   },
@@ -1383,20 +1402,20 @@ const WEEKS = [
     meals: [
       { day: 'Mon', name: 'Hatch Chicken Wrap', desc: 'Rotisserie chicken, avocado, lettuce, Hatch sauce', img: 'wrap' },
       { day: 'Tue', name: 'BBQ Rice Bowl', desc: 'BBQ chicken, black beans, jasmine rice, slaw', img: 'bowl' },
-      { day: 'Wed', name: 'Crispy Nuggets Meal', desc: 'Nuggets, tots, ranch & western dip', img: 'nuggets' },
-      { day: 'Thu', name: 'Caesar Wrap', desc: 'Rotisserie chicken, romaine, Caesar, crunchy noodles', img: 'wrap' },
-      { day: 'Fri', name: 'Choco Maca Smoothie + Wrap', desc: 'Chocolate-maca smoothie + classic chicken wrap', img: 'smoothie' },
+      { day: 'Wed', img: 'nuggets', desc: 'Nuggets, tots, ranch & western dip', img: 'nuggets' },
+      { day: 'Thu', name: 'Caesar Wrap', desc: 'Rotisserie chicken, romaine, Caesar, crunchy noodles', img: 'caesar' },
+      { day: 'Fri', name: 'Choco Maca Smoothie + Wrap', desc: 'Chocolate-maca smoothie + classic chicken wrap', img: 'choco' },
     ]
   },
   {
     label: 'Week 6', dates: 'Jul 28 – Aug 1',
     cutoff: 'Jul 23', cutoffDate: new Date('2026-07-23T23:59:00'),
     meals: [
-      { day: 'Mon', name: 'Southwest Chicken Salad', desc: 'Romaine, black beans, quinoa, avocado, western sauce', img: 'bowl' },
+      { day: 'Mon', name: 'Southwest Chicken Salad', desc: 'Romaine, black beans, quinoa, avocado, western sauce', img: 'salad' },
       { day: 'Tue', name: 'Chicken Wrap', desc: 'Rotisserie chicken, avocado, Hatch sauce', img: 'wrap' },
       { day: 'Wed', name: 'Nuggets Meal', desc: 'House-baked nuggets, BNF tots, BBQ dip', img: 'nuggets' },
       { day: 'Thu', name: 'Rotisserie Quarter Meal', desc: '¼ chicken, wedges, pita & sauce', img: 'rotisserie' },
-      { day: 'Fri', name: 'Island Goals + Wrap', desc: 'Pineapple smoothie + caesar chicken wrap', img: 'smoothie' },
+      { day: 'Fri', name: 'Island Goals + Wrap', desc: 'Pineapple smoothie + caesar chicken wrap', img: 'island' },
     ]
   },
   {
@@ -1404,7 +1423,7 @@ const WEEKS = [
     cutoff: 'Jul 30', cutoffDate: new Date('2026-07-30T23:59:00'),
     meals: [
       { day: 'Mon', name: 'Hatch Chicken Wrap', desc: 'Rotisserie chicken, all the good stuff', img: 'wrap' },
-      { day: 'Tue', name: 'Kids Pasta Bowl', desc: 'Chicken breast, rotini, western sauce', img: 'bowl' },
+      { day: 'Tue', name: 'Kids Pasta Bowl', desc: 'Chicken breast, rotini, western sauce', img: 'pasta' },
       { day: 'Wed', name: 'Crispy Nuggets', desc: 'House nuggets, tots, ranch', img: 'nuggets' },
       { day: 'Thu', name: 'BBQ Chicken Bowl', desc: 'Pulled BBQ, rice, black beans, sunset slaw', img: 'bowl' },
       { day: 'Fri', name: 'PB&J Smoothie + Wrap', desc: 'Peanut butter smoothie + breakfast wrap — the farewell special', img: 'smoothie' },
@@ -1419,7 +1438,7 @@ let children = [];       // [{ id, name, grade, allergies }]
 let selections = {};     // { childId: { weekIdx: { dayIdx: boolean } } }
 let parentInfo = {};
 let currentStep = 1;
-let stripe, cardElement;
+let stripe, cardElement, cardMounted = false;
 
 // ---------------------------------------------------------------
 // INIT
@@ -1427,7 +1446,7 @@ let stripe, cardElement;
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('footer-year').textContent = new Date().getFullYear();
 
-  // Stripe init
+  // Stripe init — mount when payment step is shown (hidden containers break Elements)
   if (STRIPE_PK && !STRIPE_PK.includes('YOUR_')) {
     stripe = Stripe(STRIPE_PK);
     const elements = stripe.elements({
@@ -1444,16 +1463,14 @@ document.addEventListener('DOMContentLoaded', () => {
         invalid: { color: '#B91C1C' }
       }
     });
-    cardElement.on('ready', () => cardElement.mount('#card-element'));
-    cardElement.on('focus', () => document.getElementById('card-element').parentElement.classList.add('focused'));
-    cardElement.on('blur',  () => document.getElementById('card-element').parentElement.classList.remove('focused'));
+    cardElement.on('focus', () => document.getElementById('card-element').classList.add('focused'));
+    cardElement.on('blur',  () => document.getElementById('card-element').classList.remove('focused'));
     cardElement.on('change', e => {
       document.getElementById('card-error').textContent = e.error ? e.error.message : '';
-      if (e.error) document.getElementById('card-element').parentElement.classList.add('error');
-      else document.getElementById('card-element').parentElement.classList.remove('error');
+      if (e.error) document.getElementById('card-element').classList.add('error');
+      else document.getElementById('card-element').classList.remove('error');
     });
   } else {
-    // Demo mode — show placeholder
     document.getElementById('card-element').innerHTML =
       '<div style="font-family:var(--f-mono);font-size:.82rem;color:rgba(18,17,16,.4);padding:4px 0;">⚠ Add your Stripe publishable key to activate live payments</div>';
   }
@@ -1501,8 +1518,11 @@ function goToStep(n) {
     else if (i === n) el.classList.add('active');
   }
 
-  // Populate review on step 4
-  if (n === 4) buildReview();
+  // Populate review on step 4 + mount Stripe card (must be visible)
+  if (n === 4) {
+    buildReview();
+    mountCardElement();
+  }
 
   // Scroll to top of main
   document.getElementById('page-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1520,12 +1540,21 @@ function addChild() {
   renderChildren();
 }
 
-function removeChild(id) {
+// Named deleteOrderChild — native DOM Node.removeChild would shadow "removeChild"
+function deleteOrderChild(id) {
   children = children.filter(c => c.id !== id);
   delete selections[id];
   renderChildren();
   renderMealBuilder();
   renderSummary();
+}
+
+function mountCardElement() {
+  if (!cardElement || cardMounted) return;
+  const el = document.getElementById('card-element');
+  if (!el) return;
+  cardElement.mount('#card-element');
+  cardMounted = true;
 }
 
 function renderChildren() {
@@ -1542,7 +1571,7 @@ function renderChildren() {
           <div class="child-name">${c.name || `Child ${idx + 1}`}</div>
           <div class="child-meta">${c.grade || 'Grade not set'}</div>
         </div>
-        ${children.length > 1 ? `<button class="child-remove" onclick="removeChild(${c.id})">Remove</button>` : ''}
+        ${children.length > 1 ? `<button type="button" class="child-remove" onclick="deleteOrderChild(${c.id})">Remove</button>` : ''}
       </div>
       <div class="child-body">
         <div class="form-grid">
@@ -2035,6 +2064,9 @@ async function submitPayment() {
       return;
     }
 
+    // 3. Email kitchen owner with full order details (non-blocking for customer UX)
+    await notifyOwnerOfOrder(paymentIntent);
+
     showSuccess(paymentIntent);
 
   } catch (err) {
@@ -2045,13 +2077,55 @@ async function submitPayment() {
   }
 }
 
+async function notifyOwnerOfOrder(paymentIntent) {
+  if (!paymentIntent || !paymentIntent.id || String(paymentIntent.id).startsWith('DEMO')) return;
+
+  const { lines, total, discount, subtotal, totalMeals } = computeTotals();
+  const camp = document.getElementById('camp-name').value === 'Other (enter below)'
+    ? document.getElementById('camp-other').value
+    : document.getElementById('camp-name').value;
+
+  try {
+    await fetch(NOTIFY_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        paymentIntentId: paymentIntent.id,
+        order: {
+          type: 'Camp lunch order',
+          customerName: `${parentInfo.first} ${parentInfo.last}`,
+          customerEmail: parentInfo.email,
+          customerPhone: parentInfo.phone,
+          camp,
+          children: children.map(c => `${c.name}${c.grade ? ` (${c.grade})` : ''}`).join(', '),
+          allergies: (parentInfo.allergies || []).join(', '),
+          items: lines.map(l => ({
+            label: l.label,
+            detail: `${l.weekLabel} · ${l.meals} meal${l.meals !== 1 ? 's' : ''}`,
+            amount: l.amount,
+            discount: l.discount || 0,
+          })),
+          notes: [
+            `Subtotal: $${subtotal.toFixed(2)}`,
+            discount ? `Discounts: -$${discount.toFixed(2)}` : null,
+            `Total meals: ${totalMeals}`,
+            `Charged: $${total.toFixed(2)}`,
+            `Weeks: ${getSelectedWeeks().map(i => WEEKS[i].label).join(', ')}`,
+          ].filter(Boolean).join('\n'),
+        },
+      }),
+    });
+  } catch (err) {
+    console.warn('[notify-order]', err);
+  }
+}
+
 function showSuccess(intent) {
   const { total, totalMeals } = computeTotals();
   const camp = document.getElementById('camp-name').value === 'Other (enter below)'
     ? document.getElementById('camp-other').value
     : document.getElementById('camp-name').value;
 
-  document.getElementById('success-email').textContent    = parentInfo.email || 'your email';
   document.getElementById('confirm-order-id').textContent = intent.id || '—';
   document.getElementById('confirm-name').textContent     = `${parentInfo.first} ${parentInfo.last}`;
   document.getElementById('confirm-camp').textContent     = camp;
