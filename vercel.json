@@ -45,8 +45,12 @@
   ],
   "routes": [
     {
+      "src": "/api/(.*)\\.js",
+      "dest": "/api/$1.js"
+    },
+    {
       "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "dest": "/api/$1.js"
     },
     {
       "src": "/(.*)",

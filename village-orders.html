@@ -1534,8 +1534,8 @@ input, select, textarea { font: inherit; }
 'use strict';
 
 const STRIPE_PK = 'pk_live_51TWjEHHMqcxiN2xT842JWnIIIZee7ZxpUBh0hPDvaKgtnovvbhbW5kPG7YKiclZilDOPLTIQDew0iKEIr8qqiVGq00rSvNtj7P';
-const PAYMENT_ENDPOINT = '/api/create-payment-intent';
-const NOTIFY_ENDPOINT  = '/api/notify-order';
+const PAYMENT_ENDPOINT = '/api/create-payment-intent.js';
+const NOTIFY_ENDPOINT  = '/api/notify-order.js';
 const paymentsEnabled = STRIPE_PK && !STRIPE_PK.includes('YOUR_');
 const STORAGE_KEY = 'hatch-village-order';
 
