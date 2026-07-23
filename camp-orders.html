@@ -755,7 +755,7 @@ input, select, textarea { font: inherit; }
   border-radius: var(--radius-sm);
   background: var(--paper);
   transition: border-color .15s, box-shadow .15s;
-  min-height: 44px;
+  min-height: 48px;
 }
 .stripe-element-wrap.focused {
   border-color: var(--gold-dark);
@@ -778,6 +778,29 @@ input, select, textarea { font: inherit; }
   color: rgba(18,17,16,.4);
   margin-top: 12px;
 }
+.card-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.card-fields-grid .field.full { grid-column: 1 / -1; }
+@media (max-width: 520px) {
+  .card-fields-grid { grid-template-columns: 1fr; }
+}
+.form-issue {
+  display: none;
+  background: #FEF2F2;
+  border-bottom: 2px solid var(--red-alert);
+  color: #991B1B;
+  padding: 12px 24px;
+  text-align: center;
+  font-weight: 700;
+  font-size: .92rem;
+  position: sticky;
+  top: 105px;
+  z-index: 88;
+}
+.form-issue.show { display: block; }
 
 /* ---- Buttons ---- */
 .btn {
@@ -974,6 +997,8 @@ input, select, textarea { font: inherit; }
     <div class="prog-step" id="prog-4">4. Payment</div>
   </div>
 </div>
+
+<div class="form-issue" id="form-issue" role="alert" aria-live="assertive"></div>
 
 <!-- Main page area -->
 <div class="page-wrap" id="page-wrap">
@@ -1190,14 +1215,32 @@ input, select, textarea { font: inherit; }
       <div class="panel">
         <div class="panel-title"><span class="num">💳</span> Secure Payment</div>
         <div class="notice">
-          Your card is processed securely by <strong>Stripe</strong>. Hatch Kitchen never sees your card number.
+          Your card is processed securely by <strong>Stripe</strong>. Hatch Kitchen never sees your card number. Browser autofill is supported.
         </div>
 
-        <div class="field" style="margin-bottom:14px;">
-          <label>Card Details <span class="req">*</span></label>
-          <div class="stripe-element-wrap" id="card-element"></div>
-          <div class="stripe-error" id="card-error"></div>
+        <div class="card-fields-grid">
+          <div class="field full">
+            <label for="card-name">Name on card <span class="req">*</span></label>
+            <input type="text" id="card-name" name="ccname" autocomplete="cc-name" placeholder="Full name on card">
+          </div>
+          <div class="field full">
+            <label>Card number <span class="req">*</span></label>
+            <div class="stripe-element-wrap" id="card-number-element"></div>
+          </div>
+          <div class="field">
+            <label>Expiration <span class="req">*</span></label>
+            <div class="stripe-element-wrap" id="card-expiry-element"></div>
+          </div>
+          <div class="field">
+            <label>CVC <span class="req">*</span></label>
+            <div class="stripe-element-wrap" id="card-cvc-element"></div>
+          </div>
+          <div class="field full">
+            <label for="card-zip">Billing zip <span class="req">*</span></label>
+            <input type="text" id="card-zip" name="postal" inputmode="numeric" autocomplete="postal-code" placeholder="90210" maxlength="10">
+          </div>
         </div>
+        <div class="stripe-error" id="card-error"></div>
 
         <div class="stripe-badge">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -1438,7 +1481,7 @@ let children = [];       // [{ id, name, grade, allergies }]
 let selections = {};     // { childId: { weekIdx: { dayIdx: boolean } } }
 let parentInfo = {};
 let currentStep = 1;
-let stripe, cardElement, cardMounted = false;
+let stripe, cardNumberEl, cardExpiryEl, cardCvcEl, cardMounted = false;
 
 // ---------------------------------------------------------------
 // INIT
@@ -1452,27 +1495,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const elements = stripe.elements({
       fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&display=swap' }]
     });
-    cardElement = elements.create('card', {
-      style: {
-        base: {
-          fontFamily: '"Hanken Grotesk", sans-serif',
-          fontSize: '15px',
-          color: '#121110',
-          '::placeholder': { color: '#a8a59e' },
-        },
-        invalid: { color: '#B91C1C' }
-      }
-    });
-    cardElement.on('focus', () => document.getElementById('card-element').classList.add('focused'));
-    cardElement.on('blur',  () => document.getElementById('card-element').classList.remove('focused'));
-    cardElement.on('change', e => {
-      document.getElementById('card-error').textContent = e.error ? e.error.message : '';
-      if (e.error) document.getElementById('card-element').classList.add('error');
-      else document.getElementById('card-element').classList.remove('error');
-    });
+    const stripeStyle = {
+      base: {
+        fontFamily: '"Hanken Grotesk", sans-serif',
+        fontSize: '15px',
+        color: '#121110',
+        '::placeholder': { color: '#a8a59e' },
+      },
+      invalid: { color: '#B91C1C' }
+    };
+    cardNumberEl = elements.create('cardNumber', { style: stripeStyle, showIcon: true });
+    cardExpiryEl = elements.create('cardExpiry', { style: stripeStyle });
+    cardCvcEl = elements.create('cardCvc', { style: stripeStyle });
+    bindStripeField(cardNumberEl, 'card-number-element');
+    bindStripeField(cardExpiryEl, 'card-expiry-element');
+    bindStripeField(cardCvcEl, 'card-cvc-element');
   } else {
-    document.getElementById('card-element').innerHTML =
-      '<div style="font-family:var(--f-mono);font-size:.82rem;color:rgba(18,17,16,.4);padding:4px 0;">⚠ Add your Stripe publishable key to activate live payments</div>';
+    const wrap = document.getElementById('card-number-element');
+    if (wrap) {
+      wrap.innerHTML =
+        '<div style="font-family:var(--f-mono);font-size:.82rem;color:rgba(18,17,16,.4);padding:4px 0;">⚠ Add your Stripe publishable key to activate live payments</div>';
+    }
   }
 
   // Camp select
@@ -1501,11 +1544,44 @@ document.addEventListener('DOMContentLoaded', () => {
 // ---------------------------------------------------------------
 // NAVIGATION
 // ---------------------------------------------------------------
+function clearFormIssue() {
+  const el = document.getElementById('form-issue');
+  if (!el) return;
+  el.classList.remove('show');
+  el.textContent = '';
+}
+
+function notifyFormIssue(message, focusSelector) {
+  const el = document.getElementById('form-issue');
+  if (el) {
+    el.innerHTML = `<strong>Can&rsquo;t continue yet.</strong> ${message}`;
+    el.classList.add('show');
+  }
+  if (focusSelector) {
+    const target = document.querySelector(focusSelector);
+    target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT')) {
+      target.focus({ preventScroll: true });
+    }
+  }
+}
+
+function bindStripeField(element, wrapId) {
+  element.on('focus', () => document.getElementById(wrapId)?.classList.add('focused'));
+  element.on('blur', () => document.getElementById(wrapId)?.classList.remove('focused'));
+  element.on('change', e => {
+    document.getElementById(wrapId)?.classList.toggle('error', !!e.error);
+    const err = document.getElementById('card-error');
+    if (err) err.textContent = e.error ? e.error.message : '';
+  });
+}
+
 function goToStep(n) {
   if (n === 2 && !validateStep1()) return;
   if (n === 3 && !validateStep2()) return;
   if (n === 4 && !validateStep3()) return;
 
+  clearFormIssue();
   currentStep = n;
   document.querySelectorAll('.step-page').forEach(p => p.classList.remove('active'));
   document.getElementById(`step-${n === 'success' ? 'success' : n}`).classList.add('active');
@@ -1550,10 +1626,11 @@ function deleteOrderChild(id) {
 }
 
 function mountCardElement() {
-  if (!cardElement || cardMounted) return;
-  const el = document.getElementById('card-element');
-  if (!el) return;
-  cardElement.mount('#card-element');
+  if (!cardNumberEl || cardMounted) return;
+  if (!document.getElementById('card-number-element')) return;
+  cardNumberEl.mount('#card-number-element');
+  cardExpiryEl.mount('#card-expiry-element');
+  cardCvcEl.mount('#card-cvc-element');
   cardMounted = true;
 }
 
@@ -1903,22 +1980,43 @@ function renderSummary() {
 // STEP VALIDATION
 // ---------------------------------------------------------------
 function validateStep1() {
-  if (!children.length) { alert('Please add at least one child.'); return false; }
-  const missing = children.find(c => !c.name.trim());
-  if (missing) { alert(`Please enter a name for Child ${children.indexOf(missing) + 1}.`); return false; }
-  const camp = document.getElementById('camp-name').value;
-  if (!camp) { alert('Please select a camp.'); return false; }
-  if (camp === 'Other (enter below)' && !document.getElementById('camp-other').value.trim()) {
-    alert('Please enter the camp name.'); return false;
+  if (!children.length) {
+    notifyFormIssue('Add at least one child before continuing.');
+    return false;
   }
+  const missing = children.find(c => !c.name.trim());
+  if (missing) {
+    notifyFormIssue(
+      `Enter a name for Child ${children.indexOf(missing) + 1}.`,
+      `#child-name-${missing.id}`
+    );
+    return false;
+  }
+  const camp = document.getElementById('camp-name').value;
+  if (!camp) {
+    notifyFormIssue('Select a camp before continuing.', '#camp-name');
+    return false;
+  }
+  if (camp === 'Other (enter below)' && !document.getElementById('camp-other').value.trim()) {
+    notifyFormIssue('Enter the camp name.', '#camp-other');
+    return false;
+  }
+  clearFormIssue();
   return true;
 }
 
 function validateStep2() {
   const selWeeks = getSelectedWeeks();
-  if (!selWeeks.length) { alert('Please select at least one week.'); return false; }
+  if (!selWeeks.length) {
+    notifyFormIssue('Select at least one week before continuing.');
+    return false;
+  }
   const { totalMeals } = computeTotals();
-  if (!totalMeals) { alert('Please select at least one meal.'); return false; }
+  if (!totalMeals) {
+    notifyFormIssue('Select at least one meal before continuing.');
+    return false;
+  }
+  clearFormIssue();
   return true;
 }
 
@@ -1927,13 +2025,23 @@ function validateStep3() {
   const last  = document.getElementById('p-last').value.trim();
   const email = document.getElementById('p-email').value.trim();
   const phone = document.getElementById('p-phone').value.trim();
-  if (!first || !last) { alert('Please enter your full name.'); return false; }
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Please enter a valid email.'); return false; }
-  if (!phone) { alert('Please enter your phone number.'); return false; }
+  if (!first || !last) {
+    notifyFormIssue('Enter your full name (first and last).', '#p-first');
+    return false;
+  }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    notifyFormIssue('Enter a valid email address.', '#p-email');
+    return false;
+  }
+  if (!phone) {
+    notifyFormIssue('Enter your phone number.', '#p-phone');
+    return false;
+  }
   parentInfo = { first, last, email, phone,
     notes: document.getElementById('p-notes').value.trim(),
     allergies: [...document.querySelectorAll('.allergy-chip.on')].map(c => c.dataset.allergy)
   };
+  clearFormIssue();
   return true;
 }
 
@@ -2008,13 +2116,25 @@ async function submitPayment() {
   const payBtn  = document.getElementById('pay-btn');
   const payText = document.getElementById('pay-btn-text');
   const paySpinner = document.getElementById('pay-btn-spinner');
+  clearFormIssue();
+
+  const cardName = document.getElementById('card-name')?.value.trim() || '';
+  const cardZip = document.getElementById('card-zip')?.value.trim() || '';
+  if (cardName.length < 2) {
+    notifyFormIssue('Enter the name on the card.', '#card-name');
+    return;
+  }
+  if (cardZip.length < 5) {
+    notifyFormIssue('Enter your billing zip code.', '#card-zip');
+    return;
+  }
 
   payBtn.disabled = true;
   payText.style.display = 'none';
   paySpinner.style.display = '';
 
   // Demo / test mode (no real key)
-  if (!stripe || !cardElement) {
+  if (!stripe || !cardNumberEl) {
     await delay(1500);
     showSuccess({ id: 'DEMO-' + Math.random().toString(36).substr(2,8).toUpperCase() });
     return;
@@ -2047,17 +2167,19 @@ async function submitPayment() {
     // 2. Confirm card payment
     const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
       payment_method: {
-        card: cardElement,
+        card: cardNumberEl,
         billing_details: {
-          name: `${parentInfo.first} ${parentInfo.last}`,
+          name: cardName,
           email: parentInfo.email,
           phone: parentInfo.phone,
+          address: { postal_code: cardZip },
         }
       }
     });
 
     if (error) {
       document.getElementById('card-error').textContent = error.message;
+      notifyFormIssue(error.message, '#card-number-element');
       payBtn.disabled = false;
       payText.style.display = '';
       paySpinner.style.display = 'none';
@@ -2065,12 +2187,15 @@ async function submitPayment() {
     }
 
     // 3. Email kitchen owner with full order details (non-blocking for customer UX)
+    clearFormIssue();
     await notifyOwnerOfOrder(paymentIntent);
 
     showSuccess(paymentIntent);
 
   } catch (err) {
-    document.getElementById('card-error').textContent = err.message || 'Payment failed. Please try again.';
+    const msg = err.message || 'Payment failed. Please try again.';
+    document.getElementById('card-error').textContent = msg;
+    notifyFormIssue(msg);
     payBtn.disabled = false;
     payText.style.display = '';
     paySpinner.style.display = 'none';

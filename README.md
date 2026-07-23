@@ -4,6 +4,10 @@ A 5-page marketing site (Home, Menu, Catering, About, Visit) built to sit in fro
 Toast ordering system. All "Order Online" buttons link out to the live Toast cart — this site does
 not process orders itself, it exists to win the Google search and convert visitors into orders/catering leads.
 
+## Language
+
+This project uses **English only**. All site copy, code comments, commit messages, documentation, and contributor notes should be written in English.
+
 ## Brand correction (v2)
 The first draft used an invented maroon/serif look that didn't match the real brand. This version
 uses your actual logo files and colors instead:

@@ -189,7 +189,7 @@ input, select, textarea { font: inherit; }
   position: relative;
   background: var(--ink);
   overflow: hidden;
-  height: 200px;
+  min-height: 220px;
 }
 .camp-hero-img {
   position: absolute;
@@ -209,8 +209,7 @@ input, select, textarea { font: inherit; }
   z-index: 1;
   max-width: 1100px;
   margin: 0 auto;
-  padding: 0 24px;
-  height: 100%;
+  padding: 28px 24px 32px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -279,6 +278,25 @@ input, select, textarea { font: inherit; }
 .prog-step.done { color: var(--sage-dark); background: var(--sage-tint); cursor: pointer; }
 .prog-step.done:hover { background: #d4dfc4; }
 .prog-step.done::before { content: "✓ "; }
+.prog-step { cursor: pointer; }
+
+/* Sticky issue banner when Continue/Pay is blocked */
+.form-issue {
+  display: none;
+  background: #FEF2F2;
+  border-bottom: 2px solid var(--red-alert);
+  color: #991B1B;
+  padding: 12px 24px;
+  text-align: center;
+  font-weight: 700;
+  font-size: .92rem;
+  position: sticky;
+  top: 105px;
+  z-index: 88;
+  box-shadow: 0 4px 12px -6px rgba(185,28,28,.35);
+}
+.form-issue.show { display: block; }
+.form-issue strong { color: var(--red-alert); }
 
 /* ---- Layout ---- */
 .page-wrap {
@@ -295,7 +313,6 @@ input, select, textarea { font: inherit; }
 /* ---- Step pages ---- */
 .step-page { display: none; }
 .step-page.active { display: contents; }
-/* Grid children from step-page */
 .step-main { grid-column: 1; }
 .step-side  { grid-column: 2; }
 @media (max-width: 860px) { .step-main, .step-side { grid-column: 1; } }
@@ -749,21 +766,116 @@ input, select, textarea { font: inherit; }
   margin: 12px 0 6px;
 }
 
-/* ---- Village meal sections ---- */
+/* ---- Village menu day nav ---- */
+.village-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+.village-menu-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+.btn-sm {
+  padding: 8px 14px !important;
+  font-size: .82rem !important;
+}
+.village-day-nav {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 2px 14px;
+  margin: 0 0 6px;
+  position: sticky;
+  top: 148px;
+  z-index: 8;
+  background: linear-gradient(180deg, var(--cream) 70%, transparent);
+  scrollbar-width: thin;
+}
+.village-day-chip {
+  flex: 0 0 auto;
+  border: 1.5px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-family: var(--f-mono);
+  font-size: .72rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background .15s, border-color .15s, transform .15s;
+}
+.village-day-chip:hover {
+  border-color: var(--gold-dark);
+  transform: translateY(-1px);
+}
+.village-day-chip.has-picks {
+  background: var(--gold-tint);
+  border-color: var(--gold);
+}
+.village-day-chip span {
+  background: var(--ink);
+  color: var(--gold);
+  border-radius: 999px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .64rem;
+}
+.sticky-summary { position: sticky; top: 72px; }
+.summary-cta { display: none; }
+@media (min-width: 861px) {
+  .summary-cta { display: block; }
+}
+.day-section-flash {
+  box-shadow: 0 0 0 2px var(--gold);
+}
+.btn.on-dark {
+  border-color: rgba(251,243,230,.45);
+  color: var(--cream);
+}
+.btn.on-dark:hover {
+  background: rgba(251,243,230,.1);
+}
+
+/* ---- Village meal sections (accordion) ---- */
 .day-section {
   border: 1px solid var(--line-soft);
   border-radius: var(--radius-md);
   overflow: hidden;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
   background: var(--paper);
+  scroll-margin-top: 170px;
 }
 .day-section-header {
+  width: 100%;
   background: var(--ink);
-  padding: 12px 18px;
+  padding: 14px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  border: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background .15s;
+}
+.day-section-header:hover { background: #1c1b19; }
+.day-section-header:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: -2px;
 }
 .day-section-title {
   font-family: var(--f-display);
@@ -777,6 +889,12 @@ input, select, textarea { font: inherit; }
   color: rgba(245,241,227,.45);
   margin-top: 2px;
 }
+.day-section-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
 .day-section-count {
   font-family: var(--f-mono);
   font-size: .72rem;
@@ -784,6 +902,28 @@ input, select, textarea { font: inherit; }
   color: rgba(245,241,227,.55);
   white-space: nowrap;
 }
+.day-section-count.has-picks { color: var(--gold); }
+.day-section-chevron {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(245,241,227,.25);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  transition: transform .2s ease;
+  flex-shrink: 0;
+}
+.day-section.is-open .day-section-chevron { transform: rotate(180deg); }
+.day-section-body {
+  display: block;
+  border-top: 1px solid var(--line-soft);
+}
+.day-section-header {
+  cursor: default;
+}
+.day-section-header:hover { background: var(--ink); }
 .meal-option-row {
   display: flex;
   align-items: center;
@@ -912,6 +1052,30 @@ input, select, textarea { font: inherit; }
   color: var(--gold);
 }
 .week-banner-cutoff.closed { background: rgba(185,28,28,.2); color: #FCA5A5; }
+.menu-set-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+.menu-set-btn {
+  border: 2px solid var(--line);
+  background: var(--paper);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: .95rem;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.menu-set-btn:hover { border-color: var(--gold-dark); }
+.menu-set-btn.is-active {
+  border-color: var(--sage);
+  background: var(--sage-tint);
+  color: var(--sage-dark);
+}
 .panel-divider {
   border: none;
   border-top: 1px solid var(--line-soft);
@@ -982,7 +1146,7 @@ input, select, textarea { font: inherit; }
   border-radius: var(--radius-sm);
   background: var(--paper);
   transition: border-color .15s, box-shadow .15s;
-  min-height: 44px;
+  min-height: 48px;
 }
 .stripe-element-wrap.focused {
   border-color: var(--gold-dark);
@@ -1004,6 +1168,15 @@ input, select, textarea { font: inherit; }
   font-size: .7rem;
   color: rgba(18,17,16,.4);
   margin-top: 12px;
+}
+.card-fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.card-fields-grid .field.full { grid-column: 1 / -1; }
+@media (max-width: 520px) {
+  .card-fields-grid { grid-template-columns: 1fr; }
 }
 
 /* ---- Buttons ---- */
@@ -1131,8 +1304,13 @@ input, select, textarea { font: inherit; }
 
 /* ---- Media ---- */
 @media (max-width: 620px) {
-  .camp-hero { height: 160px; }
+  .camp-hero { min-height: 0; }
+  .camp-hero-content { padding: 22px 16px 26px; }
   .camp-hero h1 { font-size: 1.5rem; }
+  .camp-hero-sub { display: none; }
+  .village-hero-actions { margin-top: 14px; }
+  .form-issue { top: 96px; font-size: .84rem; padding: 10px 14px; }
+  .village-day-nav { top: 138px; }
   .page-wrap { padding: 20px 16px 60px; }
   .panel { padding: 18px; }
   .meal-img-col { width: 56px; }
@@ -1191,38 +1369,98 @@ input, select, textarea { font: inherit; }
   <div class="camp-hero-content">
     <div class="camp-hero-eyebrow">Meals at the Village · Hatch Kitchen</div>
     <h1>Weekly Dinner <em>Program.</em></h1>
-    <p class="camp-hero-sub">Fresh, nutritious, and delicious — protein-packed grab-and-go meals with clean ingredients and ethical sourcing.</p>
+    <p class="camp-hero-sub">Fresh, nutritious, and delicious. Protein-packed grab-and-go meals with clean ingredients and ethical sourcing.</p>
+    <div class="village-hero-actions">
+      <a class="btn btn-gold" href="#page-wrap">Browse this week&rsquo;s menu</a>
+      <a class="btn btn-outline on-dark" href="menu.html">Full Hatch menu</a>
+    </div>
   </div>
 </div>
 
 <!-- Progress bar -->
 <div class="progress-wrap">
   <div class="progress-bar">
-    <div class="prog-step active" id="prog-1" data-step="1">1. Your Info</div>
-    <div class="prog-step" id="prog-2" data-step="2">2. Choose Meals</div>
-    <div class="prog-step" id="prog-3" data-step="3">3. Review & Pay</div>
+    <div class="prog-step active" id="prog-1" data-step="1">1. This Week&rsquo;s Menu</div>
+    <div class="prog-step" id="prog-2" data-step="2">2. Your Info</div>
+    <div class="prog-step" id="prog-3" data-step="3">3. Review &amp; Pay</div>
   </div>
 </div>
+
+<div class="form-issue" id="form-issue" role="alert" aria-live="assertive"></div>
 
 <!-- Main page area -->
 <div class="page-wrap" id="page-wrap">
 
-  <!-- STEP 1 — Your Info -->
+  <!-- STEP 1 — This Week's Menu -->
   <div class="step-page active" id="step-1">
+    <div class="step-main">
+      <div class="panel" style="padding-bottom:18px;">
+        <div class="panel-title">This week&rsquo;s dinner menu</div>
+        <p class="hint" style="margin-bottom:12px;">Browse and select meals for each day. Order only what you want &mdash; nothing is required. Pickup in the <strong>#303 refrigerator</strong>.</p>
+        <div class="week-banner" id="week-banner"></div>
+        <div class="menu-set-toggle" id="menu-set-toggle">
+          <button type="button" class="menu-set-btn is-active" data-menu-set="A">Menu 1</button>
+          <button type="button" class="menu-set-btn" data-menu-set="B">Menu 2</button>
+        </div>
+        <div class="village-menu-actions">
+          <a class="btn btn-outline btn-sm" href="menu.html" target="_blank" rel="noopener">Full Hatch menu</a>
+          <span class="hint" style="margin:0;">Same kitchen, same kosher standards.</span>
+        </div>
+      </div>
 
+      <nav class="village-day-nav" id="village-day-nav" aria-label="Jump to day on this week&rsquo;s menu"></nav>
+
+      <div id="meal-sections"></div>
+      <div class="form-error" id="step1-meals-error">Please select at least one meal to continue.</div>
+
+      <div class="btn-nav">
+        <span class="hint" style="align-self:center;margin:0;">Next: resident details</span>
+        <button class="btn btn-primary" onclick="goToStep(2)">
+          Continue to your info
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="step-side">
+      <div class="summary-card sticky-summary">
+        <div class="summary-title">Your order so far</div>
+        <div class="summary-empty" id="summary-empty">No meals selected yet.</div>
+        <div id="summary-content" style="display:none;"></div>
+        <hr class="summary-divider" id="summary-hr" style="display:none;">
+        <div id="summary-total-wrap" style="display:none;">
+          <div class="summary-total">
+            <span class="summary-total-label">Total due</span>
+            <span class="summary-total-amt" id="summary-total-amt">$0.00</span>
+          </div>
+          <div class="summary-meta" id="summary-meal-count"></div>
+        </div>
+        <div class="summary-cta">
+          <button class="btn btn-primary" style="width:100%;margin-top:14px;" onclick="goToStep(2)">
+            Continue to your info
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- STEP 2 — Your Info -->
+  <div class="step-page" id="step-2">
     <div class="step-main">
       <div class="panel">
-        <div class="panel-title">Welcome!</div>
+        <div class="panel-title">Resident details</div>
         <div class="notice">
-          Tell us who you are and we'll get your dinner order set up. Orders close <strong>Thursday at 5:00pm</strong> for the following week.
+          Tell us who this order is for. Orders close <strong>Thursday at 5:00pm</strong> for the following week.
         </div>
         <div class="notice" style="background:var(--sage-tint); border-color:rgba(79,107,61,.3); color:var(--sage-dark);">
-          📍 <strong>Weekday pickup:</strong> Available in the <strong>#303 refrigerator by 3pm</strong>, Monday through Thursday.<br>
-          📍 <strong>Shabbat & weekend pickup:</strong> Available in the <strong>#303 refrigerator by 2pm on Friday</strong>.
+          <strong>Weekday pickup:</strong> Available in the <strong>#303 refrigerator by 3pm</strong>, Monday through Thursday.<br>
+          <strong>Shabbat &amp; weekend pickup:</strong> Available in the <strong>#303 refrigerator by 2pm on Friday</strong>.
         </div>
         <p class="hint" style="margin-bottom:18px;">
-          🍽 Protein and nutrient-packed grab-and-go meals, with clean ingredients and ethical sourcing — no compromises.
           Questions? Email <a href="mailto:info@thehatchkitchen.com" style="color:var(--gold-dark); font-weight:700;">info@thehatchkitchen.com</a>
+          or browse the <a href="menu.html" style="color:var(--gold-dark); font-weight:700;">full Hatch menu</a>.
         </p>
 
         <div class="section-label">Resident</div>
@@ -1249,53 +1487,12 @@ input, select, textarea { font: inherit; }
           </div>
         </div>
 
-        <div class="form-error" id="step1-error">⚠️ Please enter the resident's first and last name to continue.</div>
+        <div class="form-error" id="step2-info-error">Please enter the resident&rsquo;s first and last name to continue.</div>
       </div>
     </div>
 
     <div class="step-side">
-      <div class="summary-card">
-        <div class="summary-title">Your order so far</div>
-        <div class="summary-empty" id="summary-empty">Choose meals on the next step to see your order.</div>
-        <div id="summary-content" style="display:none;"></div>
-        <hr class="summary-divider" id="summary-hr" style="display:none;">
-        <div id="summary-total-wrap" style="display:none;">
-          <div class="summary-total">
-            <span class="summary-total-label">Total due</span>
-            <span class="summary-total-amt" id="summary-total-amt">$0.00</span>
-          </div>
-          <div class="summary-meta">Secure checkout on final step</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="step-main">
-      <div class="btn-nav">
-        <button class="btn btn-primary" onclick="goToStep(2)">
-          Choose my meals
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </button>
-      </div>
-    </div>
-
-  </div>
-
-
-  <!-- STEP 2 — Choose Meals -->
-  <div class="step-page" id="step-2">
-
-    <div class="step-main">
-      <div class="panel" style="padding-bottom:18px;">
-        <div class="panel-title">Choose your meals</div>
-        <p class="hint" style="margin-bottom:16px;">Select as many or as few meals as you like across the week. Nothing is required — order only what you want.</p>
-        <div class="week-banner" id="week-banner"></div>
-      </div>
-      <div id="meal-sections"></div>
-      <div class="form-error" id="step2-error">Please select at least one meal to continue.</div>
-    </div>
-
-    <div class="step-side">
-      <div class="summary-card">
+      <div class="summary-card sticky-summary">
         <div class="summary-title">Your order so far</div>
         <div class="summary-empty" id="summary-empty-2">No meals selected yet.</div>
         <div id="summary-content-2" style="display:none;"></div>
@@ -1312,9 +1509,9 @@ input, select, textarea { font: inherit; }
 
     <div class="step-main">
       <div class="btn-nav">
-        <button class="btn btn-outline" onclick="goToStep(1)">← Back</button>
+        <button class="btn btn-outline" onclick="goToStep(1)">← Back to menu</button>
         <button class="btn btn-primary" onclick="goToStep(3)">
-          Review & Pay
+          Review &amp; Pay
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
       </div>
@@ -1387,12 +1584,30 @@ input, select, textarea { font: inherit; }
         <div class="panel-title"><span class="num">🔒</span> Card details</div>
 
         <div id="stripe-panel" style="display:none;">
-          <div class="notice">Secure checkout — your card information is encrypted. Processed by <strong>Stripe</strong>.</div>
-          <div class="field" style="margin-bottom:14px;">
-            <label>Card Details <span class="req">*</span></label>
-            <div class="stripe-element-wrap" id="card-element"></div>
-            <div class="stripe-error" id="card-error"></div>
+          <div class="notice">Secure checkout. Your card is encrypted and processed by <strong>Stripe</strong>. Browser autofill is supported.</div>
+          <div class="card-fields-grid">
+            <div class="field full">
+              <label for="card-name">Name on card <span class="req">*</span></label>
+              <input type="text" id="card-name" name="ccname" autocomplete="cc-name" placeholder="Full name on card">
+            </div>
+            <div class="field full">
+              <label>Card number <span class="req">*</span></label>
+              <div class="stripe-element-wrap" id="card-number-element"></div>
+            </div>
+            <div class="field">
+              <label>Expiration <span class="req">*</span></label>
+              <div class="stripe-element-wrap" id="card-expiry-element"></div>
+            </div>
+            <div class="field">
+              <label>CVC <span class="req">*</span></label>
+              <div class="stripe-element-wrap" id="card-cvc-element"></div>
+            </div>
+            <div class="field full">
+              <label for="card-zip-stripe">Billing zip <span class="req">*</span></label>
+              <input type="text" id="card-zip-stripe" name="postal" inputmode="numeric" autocomplete="postal-code" placeholder="90210" maxlength="10">
+            </div>
           </div>
+          <div class="stripe-error" id="card-error"></div>
           <div class="stripe-badge">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             Secured by Stripe · SSL Encrypted
@@ -1400,23 +1615,27 @@ input, select, textarea { font: inherit; }
         </div>
 
         <div id="manual-card-panel">
-          <div class="notice">Enter your card details below to pay for this order. Same as our previous order form.</div>
-          <div class="form-grid">
+          <div class="notice">Enter your card details below to pay for this order. Autofill from your browser wallet is supported.</div>
+          <div class="card-fields-grid">
             <div class="field full">
-              <label>Credit Card Number <span class="req">*</span></label>
-              <input type="text" id="card-number" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" maxlength="23">
+              <label for="card-name-manual">Name on card <span class="req">*</span></label>
+              <input type="text" id="card-name-manual" name="ccname" autocomplete="cc-name" placeholder="Full name on card">
+            </div>
+            <div class="field full">
+              <label for="card-number">Card number <span class="req">*</span></label>
+              <input type="text" id="card-number" name="cardnumber" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" maxlength="23">
             </div>
             <div class="field">
-              <label>Expiration Date <span class="req">*</span></label>
-              <input type="text" id="card-exp" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5">
+              <label for="card-exp">Expiration <span class="req">*</span></label>
+              <input type="text" id="card-exp" name="cc-exp" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5">
             </div>
             <div class="field">
-              <label>Security Code <span class="req">*</span></label>
-              <input type="text" id="card-cvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4">
+              <label for="card-cvc">CVC <span class="req">*</span></label>
+              <input type="text" id="card-cvc" name="cvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4">
             </div>
-            <div class="field">
-              <label>Zip Code <span class="req">*</span></label>
-              <input type="text" id="card-zip" inputmode="numeric" autocomplete="postal-code" placeholder="90210" maxlength="10">
+            <div class="field full">
+              <label for="card-zip">Billing zip <span class="req">*</span></label>
+              <input type="text" id="card-zip" name="postal" inputmode="numeric" autocomplete="postal-code" placeholder="90210" maxlength="10">
             </div>
           </div>
         </div>
@@ -1427,7 +1646,7 @@ input, select, textarea { font: inherit; }
       <div class="form-error" id="step3-error"></div>
 
       <div class="btn-nav">
-        <button class="btn btn-outline" onclick="goToStep(2)">← Back to meals</button>
+        <button class="btn btn-outline" onclick="goToStep(2)">← Back to your info</button>
         <button class="btn btn-primary" id="pay-btn" onclick="submitPayment()">
           <span id="pay-btn-text">Pay & confirm order <span id="pay-btn-amt"></span></span>
           <span id="pay-btn-spinner" style="display:none;"><span class="spinner"></span></span>
@@ -1541,10 +1760,11 @@ const STORAGE_KEY = 'hatch-village-order';
 
 // Update weekly — matches Google Form menu structure
 const ORDER_WEEK = {
-  label: 'July 6 – July 11',
-  dates: 'Sunday July 6 through Friday July 11, 2026',
-  cutoffLabel: 'Thursday July 17 at 5:00pm',
-  cutoffDate: new Date('2026-07-17T17:00:00-07:00'),
+  label: 'July 27 – August 1',
+  dates: 'Sunday July 27 through Friday August 1, 2026',
+  cutoffLabel: 'Thursday July 24 at 5:00pm',
+  cutoffDate: new Date('2026-07-24T17:00:00-07:00'),
+  weekStart: new Date('2026-07-27T00:00:00-07:00'),
 };
 
 const MEAL_IMAGES = {
@@ -1564,6 +1784,10 @@ const MEAL_IMAGES = {
   rotisserie: 'images/menu/1-4-chicken-leg-thigh-meal-78bb278aed10.jpg',
   soup:       'images/menu/chicken-noodle-soup-16-oz-cold-grab-n-go-ec6fa81a4761.jpg',
   taco:       'images/menu/steak-veggie-wrap-88f4215236f3.jpg',
+  burger:     'images/menu/prime-smoked-burger-1-2-lb-86b425df86c9.jpg',
+  breakfastBurrito: 'images/menu/classic-breakfast-wrap-5b69359f1092.jpg',
+  ebcWrap:    'images/menu/bacon-egg-cheese-bec-wrap-d56759551826.jpg',
+  avocadoSalad: 'images/menu/hatch-chicken-salad-708c75ff249e.jpg',
   asianWrap:  'images/menu/asian-chicken-wrap-a21ea7bd0c13.jpg',
   swWrap:     'images/menu/asian-chicken-wrap-a21ea7bd0c13.jpg',
   shabbat:    'images/family-story.jpg',
@@ -1577,18 +1801,22 @@ function resolveMealImage(name) {
   if (n.includes('quesadilla')) return MEAL_IMAGES.quesadilla;
   if (n.includes('veggie quinoa') || n.includes('quinoa')) return MEAL_IMAGES.quinoa;
   if (n.includes('thai garden')) return MEAL_IMAGES.thai;
+  if (n.includes('chicken avocado salad')) return MEAL_IMAGES.avocadoSalad;
   if (n.includes('asian chicken salad')) return MEAL_IMAGES.asian;
   if (n.includes('asian chicken wrap')) return MEAL_IMAGES.asianWrap;
   if (n.includes('southwest chicken wrap')) return MEAL_IMAGES.swWrap;
   if (n.includes('southwest')) return MEAL_IMAGES.salad;
   if (n.includes('chicken caesar wrap') || (n.includes('caesar') && n.includes('wrap'))) return MEAL_IMAGES.caesarWrap;
   if (n.includes('caesar')) return MEAL_IMAGES.caesar;
+  if (n.includes('smoked burger')) return MEAL_IMAGES.burger;
+  if (n.includes('breakfast burrito')) return MEAL_IMAGES.breakfastBurrito;
+  if (n.includes('steak taco')) return MEAL_IMAGES.taco;
+  if (n.includes('ebc wrap')) return MEAL_IMAGES.ebcWrap;
   if (n.includes('bbq chicken and rice') || n.includes('rice bowl')) return MEAL_IMAGES.bowl;
   if (n.includes('pulled bbq') || n.includes('sandwich')) return MEAL_IMAGES.sandwich;
   if (n.includes('wing')) return MEAL_IMAGES.wings;
   if (n.includes('soup')) return MEAL_IMAGES.soup;
-  if (n.includes('taco')) return MEAL_IMAGES.taco;
-  if (n.includes('ebc wrap') || n.includes('avocado wrap') || n.includes('burrito') || n.includes('wrap')) return MEAL_IMAGES.wrap;
+  if (n.includes('avocado wrap') || n.includes('burrito') || n.includes('wrap')) return MEAL_IMAGES.wrap;
   if (n.includes('salad')) return MEAL_IMAGES.salad;
   if (n.includes('pasta') || n.includes('rotini')) return MEAL_IMAGES.pasta;
   if (n.includes('brisket')) return MEAL_IMAGES.sandwich;
@@ -1596,7 +1824,18 @@ function resolveMealImage(name) {
   return MEAL_IMAGES.default;
 }
 
-const MEAL_SECTIONS = [
+const MENU_VARIANTS = {
+  monday: {
+    A: { id: 'mon-5', name: 'Steak Tacos', desc: 'Lettuce, sauteed onions, black beans and coleslaw', price: 18 },
+    B: { id: 'mon-5', name: 'Smoked Burger with rotisserie potato wedges', price: 18 },
+  },
+  thursday: {
+    A: { id: 'thu-4', name: 'EBC Wrap', desc: 'Black beans, shredded carrot, romaine, tomato, avocado, crunchy noodles and creamy herb sauce on the side', price: 16 },
+    B: { id: 'thu-4', name: 'Classic Breakfast Burrito with a side of tater tots', price: 14 },
+  },
+};
+
+const MEAL_SECTIONS_TEMPLATE = [
   {
     id: 'sunday',
     title: 'Sunday Meals',
@@ -1702,12 +1941,43 @@ const MEAL_SECTIONS = [
   },
 ];
 
+function buildMealSections(menuSet) {
+  const sections = JSON.parse(JSON.stringify(MEAL_SECTIONS_TEMPLATE));
+  sections.find(s => s.id === 'monday').options[4] = { ...MENU_VARIANTS.monday[menuSet] };
+  sections.find(s => s.id === 'thursday').options[3] = { ...MENU_VARIANTS.thursday[menuSet] };
+  return sections;
+}
+
+let selectedMenuSet = 'A';
+let MEAL_SECTIONS = [];
+
+function initOrderWeekMenu() {
+  selectedMenuSet = 'A';
+  MEAL_SECTIONS = buildMealSections(selectedMenuSet);
+  openDaySections = new Set(MEAL_SECTIONS.map(s => s.id));
+}
+
+function setSelectedMenuSet(set) {
+  if ((set !== 'A' && set !== 'B') || set === selectedMenuSet) return;
+  selectedMenuSet = set;
+  MEAL_SECTIONS = buildMealSections(selectedMenuSet);
+  // Clear Monday/Thursday picks when switching menus (same ids, different meals)
+  delete selections['mon-5'];
+  delete selections['thu-4'];
+  renderMenuSetToggle();
+  renderMealSections();
+  renderDayNav();
+  renderSummary();
+  persistState();
+}
+
 let selections = {};
 let residentInfo = {};
 let contactInfo = {};
 let currentStep = 1;
-let stripe, cardElement, cardMounted = false;
+let stripe, cardNumberEl, cardExpiryEl, cardCvcEl, cardMounted = false;
 let orderLocked = false;
+let openDaySections = new Set(['sunday']);
 
 function getItemById(id) {
   for (const section of MEAL_SECTIONS) {
@@ -1740,23 +2010,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const elements = stripe.elements({
       fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&display=swap' }],
     });
-    cardElement = elements.create('card', {
-      style: {
-        base: {
-          fontFamily: '"Hanken Grotesk", sans-serif',
-          fontSize: '15px',
-          color: '#121110',
-          '::placeholder': { color: '#a8a59e' },
-        },
-        invalid: { color: '#B91C1C' },
+    const stripeStyle = {
+      base: {
+        fontFamily: '"Hanken Grotesk", sans-serif',
+        fontSize: '15px',
+        color: '#121110',
+        '::placeholder': { color: '#a8a59e' },
       },
-    });
-    cardElement.on('focus', () => document.getElementById('card-element').classList.add('focused'));
-    cardElement.on('blur', () => document.getElementById('card-element').classList.remove('focused'));
-    cardElement.on('change', e => {
-      document.getElementById('card-error').textContent = e.error ? e.error.message : '';
-      document.getElementById('card-element').classList.toggle('error', !!e.error);
-    });
+      invalid: { color: '#B91C1C' },
+    };
+    cardNumberEl = elements.create('cardNumber', { style: stripeStyle, showIcon: true });
+    cardExpiryEl = elements.create('cardExpiry', { style: stripeStyle });
+    cardCvcEl = elements.create('cardCvc', { style: stripeStyle });
+
+    bindStripeField(cardNumberEl, 'card-number-element');
+    bindStripeField(cardExpiryEl, 'card-expiry-element');
+    bindStripeField(cardCvcEl, 'card-cvc-element');
   } else {
     document.getElementById('stripe-panel').style.display = 'none';
     document.getElementById('manual-card-panel').style.display = '';
@@ -1764,11 +2033,11 @@ document.addEventListener('DOMContentLoaded', () => {
     bindManualCardInputs();
   }
 
-  document.getElementById('prog-3').textContent = '3. Review & Pay';
   if (document.getElementById('confirm-total-label')) {
     document.getElementById('confirm-total-label').textContent = paymentsEnabled ? 'Amount charged' : 'Total due';
   }
 
+  initOrderWeekMenu();
   restoreState();
   updatePayButtonLabel('');
   bindFormListeners();
@@ -1776,19 +2045,28 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.prog-step').forEach(el => {
     el.addEventListener('click', () => {
       const step = parseInt(el.dataset.step, 10);
+      if (!step || step === currentStep) return;
       if (step < currentStep) goToStep(step);
+      else goToStep(step);
     });
   });
 
   renderWeekBanner();
+  renderMenuSetToggle();
   renderMealSections();
+  renderDayNav();
   renderSummary();
 
-  document.getElementById('meal-sections').addEventListener('click', e => {
+  document.getElementById('menu-set-toggle')?.addEventListener('click', e => {
+    const btn = e.target.closest('[data-menu-set]');
+    if (btn) setSelectedMenuSet(btn.dataset.menuSet);
+  });
+
+  document.getElementById('meal-sections')?.addEventListener('click', e => {
     const row = e.target.closest('[data-meal-id]');
     if (row) toggleItem(row.dataset.mealId);
   });
-  document.getElementById('meal-sections').addEventListener('keydown', e => {
+  document.getElementById('meal-sections')?.addEventListener('keydown', e => {
     if (e.key !== 'Enter' && e.key !== ' ') return;
     const row = e.target.closest('[data-meal-id]');
     if (!row) return;
@@ -1797,8 +2075,116 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+function bindStripeField(element, wrapId) {
+  element.on('focus', () => document.getElementById(wrapId)?.classList.add('focused'));
+  element.on('blur', () => document.getElementById(wrapId)?.classList.remove('focused'));
+  element.on('change', e => {
+    const wrap = document.getElementById(wrapId);
+    wrap?.classList.toggle('error', !!e.error);
+    const err = document.getElementById('card-error');
+    if (err) err.textContent = e.error ? e.error.message : '';
+  });
+}
+
+function clearFormIssue() {
+  const el = document.getElementById('form-issue');
+  if (!el) return;
+  el.classList.remove('show');
+  el.textContent = '';
+}
+
+function notifyFormIssue(message, focusSelector) {
+  const el = document.getElementById('form-issue');
+  if (el) {
+    el.innerHTML = `<strong>Can&rsquo;t continue yet.</strong> ${message}`;
+    el.classList.add('show');
+  }
+  if (focusSelector) {
+    const target = typeof focusSelector === 'string'
+      ? document.querySelector(focusSelector)
+      : focusSelector;
+    target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT')) {
+      target.focus({ preventScroll: true });
+    }
+  }
+}
+
+function toggleAccordion(sectionId) {
+  if (openDaySections.has(sectionId)) openDaySections.delete(sectionId);
+  else openDaySections.add(sectionId);
+  renderMealSections();
+  renderDayNav();
+}
+
+function openAccordion(sectionId) {
+  openDaySections.add(sectionId);
+  renderMealSections();
+  renderDayNav();
+}
+
+function dayNavLabel(section) {
+  const map = {
+    sunday: 'Sun',
+    monday: 'Mon',
+    tuesday: 'Tue',
+    wednesday: 'Wed',
+    thursday: 'Thu',
+    'shabbat-dinner': 'Shabbat Dinner',
+    'shabbat-lunch': 'Shabbat Lunch',
+  };
+  return map[section.id] || section.title.replace(/\s+Meals?$/, '');
+}
+
+function sectionPickCount(section) {
+  if (section.type === 'shabbat-dinner') {
+    return (selections[section.base.id] ? 1 : 0) + section.addons.filter(a => selections[a.id]).length;
+  }
+  return section.options.filter(o => selections[o.id]).length;
+}
+
+function renderDayNav() {
+  const nav = document.getElementById('village-day-nav');
+  if (!nav) return;
+  nav.innerHTML = MEAL_SECTIONS.map(section => {
+    const count = sectionPickCount(section);
+    return `<button type="button" class="village-day-chip${count ? ' has-picks' : ''}" data-jump="${section.id}">
+      ${dayNavLabel(section)}${count ? `<span>${count}</span>` : ''}
+    </button>`;
+  }).join('');
+
+  nav.querySelectorAll('[data-jump]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.jump;
+      openAccordion(id);
+      requestAnimationFrame(() => {
+        const target = document.getElementById(`section-${id}`);
+        if (!target) return;
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.classList.add('day-section-flash');
+        setTimeout(() => target.classList.remove('day-section-flash'), 900);
+      });
+    });
+  });
+}
+
+function accordionHeader(section, countLabel) {
+  const count = sectionPickCount(section);
+  return `
+    <div class="day-section-header" id="section-${section.id}-head">
+      <div>
+        <div class="day-section-title">${section.title}</div>
+        <div class="day-section-sub">${section.subtitle}</div>
+      </div>
+      <div class="day-section-meta">
+        <div class="day-section-count${count ? ' has-picks' : ''}">${countLabel}</div>
+      </div>
+    </div>`;
+}
+
 function renderWeekBanner() {
   const el = document.getElementById('week-banner');
+  if (!el) return;
   el.innerHTML = `
     <div>
       <div class="week-banner-title">${ORDER_WEEK.label}</div>
@@ -1809,42 +2195,45 @@ function renderWeekBanner() {
     </div>`;
 }
 
+function renderMenuSetToggle() {
+  document.querySelectorAll('#menu-set-toggle [data-menu-set]').forEach(btn => {
+    btn.classList.toggle('is-active', btn.dataset.menuSet === selectedMenuSet);
+  });
+}
+
 function renderMealSections() {
   const container = document.getElementById('meal-sections');
+  if (!container || !MEAL_SECTIONS.length) return;
   container.innerHTML = MEAL_SECTIONS.map(section => {
     if (section.type === 'shabbat-dinner') {
       const baseSel = !!selections[section.base.id];
       const addonCount = section.addons.filter(a => selections[a.id]).length;
+      const countLabel = baseSel
+        ? `1 dinner${addonCount ? ` + ${addonCount} add-on${addonCount > 1 ? 's' : ''}` : ''}`
+        : 'None selected';
       return `
-        <div class="day-section" id="section-${section.id}">
-          <div class="day-section-header">
-            <div>
-              <div class="day-section-title">${section.title}</div>
-              <div class="day-section-sub">${section.subtitle}</div>
+        <div class="day-section is-open" id="section-${section.id}">
+          ${accordionHeader(section, countLabel)}
+          <div class="day-section-body">
+            <div class="includes-box">
+              <strong>Included with dinner ($${section.base.price})</strong>
+              ${section.base.includes.map(i => `· ${i}`).join('<br>')}
             </div>
-            <div class="day-section-count">${baseSel ? `1 dinner${addonCount ? ` + ${addonCount} add-on${addonCount > 1 ? 's' : ''}` : ''}` : 'None selected'}</div>
+            ${renderOptionRow(section.base, baseSel)}
+            <div class="addon-label">Optional add-ons</div>
+            ${section.addons.map(addon => renderOptionRow(addon, !!selections[addon.id], !baseSel && addon.requiresBase)).join('')}
           </div>
-          <div class="includes-box">
-            <strong>Included with dinner ($${section.base.price})</strong>
-            ${section.base.includes.map(i => `· ${i}`).join('<br>')}
-          </div>
-          ${renderOptionRow(section.base, baseSel)}
-          <div class="addon-label">Optional add-ons</div>
-          ${section.addons.map(addon => renderOptionRow(addon, !!selections[addon.id], !baseSel && addon.requiresBase)).join('')}
         </div>`;
     }
 
     const count = section.options.filter(o => selections[o.id]).length;
+    const countLabel = count ? `${count} selected` : 'None selected';
     return `
-      <div class="day-section" id="section-${section.id}">
-        <div class="day-section-header">
-          <div>
-            <div class="day-section-title">${section.title}</div>
-            <div class="day-section-sub">${section.subtitle}</div>
-          </div>
-          <div class="day-section-count">${count ? `${count} selected` : 'None selected'}</div>
+      <div class="day-section is-open" id="section-${section.id}">
+        ${accordionHeader(section, countLabel)}
+        <div class="day-section-body">
+          ${section.options.map(opt => renderOptionRow(opt, !!selections[opt.id])).join('')}
         </div>
-        ${section.options.map(opt => renderOptionRow(opt, !!selections[opt.id])).join('')}
       </div>`;
   }).join('');
 }
@@ -1890,8 +2279,18 @@ function toggleItem(id) {
     if (id === 'shab-soup') delete selections['shab-brisket'];
   }
 
-  document.getElementById('step2-error')?.classList.remove('show');
+  document.getElementById('step1-meals-error')?.classList.remove('show');
+  clearFormIssue();
+  // Keep the day open while picking
+  const section = MEAL_SECTIONS.find(s => {
+    if (s.type === 'shabbat-dinner') {
+      return s.base.id === id || s.addons.some(a => a.id === id);
+    }
+    return s.options.some(o => o.id === id);
+  });
+  if (section) openDaySections.add(section.id);
   renderMealSections();
+  renderDayNav();
   renderSummary();
   persistState();
 }
@@ -1902,6 +2301,7 @@ function bindFormListeners() {
     if (!el) return;
     el.addEventListener('input', () => {
       clearStep1Errors();
+      clearFormIssue();
       persistState();
       if (document.getElementById('same-as-resident')?.checked) applySameAsResident();
     });
@@ -1940,6 +2340,8 @@ function persistState() {
       residentInfo,
       contactInfo,
       selections,
+      menuSet: selectedMenuSet,
+      orderWeek: ORDER_WEEK.label,
       sameAsResident: !!document.getElementById('same-as-resident')?.checked,
       raffle: {
         improve: document.getElementById('raffle-improve')?.value || '',
@@ -1970,9 +2372,25 @@ function restoreState() {
       document.getElementById('c-email').value = contactInfo.email || '';
       document.getElementById('c-phone').value = contactInfo.phone || '';
     }
+    if (data.menuSet === 'A' || data.menuSet === 'B') {
+      selectedMenuSet = data.menuSet;
+      MEAL_SECTIONS = buildMealSections(selectedMenuSet);
+      renderMenuSetToggle();
+    }
     if (data.selections) {
-      selections = data.selections;
+      if (data.orderWeek && data.orderWeek !== ORDER_WEEK.label) {
+        selections = {};
+      } else {
+        selections = data.selections;
+        Object.keys(selections).forEach(id => {
+          if (!getItemById(id)) delete selections[id];
+        });
+      }
+      MEAL_SECTIONS.forEach(s => {
+        if (sectionPickCount(s)) openDaySections.add(s.id);
+      });
       renderMealSections();
+      renderDayNav();
     }
     if (data.raffle) {
       document.getElementById('raffle-improve').value = data.raffle.improve || '';
@@ -1988,7 +2406,7 @@ function restoreState() {
 }
 
 function clearStep1Errors() {
-  document.getElementById('step1-error')?.classList.remove('show');
+  document.getElementById('step2-info-error')?.classList.remove('show');
   document.getElementById('r-first')?.closest('.field')?.classList.remove('invalid');
   document.getElementById('r-last')?.closest('.field')?.classList.remove('invalid');
 }
@@ -2085,6 +2503,7 @@ function bindManualCardInputs() {
 
 function getManualCardInfo() {
   return {
+    name: document.getElementById('card-name-manual')?.value.trim() || '',
     number: document.getElementById('card-number')?.value.replace(/\s/g, '') || '',
     exp: document.getElementById('card-exp')?.value.trim() || '',
     cvc: document.getElementById('card-cvc')?.value.trim() || '',
@@ -2094,42 +2513,78 @@ function getManualCardInfo() {
 
 function validateManualCard() {
   const card = getManualCardInfo();
+  if (card.name.length < 2) return 'Please enter the name on the card.';
   if (card.number.length < 15) return 'Please enter a valid credit card number.';
   if (!/^\d{2}\/\d{2}$/.test(card.exp)) return 'Please enter expiration as MM/YY.';
-  if (card.cvc.length < 3) return 'Please enter the card security code.';
+  if (card.cvc.length < 3) return 'Please enter the card security code (CVC).';
   if (card.zip.length < 5) return 'Please enter your billing zip code.';
   return '';
 }
 
-function goToStep(n) {
-  if (n === 2 && !validateStep1()) return;
-  if (n === 3 && !validateStep2()) return;
-  if (n === 3) {
-    saveStep1();
-    buildReview();
-  }
+function validateStripeCardFields() {
+  const name = document.getElementById('card-name')?.value.trim() || '';
+  const zip = document.getElementById('card-zip-stripe')?.value.trim() || '';
+  if (name.length < 2) return 'Please enter the name on the card.';
+  if (zip.length < 5) return 'Please enter your billing zip code.';
+  return '';
+}
 
+function showStep(n) {
   currentStep = n;
   document.querySelectorAll('.step-page').forEach(p => p.classList.remove('active'));
-  document.getElementById(`step-${n}`).classList.add('active');
+  const page = document.getElementById(`step-${n}`);
+  if (page) page.classList.add('active');
 
   for (let i = 1; i <= 3; i++) {
     const el = document.getElementById(`prog-${i}`);
+    if (!el) continue;
     el.classList.remove('active', 'done');
     if (i < n) el.classList.add('done');
     else if (i === n) el.classList.add('active');
   }
+}
 
-  if (n === 3) mountCardElement();
+function goToStep(n) {
+  // Step 1 = weekly menu, Step 2 = resident info, Step 3 = review & pay
+  if (n > currentStep) {
+    if (n >= 2 && !validateMealsStep()) {
+      showStep(1);
+      notifyFormIssue(
+        'Select at least one meal from this week&rsquo;s menu, then try Continue again.',
+        '#step1-meals-error'
+      );
+      return;
+    }
+    if (n >= 3 && !validateInfoStep()) {
+      showStep(2);
+      notifyFormIssue(
+        'Enter the resident&rsquo;s first and last name, then try Review &amp; Pay again.',
+        '#r-first'
+      );
+      return;
+    }
+  }
+
+  clearFormIssue();
+  showStep(n);
+
+  if (n === 3) {
+    saveStep1();
+    buildReview();
+    mountCardElement();
+  }
+  if (n === 1) renderDayNav();
 
   document.getElementById('page-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
   renderSummary();
 }
 
 function mountCardElement() {
-  if (!cardElement || cardMounted) return;
-  if (!document.getElementById('card-element')) return;
-  cardElement.mount('#card-element');
+  if (!cardNumberEl || cardMounted) return;
+  if (!document.getElementById('card-number-element')) return;
+  cardNumberEl.mount('#card-number-element');
+  cardExpiryEl.mount('#card-expiry-element');
+  cardCvcEl.mount('#card-cvc-element');
   cardMounted = true;
 }
 
@@ -2152,29 +2607,28 @@ function saveContactInfo() {
   };
 }
 
-function validateStep1() {
-  saveStep1();
-  const err = document.getElementById('step1-error');
-  const firstField = document.getElementById('r-first')?.closest('.field');
-  const lastField = document.getElementById('r-last')?.closest('.field');
-  const valid = residentInfo.first && residentInfo.last;
-  err.classList.toggle('show', !valid);
-  firstField?.classList.toggle('invalid', !residentInfo.first);
-  lastField?.classList.toggle('invalid', !residentInfo.last);
-  if (!valid) document.getElementById('r-first').focus();
-  return valid;
-}
-
-function validateStep2() {
-  const err = document.getElementById('step2-error');
+function validateMealsStep() {
+  const err = document.getElementById('step1-meals-error');
   const { itemCount } = computeTotals();
   const valid = itemCount > 0;
   err?.classList.toggle('show', !valid);
-  if (!valid) {
-    err?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
   return valid;
 }
+
+function validateInfoStep() {
+  saveStep1();
+  const err = document.getElementById('step2-info-error');
+  const firstField = document.getElementById('r-first')?.closest('.field');
+  const lastField = document.getElementById('r-last')?.closest('.field');
+  const valid = !!(residentInfo.first && residentInfo.last);
+  err?.classList.toggle('show', !valid);
+  firstField?.classList.toggle('invalid', !residentInfo.first);
+  lastField?.classList.toggle('invalid', !residentInfo.last);
+  return valid;
+}
+
+function validateStep1() { return validateInfoStep(); }
+function validateStep2() { return validateMealsStep(); }
 
 function validateContactInfo() {
   saveContactInfo();
@@ -2197,7 +2651,7 @@ function buildReview() {
     </div>
     <div style="margin-bottom:14px;">
       <div class="eyebrow" style="margin-bottom:6px;">Week</div>
-      <strong>${ORDER_WEEK.label}</strong> · ${ORDER_WEEK.dates}
+      <strong>${ORDER_WEEK.label}</strong><br>${ORDER_WEEK.dates}
     </div>
     ${residentInfo.allergies ? `<div class="notice" style="margin-bottom:14px;"><strong>Allergies:</strong> ${residentInfo.allergies}</div>` : ''}
     ${residentInfo.requests ? `<div class="notice" style="margin-bottom:14px;"><strong>Special requests:</strong> ${residentInfo.requests}</div>` : ''}
@@ -2231,23 +2685,29 @@ async function submitPayment() {
   const { total, itemCount } = computeTotals();
   const errEl = document.getElementById('step3-error');
   errEl.classList.remove('show');
+  clearFormIssue();
 
   if (!validateContactInfo()) {
-    errEl.textContent = 'Please fill in all payment contact fields (name, email, and phone).';
+    const msg = 'Fill in all payment contact fields (first name, last name, email, and phone).';
+    errEl.textContent = msg;
     errEl.classList.add('show');
-    document.getElementById('c-first').focus();
+    notifyFormIssue(msg, '#c-first');
     return;
   }
 
   if (orderLocked) {
-    errEl.textContent = 'Orders for this week are closed. The cutoff was ' + ORDER_WEEK.cutoffLabel + '.';
+    const msg = 'Orders for this week are closed. The cutoff was ' + ORDER_WEEK.cutoffLabel + '.';
+    errEl.textContent = msg;
     errEl.classList.add('show');
+    notifyFormIssue(msg);
     return;
   }
 
   if (total < 0.5) {
-    errEl.textContent = 'Please select at least one meal before paying.';
+    const msg = 'Select at least one meal before paying.';
+    errEl.textContent = msg;
     errEl.classList.add('show');
+    notifyFormIssue(msg);
     return;
   }
 
@@ -2256,7 +2716,15 @@ async function submitPayment() {
     if (cardErr) {
       errEl.textContent = cardErr;
       errEl.classList.add('show');
-      document.getElementById('card-number')?.focus();
+      notifyFormIssue(cardErr, '#card-name-manual');
+      return;
+    }
+  } else {
+    const cardErr = validateStripeCardFields();
+    if (cardErr) {
+      errEl.textContent = cardErr;
+      errEl.classList.add('show');
+      notifyFormIssue(cardErr, '#card-name');
       return;
     }
   }
@@ -2274,7 +2742,7 @@ async function submitPayment() {
     enjoy: document.getElementById('raffle-enjoy').value.trim(),
   };
 
-  if (!paymentsEnabled || !stripe || !cardElement) {
+  if (!paymentsEnabled || !stripe || !cardNumberEl) {
     await delay(1500);
     const card = getManualCardInfo();
     showSuccess({
@@ -2295,6 +2763,7 @@ async function submitPayment() {
           source: 'hatch-village-orders',
           order_type: 'village-dinner',
           week: ORDER_WEEK.label,
+          menu_set: selectedMenuSet === 'A' ? 'Menu 1' : 'Menu 2',
           resident_name: `${residentInfo.first} ${residentInfo.last}`,
           customer_name: `${contactInfo.first} ${contactInfo.last}`,
           customer_email: contactInfo.email,
@@ -2311,30 +2780,39 @@ async function submitPayment() {
     if (!intentRes.ok) throw new Error('Could not create payment session. Please try again.');
     const { clientSecret } = await intentRes.json();
 
+    const cardholderName = document.getElementById('card-name')?.value.trim()
+      || `${contactInfo.first} ${contactInfo.last}`;
+    const postal = document.getElementById('card-zip-stripe')?.value.trim() || '';
+
     const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
       payment_method: {
-        card: cardElement,
+        card: cardNumberEl,
         billing_details: {
-          name: `${contactInfo.first} ${contactInfo.last}`,
+          name: cardholderName,
           email: contactInfo.email,
           phone: contactInfo.phone,
+          address: { postal_code: postal },
         },
       },
     });
 
     if (error) {
       document.getElementById('card-error').textContent = error.message;
+      notifyFormIssue(error.message, '#card-number-element');
       payBtn.disabled = false;
       payText.style.display = '';
       paySpinner.style.display = 'none';
       return;
     }
 
+    clearFormIssue();
     await notifyOwnerOfOrder(paymentIntent);
     showSuccess(paymentIntent);
   } catch (err) {
-    errEl.textContent = err.message || 'Payment failed. Please try again.';
+    const msg = err.message || 'Payment failed. Please try again.';
+    errEl.textContent = msg;
     errEl.classList.add('show');
+    notifyFormIssue(msg);
     payBtn.disabled = false;
     payText.style.display = '';
     paySpinner.style.display = 'none';

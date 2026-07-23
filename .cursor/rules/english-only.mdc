@@ -1,0 +1,15 @@
+---
+description: This project uses English only for all content and communication.
+alwaysApply: true
+---
+
+# English only
+
+This project uses English only.
+
+- Site copy, UI text, meta tags, and schema markup: English
+- Code comments and documentation: English
+- Commit messages and PR descriptions: English
+- AI responses and notes about this project: English
+
+Do not add German or other non-English text to the codebase unless the user explicitly requests a translation or localized variant.
