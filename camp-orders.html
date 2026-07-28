@@ -1055,6 +1055,28 @@ input, select, textarea { font: inherit; }
 .access-error.show {
   display: block;
 }
+.access-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--ink-soft);
+  font-size: 1.15rem;
+  line-height: 1;
+  transition: background .15s, color .15s;
+}
+.access-close:hover {
+  background: rgba(18,17,16,.07);
+  color: var(--ink);
+}
 </style>
 </head>
 <body>
@@ -1062,6 +1084,7 @@ input, select, textarea { font: inherit; }
 <!-- Access Code Modal Overlay -->
 <div class="access-overlay" id="access-overlay" hidden>
   <div class="access-card">
+    <button class="access-close" onclick="dismissAccessOverlay()" aria-label="Close and go back" title="Go back">&times;</button>
     <div class="access-icon-wrap">🔒</div>
     <h2 class="access-title">Private Order Access</h2>
     <p class="access-sub">Please enter your special access code to view the menu and place your order.</p>
@@ -1615,6 +1638,14 @@ let stripe, cardNumberEl, cardExpiryEl, cardCvcEl, cardMounted = false;
 
 const REQUIRED_ACCESS_CODE = 'HATCH2026';
 const ACCESS_STORAGE_KEY = 'hatch_access_granted';
+
+function dismissAccessOverlay() {
+  if (document.referrer && document.referrer !== window.location.href) {
+    history.back();
+  } else {
+    window.location.href = 'index.html';
+  }
+}
 
 function checkAccessGate() {
   const overlay = document.getElementById('access-overlay');
