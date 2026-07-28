@@ -1967,7 +1967,7 @@ const MEAL_IMAGES = {
   sandwich:   'images/menu/pulled-bbq-chicken-sandwich-982479d4114a.jpg',
   rotisserie: 'images/menu/1-4-chicken-leg-thigh-meal-78bb278aed10.jpg',
   soup:       'images/menu/chicken-noodle-soup-16-oz-cold-grab-n-go-ec6fa81a4761.jpg',
-  taco:       'images/menu/steak-veggie-wrap-88f4215236f3.jpg',
+  taco:       'images/menu/steak-tacos.webp',
   burger:     'images/menu/prime-smoked-burger-1-2-lb-86b425df86c9.jpg',
   breakfastBurrito: 'images/menu/classic-breakfast-wrap-5b69359f1092.jpg',
   ebcWrap:    'images/menu/bacon-egg-cheese-bec-wrap-5acf85fb471c.jpg',
@@ -1997,7 +1997,7 @@ function resolveMealImage(name) {
   if (n.includes('caesar')) return MEAL_IMAGES.caesar;
   if (n.includes('smoked burger')) return MEAL_IMAGES.burger;
   if (n.includes('breakfast burrito')) return MEAL_IMAGES.breakfastBurrito;
-  if (n.includes('steak taco')) return MEAL_IMAGES.taco;
+  if (n.includes('steak taco') || n.includes('taco')) return MEAL_IMAGES.taco;
   if (n.includes('ebc wrap')) return MEAL_IMAGES.ebcWrap;
   if (n.includes('bbq chicken and rice') || n.includes('rice bowl')) return MEAL_IMAGES.bowl;
   if (n.includes('pulled bbq') && n.includes('sandwich')) return MEAL_IMAGES.sandwich;
