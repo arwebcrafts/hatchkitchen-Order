@@ -939,30 +939,24 @@ input, select, textarea { font: inherit; }
 
 /* ---- Access Code Gate Modal Overlay ---- */
 .access-overlay {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  z-index: 999999 !important;
-  background: rgba(18,17,16,.92) !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999999;
+  background: rgba(18,17,16,.92);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
-  opacity: 1;
-  visibility: visible;
-  transition: opacity .3s ease, visibility .3s ease;
 }
-.access-overlay.unlocked {
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
+.access-overlay[hidden] {
+  display: none;
 }
 .access-card {
   background: var(--paper);
@@ -1066,17 +1060,17 @@ input, select, textarea { font: inherit; }
 <body>
 
 <!-- Access Code Modal Overlay -->
-<div class="access-overlay" id="access-overlay">
+<div class="access-overlay" id="access-overlay" hidden>
   <div class="access-card">
     <div class="access-icon-wrap">🔒</div>
     <h2 class="access-title">Private Order Access</h2>
     <p class="access-sub">Please enter your special access code to view the menu and place your order.</p>
-    <form class="access-form" id="access-form" onsubmit="handleAccessSubmit(event)">
+    <form class="access-form" id="access-form" onsubmit="handleAccessSubmit(event); return false;">
       <div class="access-input-wrap">
         <input type="text" id="access-code-input" class="access-input" placeholder="ENTER ACCESS CODE" autocomplete="off" spellcheck="false" required>
       </div>
-      <div class="access-error" id="access-error">Invalid access code. Please try again.</div>
-      <button type="submit" class="access-btn">Unlock Menu & Order →</button>
+      <div class="access-error" id="access-error"></div>
+      <button type="submit" class="access-btn">Unlock Menu &amp; Order →</button>
     </form>
   </div>
 </div>
@@ -1627,14 +1621,12 @@ function checkAccessGate() {
   if (!overlay) return;
   const isGranted = sessionStorage.getItem(ACCESS_STORAGE_KEY) === 'true';
   if (isGranted) {
-    overlay.classList.add('unlocked');
-    overlay.style.display = 'none';
+    overlay.hidden = true;
   } else {
-    overlay.classList.remove('unlocked');
-    overlay.style.display = 'flex';
+    overlay.hidden = false;
     setTimeout(() => {
       document.getElementById('access-code-input')?.focus();
-    }, 100);
+    }, 120);
   }
 }
 
@@ -1643,22 +1635,19 @@ function handleAccessSubmit(e) {
   const input = document.getElementById('access-code-input');
   const errEl = document.getElementById('access-error');
   if (!input) return false;
-  const enteredCode = input.value.trim().toUpperCase();
-  if (enteredCode === REQUIRED_ACCESS_CODE.toUpperCase()) {
+  const entered = input.value.trim().toUpperCase();
+  if (entered === REQUIRED_ACCESS_CODE) {
     sessionStorage.setItem(ACCESS_STORAGE_KEY, 'true');
     const overlay = document.getElementById('access-overlay');
-    if (overlay) {
-      overlay.classList.add('unlocked');
-      overlay.style.display = 'none';
-    }
-    if (errEl) errEl.classList.remove('show');
+    if (overlay) overlay.hidden = true;
+    if (errEl) { errEl.textContent = ''; errEl.classList.remove('show'); }
   } else {
     if (errEl) {
-      errEl.textContent = 'Incorrect access code. Please check and try again.';
+      errEl.textContent = 'Incorrect access code — please try again.';
       errEl.classList.add('show');
     }
-    input.focus();
     input.select();
+    input.focus();
   }
   return false;
 }
