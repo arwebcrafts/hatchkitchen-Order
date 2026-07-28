@@ -935,15 +935,143 @@ input, select, textarea { font: inherit; }
   .meal-img-col img { width: 56px; height: 52px; }
   .summary-total-amt { font-size: 1.8rem; }
   .prog-step { font-size: .62rem; padding: 9px 4px; }
+/* ---- Access Code Gate Modal ---- */
+.access-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(18,17,16,.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .3s ease, visibility .3s ease;
 }
-@media (max-width: 420px) {
-  .form-grid { grid-template-columns: 1fr; }
-  .meal-img-col { display: none; }
-  .prog-step { font-size: .58rem; }
+.access-overlay.unlocked {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.access-card {
+  background: var(--paper);
+  border: 1.5px solid var(--gold-dark);
+  border-radius: var(--radius-xl);
+  padding: 36px 32px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0,0,0,.6);
+  position: relative;
+  transform: translateY(0);
+  transition: transform .3s ease;
+}
+.access-overlay.unlocked .access-card {
+  transform: translateY(-20px);
+}
+.access-icon-wrap {
+  width: 56px;
+  height: 56px;
+  background: var(--ink);
+  color: var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin: 0 auto 18px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.2);
+}
+.access-title {
+  font-family: var(--f-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.access-sub {
+  font-size: .88rem;
+  color: var(--ink-soft);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+.access-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.access-input-wrap {
+  position: relative;
+}
+.access-input {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  font-size: 1.05rem;
+  letter-spacing: .08em;
+  text-align: center;
+  font-weight: 700;
+  text-transform: uppercase;
+  outline: none;
+  background: #fff;
+  transition: border-color .15s, box-shadow .15s;
+}
+.access-input:focus {
+  border-color: var(--gold-dark);
+  box-shadow: 0 0 0 4px rgba(200,148,31,.2);
+}
+.access-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--ink);
+  color: var(--gold);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: .03em;
+  cursor: pointer;
+  transition: background .15s, transform .15s;
+}
+.access-btn:hover {
+  background: #252321;
+  transform: translateY(-1px);
+}
+.access-error {
+  color: var(--red-alert);
+  font-size: .82rem;
+  font-weight: 600;
+  min-height: 20px;
+  margin-top: 4px;
+  display: none;
+}
+.access-error.show {
+  display: block;
 }
 </style>
 </head>
 <body>
+
+<!-- Access Code Modal Overlay -->
+<div class="access-overlay" id="access-overlay">
+  <div class="access-card">
+    <div class="access-icon-wrap">🔒</div>
+    <h2 class="access-title">Private Order Access</h2>
+    <p class="access-sub">Please enter your special access code to view the menu and place your order.</p>
+    <form class="access-form" id="access-form" onsubmit="handleAccessSubmit(event)">
+      <div class="access-input-wrap">
+        <input type="text" id="access-code-input" class="access-input" placeholder="ENTER ACCESS CODE" autocomplete="off" spellcheck="false" required>
+      </div>
+      <div class="access-error" id="access-error">Invalid access code. Please try again.</div>
+      <button type="submit" class="access-btn">Unlock Menu & Order →</button>
+    </form>
+  </div>
+</div>
 
 <!-- Top bar -->
 <div class="topbar">
@@ -1483,10 +1611,49 @@ let parentInfo = {};
 let currentStep = 1;
 let stripe, cardNumberEl, cardExpiryEl, cardCvcEl, cardMounted = false;
 
+const REQUIRED_ACCESS_CODE = 'HATCH2026';
+const ACCESS_STORAGE_KEY = 'hatch_access_granted';
+
+function checkAccessGate() {
+  const overlay = document.getElementById('access-overlay');
+  if (!overlay) return;
+  const isGranted = sessionStorage.getItem(ACCESS_STORAGE_KEY) === 'true';
+  if (isGranted) {
+    overlay.classList.add('unlocked');
+  } else {
+    overlay.classList.remove('unlocked');
+    setTimeout(() => {
+      document.getElementById('access-code-input')?.focus();
+    }, 100);
+  }
+}
+
+function handleAccessSubmit(e) {
+  e.preventDefault();
+  const input = document.getElementById('access-code-input');
+  const errEl = document.getElementById('access-error');
+  if (!input) return;
+  const enteredCode = input.value.trim().toUpperCase();
+  if (enteredCode === REQUIRED_ACCESS_CODE.toUpperCase()) {
+    sessionStorage.setItem(ACCESS_STORAGE_KEY, 'true');
+    const overlay = document.getElementById('access-overlay');
+    if (overlay) overlay.classList.add('unlocked');
+    if (errEl) errEl.classList.remove('show');
+  } else {
+    if (errEl) {
+      errEl.textContent = 'Incorrect access code. Please check and try again.';
+      errEl.classList.add('show');
+    }
+    input.focus();
+    input.select();
+  }
+}
+
 // ---------------------------------------------------------------
 // INIT
 // ---------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
+  checkAccessGate();
   document.getElementById('footer-year').textContent = new Date().getFullYear();
 
   // Stripe init — mount when payment step is shown (hidden containers break Elements)
