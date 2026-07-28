@@ -2206,6 +2206,14 @@ function handleAccessSubmit(e) {
   return false;
 }
 
+function isOrderLocked() {
+  try {
+    return ORDER_WEEK.cutoffDate && new Date() > ORDER_WEEK.cutoffDate;
+  } catch (e) {
+    return false;
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   checkAccessGate();
   document.getElementById('footer-year').textContent = new Date().getFullYear();
