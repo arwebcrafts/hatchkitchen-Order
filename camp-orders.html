@@ -934,27 +934,35 @@ input, select, textarea { font: inherit; }
   .meal-img-col { width: 56px; }
   .meal-img-col img { width: 56px; height: 52px; }
   .summary-total-amt { font-size: 1.8rem; }
-  .prog-step { font-size: .62rem; padding: 9px 4px; }
-/* ---- Access Code Gate Modal ---- */
+  .prog-step { font-size: .58rem; }
+}
+
+/* ---- Access Code Gate Modal Overlay ---- */
 .access-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 10000;
-  background: rgba(18,17,16,.88);
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+  background: rgba(18,17,16,.92) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   padding: 20px;
   opacity: 1;
   visibility: visible;
   transition: opacity .3s ease, visibility .3s ease;
 }
 .access-overlay.unlocked {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 .access-card {
   background: var(--paper);
@@ -1620,8 +1628,10 @@ function checkAccessGate() {
   const isGranted = sessionStorage.getItem(ACCESS_STORAGE_KEY) === 'true';
   if (isGranted) {
     overlay.classList.add('unlocked');
+    overlay.style.display = 'none';
   } else {
     overlay.classList.remove('unlocked');
+    overlay.style.display = 'flex';
     setTimeout(() => {
       document.getElementById('access-code-input')?.focus();
     }, 100);
@@ -1629,15 +1639,18 @@ function checkAccessGate() {
 }
 
 function handleAccessSubmit(e) {
-  e.preventDefault();
+  if (e) e.preventDefault();
   const input = document.getElementById('access-code-input');
   const errEl = document.getElementById('access-error');
-  if (!input) return;
+  if (!input) return false;
   const enteredCode = input.value.trim().toUpperCase();
   if (enteredCode === REQUIRED_ACCESS_CODE.toUpperCase()) {
     sessionStorage.setItem(ACCESS_STORAGE_KEY, 'true');
     const overlay = document.getElementById('access-overlay');
-    if (overlay) overlay.classList.add('unlocked');
+    if (overlay) {
+      overlay.classList.add('unlocked');
+      overlay.style.display = 'none';
+    }
     if (errEl) errEl.classList.remove('show');
   } else {
     if (errEl) {
@@ -1647,6 +1660,7 @@ function handleAccessSubmit(e) {
     input.focus();
     input.select();
   }
+  return false;
 }
 
 // ---------------------------------------------------------------

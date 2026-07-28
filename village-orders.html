@@ -1336,23 +1336,30 @@ input, select, textarea { font: inherit; }
   .meal-option-img { width: 56px; height: 56px; }
   .meal-option-name { font-size: .86rem; }
   .summary-total-amt { font-size: 1.8rem; }
-  .prog-step { font-size: .62rem; padding: 9px 4px; }
+  .prog-step { font-size: .58rem; }
 }
 @media (max-width: 420px) {
   .form-grid { grid-template-columns: 1fr; }
   .meal-img-col { display: none; }
   .meal-option-img { width: 48px; height: 48px; }
-/* ---- Access Code Gate Modal ---- */
+}
+
+/* ---- Access Code Gate Modal Overlay ---- */
 .access-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 10000;
-  background: rgba(18,17,16,.88);
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+  background: rgba(18,17,16,.92) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   padding: 20px;
   opacity: 1;
   visibility: visible;
@@ -2172,8 +2179,10 @@ function checkAccessGate() {
   const isGranted = sessionStorage.getItem(ACCESS_STORAGE_KEY) === 'true';
   if (isGranted) {
     overlay.classList.add('unlocked');
+    overlay.style.display = 'none';
   } else {
     overlay.classList.remove('unlocked');
+    overlay.style.display = 'flex';
     setTimeout(() => {
       document.getElementById('access-code-input')?.focus();
     }, 100);
@@ -2181,15 +2190,18 @@ function checkAccessGate() {
 }
 
 function handleAccessSubmit(e) {
-  e.preventDefault();
+  if (e) e.preventDefault();
   const input = document.getElementById('access-code-input');
   const errEl = document.getElementById('access-error');
-  if (!input) return;
+  if (!input) return false;
   const enteredCode = input.value.trim().toUpperCase();
   if (enteredCode === REQUIRED_ACCESS_CODE.toUpperCase()) {
     sessionStorage.setItem(ACCESS_STORAGE_KEY, 'true');
     const overlay = document.getElementById('access-overlay');
-    if (overlay) overlay.classList.add('unlocked');
+    if (overlay) {
+      overlay.classList.add('unlocked');
+      overlay.style.display = 'none';
+    }
     if (errEl) errEl.classList.remove('show');
   } else {
     if (errEl) {
@@ -2199,6 +2211,7 @@ function handleAccessSubmit(e) {
     input.focus();
     input.select();
   }
+  return false;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
