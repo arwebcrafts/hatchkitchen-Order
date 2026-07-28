@@ -1947,7 +1947,7 @@ const ORDER_WEEK = buildOrderWeekConfig(new Date('2026-07-27T00:00:00-07:00'), {
 });
 
 const MENU_SET_COPY = {
-  A: { label: 'Menu 1', detail: 'Mon: Steak Tacos · Thu: EBC Wrap' },
+  A: { label: 'Menu 1', detail: 'Mon: Steak Tacos · Thu: BEC Wrap' },
   B: { label: 'Menu 2', detail: 'Mon: Smoked Burger · Thu: Breakfast Burrito' },
 };
 
@@ -1964,14 +1964,16 @@ const MEAL_IMAGES = {
   quinoa:     'images/menu/veggie-quinoa-power-bowl-587890e05267.jpg',
   quesadilla: 'images/menu/cheesy-quesadilla-82ba34c4e5ee.jpg',
   wings:      'images/menu/bbq-chicken-wings-d57f0e049978.jpg',
-  sandwich:   'images/menu/pulled-bbq-chicken-sandwich-982479d4114a.jpg',
+  sandwich:   'images/menu/bbq-chicken-sandwich.png',
   rotisserie: 'images/menu/1-4-chicken-leg-thigh-meal-78bb278aed10.jpg',
   soup:       'images/menu/chicken-noodle-soup-16-oz-cold-grab-n-go-ec6fa81a4761.jpg',
   taco:       'images/menu/steak-tacos.webp',
-  burger:     'images/menu/prime-smoked-burger-1-2-lb-86b425df86c9.jpg',
+  burger:     'images/menu/smoked-burger.png',
   breakfastBurrito: 'images/menu/classic-breakfast-wrap-5b69359f1092.jpg',
-  ebcWrap:    'images/menu/bacon-egg-cheese-bec-wrap-5acf85fb471c.jpg',
-  brisket8oz: 'images/menu/pulled-bbq-brisket-8-oz-30f8652b271c.jpg',
+  becWrap:    'images/menu/bec-wrap.png',
+  ebcWrap:    'images/menu/bec-wrap.png',
+  burrito:    'images/menu/beans-rice-chicken-burrito.jpg',
+  brisket8oz: 'images/menu/smoked-brisket-shabbat.jpg',
   avocadoSalad: 'images/menu/hatch-chicken-salad-708c75ff249e.jpg',
   asianWrap:  'images/menu/asian-chicken-wrap-a21ea7bd0c13.jpg',
   swWrap:     'images/menu/asian-chicken-wrap-a21ea7bd0c13.jpg',
@@ -1982,8 +1984,8 @@ const MEAL_IMAGES = {
 function resolveMealImage(name) {
   const n = name.toLowerCase();
   if (n.includes('shabbat')) return MEAL_IMAGES.shabbat;
-  if (n.includes('chicken noodle soup')) return MEAL_IMAGES.soup;
-  if (n.includes('smoked brisket') || (n.includes('brisket') && n.includes('8 oz'))) return MEAL_IMAGES.brisket8oz;
+  if (n.includes('chicken noodle soup') || n.includes('soup')) return MEAL_IMAGES.soup;
+  if (n.includes('smoked brisket') || n.includes('brisket')) return MEAL_IMAGES.brisket8oz;
   if (n.includes('nugget') || n.includes('tater tot')) return MEAL_IMAGES.nuggets;
   if (n.includes('quesadilla')) return MEAL_IMAGES.quesadilla;
   if (n.includes('veggie quinoa') || n.includes('quinoa')) return MEAL_IMAGES.quinoa;
@@ -1995,17 +1997,17 @@ function resolveMealImage(name) {
   if (n.includes('southwest')) return MEAL_IMAGES.salad;
   if (n.includes('chicken caesar wrap') || (n.includes('caesar') && n.includes('wrap'))) return MEAL_IMAGES.caesarWrap;
   if (n.includes('caesar')) return MEAL_IMAGES.caesar;
-  if (n.includes('smoked burger')) return MEAL_IMAGES.burger;
+  if (n.includes('smoked burger') || n.includes('burger')) return MEAL_IMAGES.burger;
   if (n.includes('breakfast burrito')) return MEAL_IMAGES.breakfastBurrito;
   if (n.includes('steak taco') || n.includes('taco')) return MEAL_IMAGES.taco;
-  if (n.includes('ebc wrap')) return MEAL_IMAGES.ebcWrap;
+  if (n.includes('bec wrap') || n.includes('ebc wrap')) return MEAL_IMAGES.becWrap;
+  if (n.includes('beans and rice') || n.includes('chicken, beans')) return MEAL_IMAGES.burrito;
   if (n.includes('bbq chicken and rice') || n.includes('rice bowl')) return MEAL_IMAGES.bowl;
-  if (n.includes('pulled bbq') && n.includes('sandwich')) return MEAL_IMAGES.sandwich;
+  if (n.includes('bbq chicken sandwich') || (n.includes('pulled bbq') && n.includes('sandwich'))) return MEAL_IMAGES.sandwich;
   if (n.includes('wing')) return MEAL_IMAGES.wings;
   if (n.includes('avocado wrap') || n.includes('burrito') || n.includes(' wrap')) return MEAL_IMAGES.wrap;
   if (n.includes('salad')) return MEAL_IMAGES.salad;
   if (n.includes('pasta') || n.includes('rotini')) return MEAL_IMAGES.pasta;
-  if (n.includes('brisket')) return MEAL_IMAGES.brisket8oz;
   if (n.includes('rotisserie') || n.includes('chicken leg') || n.includes('chicken breast') || n.includes('shredded chicken')) return MEAL_IMAGES.rotisserie;
   return MEAL_IMAGES.default;
 }
@@ -2016,7 +2018,7 @@ const MENU_VARIANTS = {
     B: { id: 'mon-5', name: 'Smoked Burger with rotisserie potato wedges', price: 18, image: MEAL_IMAGES.burger },
   },
   thursday: {
-    A: { id: 'thu-4', name: 'EBC Wrap', desc: 'Black beans, shredded carrot, romaine, tomato, avocado, crunchy noodles and creamy herb sauce on the side', price: 16, image: MEAL_IMAGES.ebcWrap },
+    A: { id: 'thu-4', name: 'BEC Wrap', desc: 'Black beans, shredded carrot, romaine, tomato, avocado, crunchy noodles and creamy herb sauce on the side', price: 16, image: MEAL_IMAGES.becWrap },
     B: { id: 'thu-4', name: 'Classic Breakfast Burrito with a side of tater tots', price: 14, image: MEAL_IMAGES.breakfastBurrito },
   },
 };
@@ -2082,7 +2084,7 @@ const MEAL_SECTIONS_TEMPLATE = [
       { id: 'thu-1', name: 'Shredded Chicken Breast and Rotini Pasta with steamed green beans', price: 13 },
       { id: 'thu-2', name: 'Thai Garden Salad', desc: 'Romaine, red cabbage, shredded carrot, cilantro, rice noodles and Thai peanut dressing', price: 16 },
       { id: 'thu-3', name: 'Chicken Nuggets and Tater Tots Meal', price: 14 },
-      { id: 'thu-4', name: 'EBC Wrap', desc: 'Black beans, shredded carrot, romaine, tomato, avocado, crunchy noodles and creamy herb sauce on the side', price: 16 },
+      { id: 'thu-4', name: 'BEC Wrap', desc: 'Black beans, shredded carrot, romaine, tomato, avocado, crunchy noodles and creamy herb sauce on the side', price: 16 },
       { id: 'thu-5', name: 'Pulled BBQ Chicken Sandwich with coleslaw and potato wedges', price: 18 },
       { id: 'thu-6', name: 'Cheddar Cheese Quesadilla', desc: 'Vegan cheddar cheese, black beans and coleslaw', price: 13 },
     ],
@@ -2105,7 +2107,7 @@ const MEAL_SECTIONS_TEMPLATE = [
       ],
     },
     addons: [
-      { id: 'shab-soup', name: 'Chicken Noodle Soup 16 oz', desc: '$14 extra', price: 14, requiresBase: true, image: MEAL_IMAGES.soup },
+      { id: 'shab-soup', name: 'Chicken Noodle Soup 16 oz', desc: '$14 (standalone or add-on)', price: 14, requiresBase: false, image: MEAL_IMAGES.soup },
       { id: 'shab-brisket', name: 'Swap Chicken for 8 oz Smoked Brisket with BBQ sauce', desc: '$12 extra', price: 12, requiresBase: true, image: MEAL_IMAGES.brisket8oz },
     ],
   },
@@ -2137,8 +2139,16 @@ function buildMealSections(menuSet) {
 let selectedMenuSet = 'A';
 let MEAL_SECTIONS = [];
 
+function getAutoMenuSet() {
+  const anchorDate = new Date('2026-07-27T00:00:00-07:00');
+  const now = new Date();
+  const diffDays = Math.floor((now - anchorDate) / (1000 * 60 * 60 * 24));
+  const diffWeeks = Math.floor(diffDays / 7);
+  return (diffWeeks % 2 === 0 || diffWeeks < 0) ? 'A' : 'B';
+}
+
 function initOrderWeekMenu() {
-  selectedMenuSet = 'A';
+  selectedMenuSet = getAutoMenuSet();
   MEAL_SECTIONS = buildMealSections(selectedMenuSet);
   openDaySections = new Set(MEAL_SECTIONS.map(s => s.id));
 }
@@ -2161,7 +2171,6 @@ function setSelectedMenuSet(set) {
 
 function enforceShabbatAddonRules() {
   if (!selections['shab-dinner']) {
-    delete selections['shab-soup'];
     delete selections['shab-brisket'];
   }
 }
@@ -2527,21 +2536,18 @@ function toggleItem(id) {
   const item = getItemById(id);
   if (!item) return;
 
-  if ((item.requiresBase || id === 'shab-soup' || id === 'shab-brisket') && !selections['shab-dinner']) {
-    notifyFormIssue('Select the Shabbat Dinner meal first before adding soup or brisket swap.', '#section-shabbat-dinner');
+  if (item.requiresBase && !selections['shab-dinner']) {
+    notifyFormIssue('Select the Shabbat Dinner meal first before adding the brisket swap.', '#section-shabbat-dinner');
     return;
   }
 
   if (selections[id]) {
     delete selections[id];
     if (id === 'shab-dinner') {
-      delete selections['shab-soup'];
       delete selections['shab-brisket'];
     }
   } else {
     selections[id] = true;
-    if (id === 'shab-brisket') delete selections['shab-soup'];
-    if (id === 'shab-soup') delete selections['shab-brisket'];
   }
 
   document.getElementById('step1-meals-error')?.classList.remove('show');
