@@ -940,8 +940,6 @@ input, select, textarea { font: inherit; }
   box-shadow: inset 3px 0 0 var(--gold);
 }
 .meal-option-row:hover { background: rgba(243,196,87,.06); }
-.meal-option-row.addon-muted { opacity: .55; }
-.meal-option-row.addon-muted:hover { opacity: .75; }
 .meal-option-row:focus-visible {
   outline: 2px solid var(--gold-dark);
   outline-offset: -2px;
@@ -1063,12 +1061,16 @@ input, select, textarea { font: inherit; }
   background: var(--paper);
   border-radius: var(--radius-sm);
   padding: 12px 14px;
-  font-family: var(--f-display);
-  font-weight: 700;
-  font-size: .95rem;
   color: var(--ink);
   cursor: pointer;
+  text-align: left;
   transition: border-color .15s, background .15s;
+}
+.menu-set-btn-label {
+  display: block;
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: .95rem;
 }
 .menu-set-btn:hover { border-color: var(--gold-dark); }
 .menu-set-btn.is-active {
@@ -1076,6 +1078,22 @@ input, select, textarea { font: inherit; }
   background: var(--sage-tint);
   color: var(--sage-dark);
 }
+.menu-set-btn-detail {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--f-body);
+  font-size: .72rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+.menu-set-btn.is-active .menu-set-btn-detail { color: var(--sage-dark); }
+.meal-option-row.addon-muted {
+  opacity: .55;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+.meal-option-row.addon-muted:hover { opacity: .55; }
 .panel-divider {
   border: none;
   border-top: 1px solid var(--line-soft);
@@ -1398,10 +1416,8 @@ input, select, textarea { font: inherit; }
         <div class="panel-title">This week&rsquo;s dinner menu</div>
         <p class="hint" style="margin-bottom:12px;">Browse and select meals for each day. Order only what you want &mdash; nothing is required. Pickup in the <strong>#303 refrigerator</strong>.</p>
         <div class="week-banner" id="week-banner"></div>
-        <div class="menu-set-toggle" id="menu-set-toggle">
-          <button type="button" class="menu-set-btn is-active" data-menu-set="A">Menu 1</button>
-          <button type="button" class="menu-set-btn" data-menu-set="B">Menu 2</button>
-        </div>
+        <div class="menu-set-toggle" id="menu-set-toggle" aria-label="Choose Menu 1 or Menu 2"></div>
+        <p class="hint" id="menu-set-hint" style="margin:10px 0 0; font-size:.82rem;"></p>
         <div class="village-menu-actions">
           <a class="btn btn-outline btn-sm" href="menu.html" target="_blank" rel="noopener">Full Hatch menu</a>
           <span class="hint" style="margin:0;">Same kitchen, same kosher standards.</span>
@@ -1452,7 +1468,7 @@ input, select, textarea { font: inherit; }
       <div class="panel">
         <div class="panel-title">Resident details</div>
         <div class="notice">
-          Tell us who this order is for. Orders close <strong>Thursday at 5:00pm</strong> for the following week.
+          Tell us who this order is for. Orders close <strong>Sunday at 5:00pm</strong> for the following week.
         </div>
         <div class="notice" style="background:var(--sage-tint); border-color:rgba(79,107,61,.3); color:var(--sage-dark);">
           <strong>Weekday pickup:</strong> Available in the <strong>#303 refrigerator by 3pm</strong>, Monday through Thursday.<br>
@@ -1759,12 +1775,23 @@ const paymentsEnabled = STRIPE_PK && !STRIPE_PK.includes('YOUR_');
 const STORAGE_KEY = 'hatch-village-order';
 
 // Update weekly — matches Google Form menu structure
-const ORDER_WEEK = {
+function buildOrderWeekConfig(weekStartDate, meta) {
+  const weekStart = new Date(weekStartDate);
+  const cutoff = new Date(weekStart);
+  cutoff.setHours(17, 0, 0, 0);
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const cutoffLabel = `Sunday ${monthNames[cutoff.getMonth()]} ${cutoff.getDate()} at 5:00pm`;
+  return { ...meta, weekStart, cutoffLabel, cutoffDate: cutoff };
+}
+
+const ORDER_WEEK = buildOrderWeekConfig(new Date('2026-07-27T00:00:00-07:00'), {
   label: 'July 27 – August 1',
   dates: 'Sunday July 27 through Friday August 1, 2026',
-  cutoffLabel: 'Thursday July 24 at 5:00pm',
-  cutoffDate: new Date('2026-07-24T17:00:00-07:00'),
-  weekStart: new Date('2026-07-27T00:00:00-07:00'),
+});
+
+const MENU_SET_COPY = {
+  A: { label: 'Menu 1', detail: 'Mon: Steak Tacos · Thu: EBC Wrap' },
+  B: { label: 'Menu 2', detail: 'Mon: Smoked Burger · Thu: Breakfast Burrito' },
 };
 
 const MEAL_IMAGES = {
@@ -1773,7 +1800,7 @@ const MEAL_IMAGES = {
   nuggets:    'images/menu/hatch-chicken-nuggets-6-pc-be40ed407135.jpg',
   wrap:       'images/menu/hatch-chicken-wrap-9a18edd093fa.jpg',
   salad:      'images/menu/southwest-chicken-salad-4c6c26d86cb2.jpg',
-  asian:      'images/menu/asian-chicken-salad-6fb655d95f2a.jpg',
+  asian:      'images/menu/asian-chicken-salad-ba2f88689ed8.jpg',
   caesar:     'images/menu/chicken-caesar-salad-708c75ff249e.jpg',
   caesarWrap: 'images/menu/chicken-caesar-wrap-1f8c550f0b82.jpg',
   thai:       'images/menu/thai-garden-salad-b9de37d4288d.jpg',
@@ -1786,7 +1813,8 @@ const MEAL_IMAGES = {
   taco:       'images/menu/steak-veggie-wrap-88f4215236f3.jpg',
   burger:     'images/menu/prime-smoked-burger-1-2-lb-86b425df86c9.jpg',
   breakfastBurrito: 'images/menu/classic-breakfast-wrap-5b69359f1092.jpg',
-  ebcWrap:    'images/menu/bacon-egg-cheese-bec-wrap-d56759551826.jpg',
+  ebcWrap:    'images/menu/bacon-egg-cheese-bec-wrap-5acf85fb471c.jpg',
+  brisket8oz: 'images/menu/pulled-bbq-brisket-8-oz-30f8652b271c.jpg',
   avocadoSalad: 'images/menu/hatch-chicken-salad-708c75ff249e.jpg',
   asianWrap:  'images/menu/asian-chicken-wrap-a21ea7bd0c13.jpg',
   swWrap:     'images/menu/asian-chicken-wrap-a21ea7bd0c13.jpg',
@@ -1797,6 +1825,8 @@ const MEAL_IMAGES = {
 function resolveMealImage(name) {
   const n = name.toLowerCase();
   if (n.includes('shabbat')) return MEAL_IMAGES.shabbat;
+  if (n.includes('chicken noodle soup')) return MEAL_IMAGES.soup;
+  if (n.includes('smoked brisket') || (n.includes('brisket') && n.includes('8 oz'))) return MEAL_IMAGES.brisket8oz;
   if (n.includes('nugget') || n.includes('tater tot')) return MEAL_IMAGES.nuggets;
   if (n.includes('quesadilla')) return MEAL_IMAGES.quesadilla;
   if (n.includes('veggie quinoa') || n.includes('quinoa')) return MEAL_IMAGES.quinoa;
@@ -1813,13 +1843,12 @@ function resolveMealImage(name) {
   if (n.includes('steak taco')) return MEAL_IMAGES.taco;
   if (n.includes('ebc wrap')) return MEAL_IMAGES.ebcWrap;
   if (n.includes('bbq chicken and rice') || n.includes('rice bowl')) return MEAL_IMAGES.bowl;
-  if (n.includes('pulled bbq') || n.includes('sandwich')) return MEAL_IMAGES.sandwich;
+  if (n.includes('pulled bbq') && n.includes('sandwich')) return MEAL_IMAGES.sandwich;
   if (n.includes('wing')) return MEAL_IMAGES.wings;
-  if (n.includes('soup')) return MEAL_IMAGES.soup;
-  if (n.includes('avocado wrap') || n.includes('burrito') || n.includes('wrap')) return MEAL_IMAGES.wrap;
+  if (n.includes('avocado wrap') || n.includes('burrito') || n.includes(' wrap')) return MEAL_IMAGES.wrap;
   if (n.includes('salad')) return MEAL_IMAGES.salad;
   if (n.includes('pasta') || n.includes('rotini')) return MEAL_IMAGES.pasta;
-  if (n.includes('brisket')) return MEAL_IMAGES.sandwich;
+  if (n.includes('brisket')) return MEAL_IMAGES.brisket8oz;
   if (n.includes('rotisserie') || n.includes('chicken leg') || n.includes('chicken breast') || n.includes('shredded chicken')) return MEAL_IMAGES.rotisserie;
   return MEAL_IMAGES.default;
 }
@@ -1827,11 +1856,11 @@ function resolveMealImage(name) {
 const MENU_VARIANTS = {
   monday: {
     A: { id: 'mon-5', name: 'Steak Tacos', desc: 'Lettuce, sauteed onions, black beans and coleslaw', price: 18 },
-    B: { id: 'mon-5', name: 'Smoked Burger with rotisserie potato wedges', price: 18 },
+    B: { id: 'mon-5', name: 'Smoked Burger with rotisserie potato wedges', price: 18, image: MEAL_IMAGES.burger },
   },
   thursday: {
-    A: { id: 'thu-4', name: 'EBC Wrap', desc: 'Black beans, shredded carrot, romaine, tomato, avocado, crunchy noodles and creamy herb sauce on the side', price: 16 },
-    B: { id: 'thu-4', name: 'Classic Breakfast Burrito with a side of tater tots', price: 14 },
+    A: { id: 'thu-4', name: 'EBC Wrap', desc: 'Black beans, shredded carrot, romaine, tomato, avocado, crunchy noodles and creamy herb sauce on the side', price: 16, image: MEAL_IMAGES.ebcWrap },
+    B: { id: 'thu-4', name: 'Classic Breakfast Burrito with a side of tater tots', price: 14, image: MEAL_IMAGES.breakfastBurrito },
   },
 };
 
@@ -1841,7 +1870,7 @@ const MEAL_SECTIONS_TEMPLATE = [
     title: 'Sunday Meals',
     subtitle: 'Choose one or more',
     options: [
-      { id: 'sun-1', name: 'Shredded Chicken Breast and Rotini Pasta with steamed veggie medley', price: 13 },
+      { id: 'sun-1', name: 'Shredded Chicken Breast and Rotini Pasta with steamed veggie medley', price: 1 }, // Set to $1 for Stripe testing (Normal price: 13)
       { id: 'sun-2', name: 'Veggie Quinoa Power Bowl', desc: 'Roasted veggie medley, chickpeas, avocado, coleslaw and tahini and basil dressing', price: 18 },
       { id: 'sun-3', name: 'Chicken Nuggets and Tater Tots Meal', price: 14 },
       { id: 'sun-4', name: 'Chicken Caesar Wrap', desc: 'Romaine lettuce, tomato, crunchy noodles and Caesar dressing on the side', price: 16 },
@@ -1919,8 +1948,8 @@ const MEAL_SECTIONS_TEMPLATE = [
       ],
     },
     addons: [
-      { id: 'shab-soup', name: 'Chicken Noodle Soup 16 oz', desc: '$14 extra', price: 14, requiresBase: true },
-      { id: 'shab-brisket', name: 'Swap Chicken for 8 oz Smoked Brisket with BBQ sauce', desc: '$12 extra', price: 12, requiresBase: true },
+      { id: 'shab-soup', name: 'Chicken Noodle Soup 16 oz', desc: '$14 extra', price: 14, requiresBase: true, image: MEAL_IMAGES.soup },
+      { id: 'shab-brisket', name: 'Swap Chicken for 8 oz Smoked Brisket with BBQ sauce', desc: '$12 extra', price: 12, requiresBase: true, image: MEAL_IMAGES.brisket8oz },
     ],
   },
   {
@@ -1928,7 +1957,7 @@ const MEAL_SECTIONS_TEMPLATE = [
     title: 'Shabbat Lunch Options',
     subtitle: 'Dropped off with dinner on Friday — store in fridge until ready',
     options: [
-      { id: 'sl-1', name: 'Asian Chicken Salad', desc: 'Romaine lettuce, cabbage mix, carrots, green onion, crunchy noodles and sesame dressing', price: 16 },
+      { id: 'sl-1', name: 'Asian Chicken Salad', desc: 'Romaine lettuce, cabbage mix, carrots, green onion, crunchy noodles and sesame dressing', price: 16, image: MEAL_IMAGES.asian },
       { id: 'sl-2', name: 'Chicken Avocado Salad', desc: 'Romaine, tomato, carrots, rotini pasta, crunchy noodles and creamy herb sauce on the side', price: 16 },
       { id: 'sl-3', name: 'Southwest Chicken Salad', desc: 'Romaine lettuce, tomatoes, black beans, green onion, avocado, crunchy noodles and Southwest dressing', price: 16 },
       { id: 'sl-4', name: 'Chicken Caesar Salad', desc: 'Romaine lettuce, house made sourdough croutons and Caesar dressing', price: 16 },
@@ -1961,7 +1990,6 @@ function setSelectedMenuSet(set) {
   if ((set !== 'A' && set !== 'B') || set === selectedMenuSet) return;
   selectedMenuSet = set;
   MEAL_SECTIONS = buildMealSections(selectedMenuSet);
-  // Clear Monday/Thursday picks when switching menus (same ids, different meals)
   delete selections['mon-5'];
   delete selections['thu-4'];
   renderMenuSetToggle();
@@ -1969,6 +1997,16 @@ function setSelectedMenuSet(set) {
   renderDayNav();
   renderSummary();
   persistState();
+  requestAnimationFrame(() => {
+    document.getElementById('section-monday')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
+
+function enforceShabbatAddonRules() {
+  if (!selections['shab-dinner']) {
+    delete selections['shab-soup'];
+    delete selections['shab-brisket'];
+  }
 }
 
 let selections = {};
@@ -2196,14 +2234,27 @@ function renderWeekBanner() {
 }
 
 function renderMenuSetToggle() {
-  document.querySelectorAll('#menu-set-toggle [data-menu-set]').forEach(btn => {
-    btn.classList.toggle('is-active', btn.dataset.menuSet === selectedMenuSet);
-  });
+  const wrap = document.getElementById('menu-set-toggle');
+  const hint = document.getElementById('menu-set-hint');
+  if (!wrap) return;
+  wrap.innerHTML = ['A', 'B'].map(set => {
+    const copy = MENU_SET_COPY[set];
+    return `<button type="button" class="menu-set-btn${selectedMenuSet === set ? ' is-active' : ''}" data-menu-set="${set}">
+      <span class="menu-set-btn-label">${copy.label}</span>
+      <span class="menu-set-btn-detail">${copy.detail}</span>
+    </button>`;
+  }).join('');
+  if (hint) {
+    hint.textContent = selectedMenuSet === 'A'
+      ? 'Showing Menu 1. Monday and Thursday options below match this menu.'
+      : 'Showing Menu 2. Monday and Thursday options below match this menu.';
+  }
 }
 
 function renderMealSections() {
   const container = document.getElementById('meal-sections');
   if (!container || !MEAL_SECTIONS.length) return;
+  enforceShabbatAddonRules();
   container.innerHTML = MEAL_SECTIONS.map(section => {
     if (section.type === 'shabbat-dinner') {
       const baseSel = !!selections[section.base.id];
@@ -2239,12 +2290,14 @@ function renderMealSections() {
 }
 
 function renderOptionRow(item, selected, needsBase) {
-  const img = resolveMealImage(item.name);
+  const img = item.image || resolveMealImage(item.name);
+  const blocked = needsBase || (item.requiresBase && !selections['shab-dinner']);
   return `
-    <div class="meal-option-row ${selected ? 'selected' : ''} ${needsBase ? 'addon-muted' : ''}"
-         data-meal-id="${item.id}"
+    <div class="meal-option-row ${selected ? 'selected' : ''} ${blocked ? 'addon-muted' : ''}"
+         data-meal-id="${blocked ? '' : item.id}"
          role="button"
-         tabindex="0"
+         tabindex="${blocked ? '-1' : '0'}"
+         aria-disabled="${blocked ? 'true' : 'false'}"
          aria-pressed="${selected ? 'true' : 'false'}">
       <div class="meal-option-check ${selected ? 'checked' : ''}"></div>
       <div class="meal-option-img">
@@ -2262,8 +2315,8 @@ function toggleItem(id) {
   const item = getItemById(id);
   if (!item) return;
 
-  if (item.requiresBase && !selections['shab-dinner']) {
-    alert('Please select the Shabbat Dinner meal first before adding extras.');
+  if ((item.requiresBase || id === 'shab-soup' || id === 'shab-brisket') && !selections['shab-dinner']) {
+    notifyFormIssue('Select the Shabbat Dinner meal first before adding soup or brisket swap.', '#section-shabbat-dinner');
     return;
   }
 
