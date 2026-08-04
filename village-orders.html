@@ -1298,6 +1298,88 @@ input, select, textarea { font: inherit; }
 .success-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 16px; }
 .success-actions .btn { flex: 1; min-width: 160px; }
 
+/* ---- FAQ / Terms panel ---- */
+.faq-panel {
+  max-width: 1100px;
+  margin: 48px auto 0;
+  padding: 0 24px 64px;
+}
+.faq-panel-title {
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.faq-panel-sub {
+  font-size: .88rem;
+  color: var(--ink-soft);
+  margin-bottom: 28px;
+}
+.faq-item {
+  border-bottom: 1px solid var(--line-soft);
+  overflow: hidden;
+}
+.faq-item:first-of-type { border-top: 1px solid var(--line-soft); }
+.faq-trigger {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 16px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  text-align: left;
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: .95rem;
+  color: var(--ink);
+  cursor: pointer;
+  transition: color .15s;
+}
+.faq-trigger:hover { color: var(--sage-dark); }
+.faq-trigger:focus-visible { outline: 2px solid var(--gold-dark); outline-offset: 2px; border-radius: 4px; }
+.faq-chevron {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--sage);
+  flex-shrink: 0;
+  transition: transform .2s ease, background .15s;
+}
+.faq-item.open .faq-chevron { transform: rotate(180deg); background: var(--sage-tint); }
+.faq-body {
+  display: none;
+  padding: 0 4px 18px;
+  font-size: .9rem;
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+.faq-item.open .faq-body { display: block; }
+.faq-body strong { color: var(--ink); }
+.faq-body ul { list-style: disc; padding-left: 1.4em; margin-top: 8px; }
+.faq-body ul li { margin-bottom: 5px; }
+.faq-divider-label {
+  font-family: var(--f-mono);
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  margin: 28px 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.faq-divider-label::before, .faq-divider-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line-soft);
+}
+
 /* ---- Footer ---- */
 .site-footer {
   background: var(--ink);
@@ -1573,8 +1655,6 @@ input, select, textarea { font: inherit; }
         <div class="panel-title">This week&rsquo;s dinner menu</div>
         <p class="hint" style="margin-bottom:12px;">Browse and select meals for each day. Order only what you want &mdash; nothing is required. Pickup in the <strong>#303 refrigerator</strong>.</p>
         <div class="week-banner" id="week-banner"></div>
-        <div class="menu-set-toggle" id="menu-set-toggle" aria-label="Choose Menu 1 or Menu 2"></div>
-        <p class="hint" id="menu-set-hint" style="margin:10px 0 0; font-size:.82rem;"></p>
         <div class="village-menu-actions">
           <a class="btn btn-outline btn-sm" href="menu.html" target="_blank" rel="noopener">Full Hatch menu</a>
           <span class="hint" style="margin:0;">Same kitchen, same kosher standards.</span>
@@ -1900,6 +1980,109 @@ input, select, textarea { font: inherit; }
 
 </div><!-- end page-wrap -->
 
+<!-- FAQ, Terms & Refund Policy -->
+<section class="faq-panel">
+  <p class="faq-divider-label">Order info &amp; policies</p>
+  <div class="faq-panel-title">Frequently Asked Questions</div>
+  <p class="faq-panel-sub">Everything you need to know about ordering, pickup, and our policies.</p>
+
+  <div class="faq-item">
+    <button class="faq-trigger" type="button" aria-expanded="false">
+      When will my meal be ready?
+      <span class="faq-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </button>
+    <div class="faq-body">
+      <strong>Weekday meals</strong> are available for pickup by <strong>3:00 PM Monday through Thursday</strong>.<br>
+      <strong>Shabbat &amp; weekend meals</strong> are available by <strong>2:00 PM on Friday</strong>.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-trigger" type="button" aria-expanded="false">
+      Where do I pick up my order?
+      <span class="faq-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </button>
+    <div class="faq-body">
+      All meals are placed in the <strong>#303 refrigerator</strong> inside The Village. Your order will be labeled with your name.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-trigger" type="button" aria-expanded="false">
+      What is the access code, and where do I get it?
+      <span class="faq-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </button>
+    <div class="faq-body">
+      Your access code is provided by The Village management. If you have lost it or never received it, please contact The Village office directly.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-trigger" type="button" aria-expanded="false">
+      Can I order for more than one person?
+      <span class="faq-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </button>
+    <div class="faq-body">
+      Each order is tied to one resident. To order for multiple people, please place a separate order for each resident.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-trigger" type="button" aria-expanded="false">
+      I have an allergy. Is the food safe for me?
+      <span class="faq-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </button>
+    <div class="faq-body">
+      Please list all allergies in the order form and we will do our best to accommodate. <strong>We cannot guarantee a fully allergen-free kitchen environment.</strong> If you have a severe or life-threatening allergy, please contact us directly before ordering: <a href="mailto:info@thehatchkitchen.com" style="color:var(--gold-dark);font-weight:700;">info@thehatchkitchen.com</a>.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-trigger" type="button" aria-expanded="false">
+      Is all the food kosher?
+      <span class="faq-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </button>
+    <div class="faq-body">
+      Yes. Every meal on this menu is prepared in our <strong>OK Kosher certified kitchen</strong> at 8947 W Pico Blvd, Los Angeles, CA 90035, United States.
+    </div>
+  </div>
+
+  <p class="faq-divider-label">Cancellations &amp; refunds</p>
+
+  <div class="faq-item">
+    <button class="faq-trigger" type="button" aria-expanded="false">
+      Can I cancel or change my order?
+      <span class="faq-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </button>
+    <div class="faq-body">
+      Orders may be cancelled for a <strong>full refund up to Sunday at 5:00 PM</strong> for the upcoming week's meals. After the Sunday cutoff, all orders are <strong>final and non-refundable</strong> as food preparation begins on Sunday night.
+      <br><br>
+      To request a cancellation before the cutoff, email <a href="mailto:info@thehatchkitchen.com" style="color:var(--gold-dark);font-weight:700;">info@thehatchkitchen.com</a> with your order details.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-trigger" type="button" aria-expanded="false">
+      What if there is a problem with my order?
+      <span class="faq-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </button>
+    <div class="faq-body">
+      If an item is missing, incorrect, or there is a quality concern, please contact us <strong>within 24 hours of your scheduled pickup</strong> at <a href="mailto:info@thehatchkitchen.com" style="color:var(--gold-dark);font-weight:700;">info@thehatchkitchen.com</a> or call <a href="tel:+14244553195" style="color:var(--gold-dark);font-weight:700;">(424) 455-3195</a>. We will make it right.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-trigger" type="button" aria-expanded="false">
+      How are payments processed? Is my card information secure?
+      <span class="faq-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></span>
+    </button>
+    <div class="faq-body">
+      All payments are processed securely through <strong>Stripe</strong>, a PCI-DSS Level 1 certified payment processor. Hatch Kitchen never stores your card details. Your transaction is encrypted end-to-end via SSL.
+    </div>
+  </div>
+
+</section>
+
 <!-- Footer -->
 <footer class="site-footer">
   <div class="footer-inner">
@@ -1945,11 +2128,6 @@ const ORDER_WEEK = buildOrderWeekConfig(new Date('2026-07-27T00:00:00-07:00'), {
   label: 'July 27 – August 1',
   dates: 'Sunday July 27 through Friday August 1, 2026',
 });
-
-const MENU_SET_COPY = {
-  A: { label: 'Menu 1', detail: 'Mon: Steak Tacos · Thu: BEC Wrap' },
-  B: { label: 'Menu 2', detail: 'Mon: Smoked Burger · Thu: Breakfast Burrito' },
-};
 
 const MEAL_IMAGES = {
   pasta:      'images/menu/kids-pasta-and-chicken-bowl-dd6e78d2f807.jpg',
@@ -2012,28 +2190,17 @@ function resolveMealImage(name) {
   return MEAL_IMAGES.default;
 }
 
-const MENU_VARIANTS = {
-  monday: {
-    A: { id: 'mon-5', name: 'Steak Tacos', desc: 'Lettuce, sauteed onions, black beans and coleslaw', price: 18 },
-    B: { id: 'mon-5', name: 'Smoked Burger with rotisserie potato wedges', price: 18, image: MEAL_IMAGES.burger },
-  },
-  thursday: {
-    A: { id: 'thu-4', name: 'BEC Wrap', desc: 'Black beans, shredded carrot, romaine, tomato, avocado, crunchy noodles and creamy herb sauce on the side', price: 16, image: MEAL_IMAGES.becWrap },
-    B: { id: 'thu-4', name: 'Classic Breakfast Burrito with a side of tater tots', price: 14, image: MEAL_IMAGES.breakfastBurrito },
-  },
-};
-
 const MEAL_SECTIONS_TEMPLATE = [
   {
     id: 'sunday',
     title: 'Sunday Meals',
     subtitle: 'Choose one or more',
     options: [
-      { id: 'sun-1', name: 'Shredded Chicken Breast and Rotini Pasta with steamed veggie medley', price: 13 },
-      { id: 'sun-2', name: 'Veggie Quinoa Power Bowl', desc: 'Roasted veggie medley, chickpeas, avocado, coleslaw and tahini and basil dressing', price: 16 },
-      { id: 'sun-3', name: 'Chicken Nuggets and Tater Tots Meal', price: 14 },
+      { id: 'sun-1', name: 'Shredded Chicken Breast and Rotini Pasta', desc: 'Slow-roasted chicken breast, rotini pasta and a steamed seasonal veggie medley', price: 13 },
+      { id: 'sun-2', name: 'Veggie Quinoa Power Bowl', desc: 'Roasted veggie medley, chickpeas, avocado, coleslaw and tahini-basil dressing', price: 16 },
+      { id: 'sun-3', name: 'Chicken Nuggets and Tater Tots Meal', desc: 'Crispy chicken nuggets, golden tater tots and a dipping sauce', price: 14 },
       { id: 'sun-4', name: 'Chicken Caesar Wrap', desc: 'Romaine lettuce, tomato, crunchy noodles and Caesar dressing on the side', price: 16 },
-      { id: 'sun-5', name: 'BBQ Chicken and Rice Bowl', desc: 'Black beans, sauteed onions, coleslaw and green onion', price: 16 },
+      { id: 'sun-5', name: 'BBQ Chicken and Rice Bowl', desc: 'Pulled BBQ chicken over jasmine rice with black beans, sautéed onions, coleslaw and green onion', price: 16 },
       { id: 'sun-6', name: 'Cheddar Cheese Quesadilla', desc: 'Vegan cheddar cheese, black beans and coleslaw', price: 13 },
     ],
   },
@@ -2042,12 +2209,12 @@ const MEAL_SECTIONS_TEMPLATE = [
     title: 'Monday Meals',
     subtitle: 'Choose one or more',
     options: [
-      { id: 'mon-1', name: 'Rotisserie Chicken Breast with rice and sauteed cauliflower', price: 16 },
+      { id: 'mon-1', name: 'Rotisserie Chicken Breast', desc: 'Slow-turned rotisserie chicken breast with jasmine rice and sautéed cauliflower', price: 16 },
       { id: 'mon-2', name: 'Southwest Chicken Salad', desc: 'Romaine lettuce, tomatoes, black beans, green onion, avocado, crunchy noodles and Southwest dressing', price: 16 },
-      { id: 'mon-3', name: 'Chicken Nuggets and Tater Tots Meal', price: 14 },
-      { id: 'mon-4', name: 'BBQ Chicken Wings with rotisserie potatoes and ranch dipping sauce', price: 16 },
-      { id: 'mon-5', name: 'Steak Tacos', desc: 'Lettuce, sauteed onions, black beans and coleslaw', price: 18 },
-      { id: 'mon-6', name: 'Chicken, Beans and Rice Burrito with side coleslaw', price: 15 },
+      { id: 'mon-3', name: 'Chicken Nuggets and Tater Tots Meal', desc: 'Crispy chicken nuggets, golden tater tots and a dipping sauce', price: 14 },
+      { id: 'mon-4', name: 'BBQ Chicken Wings', desc: 'Sauced BBQ chicken wings with rotisserie potato wedges and ranch dipping sauce', price: 16 },
+      { id: 'mon-5', name: 'Steak Tacos', desc: 'Grilled steak, lettuce, sautéed onions, black beans and coleslaw', price: 18, image: MEAL_IMAGES.taco },
+      { id: 'mon-6', name: 'Chicken, Beans and Rice Burrito', desc: 'Flour tortilla stuffed with rotisserie chicken, black beans, jasmine rice and side coleslaw', price: 15 },
     ],
   },
   {
@@ -2055,11 +2222,11 @@ const MEAL_SECTIONS_TEMPLATE = [
     title: 'Tuesday Meals',
     subtitle: 'Choose one or more',
     options: [
-      { id: 'tue-1', name: 'Rotisserie Chicken Leg and Thigh with rice and steamed green beans', price: 16 },
+      { id: 'tue-1', name: 'Rotisserie Chicken Leg and Thigh', desc: 'Slow-turned rotisserie chicken leg and thigh with jasmine rice and steamed green beans', price: 16 },
       { id: 'tue-2', name: 'Asian Chicken Salad', desc: 'Romaine lettuce, cabbage mix, carrots, green onion, crunchy noodles and sesame dressing', price: 16 },
-      { id: 'tue-3', name: 'Chicken Caesar Salad', desc: 'Romaine lettuce, house made sourdough croutons and Caesar dressing', price: 16 },
+      { id: 'tue-3', name: 'Chicken Caesar Salad', desc: 'Romaine lettuce, house-made sourdough croutons, Caesar dressing and shaved chicken breast', price: 16 },
       { id: 'tue-4', name: 'Cheddar Cheese Quesadilla', desc: 'Vegan cheddar cheese, black beans and coleslaw on the side', price: 13 },
-      { id: 'tue-5', name: 'Chicken Nuggets and Tater Tots Meal', price: 14 },
+      { id: 'tue-5', name: 'Chicken Nuggets and Tater Tots Meal', desc: 'Crispy chicken nuggets, golden tater tots and a dipping sauce', price: 14 },
       { id: 'tue-6', name: 'Chicken Avocado Wrap', desc: 'Romaine, tomato, carrots, crunchy noodles and creamy herb sauce on the side', price: 16 },
     ],
   },
@@ -2068,11 +2235,11 @@ const MEAL_SECTIONS_TEMPLATE = [
     title: 'Wednesday Meals',
     subtitle: 'Choose one or more',
     options: [
-      { id: 'wed-1', name: 'Shredded Chicken Breast and Rotini Pasta with steamed veggie medley', price: 13 },
-      { id: 'wed-2', name: 'Veggie Quinoa Power Bowl', desc: 'Roasted veggie medley, chickpeas, avocado, coleslaw and tahini and basil dressing', price: 16 },
-      { id: 'wed-3', name: 'Chicken Nuggets and Tater Tots Meal', price: 14 },
+      { id: 'wed-1', name: 'Shredded Chicken Breast and Rotini Pasta', desc: 'Slow-roasted chicken breast, rotini pasta and a steamed seasonal veggie medley', price: 13 },
+      { id: 'wed-2', name: 'Veggie Quinoa Power Bowl', desc: 'Roasted veggie medley, chickpeas, avocado, coleslaw and tahini-basil dressing', price: 16 },
+      { id: 'wed-3', name: 'Chicken Nuggets and Tater Tots Meal', desc: 'Crispy chicken nuggets, golden tater tots and a dipping sauce', price: 14 },
       { id: 'wed-4', name: 'Chicken Caesar Wrap', desc: 'Romaine lettuce, tomato, crunchy noodles and Caesar dressing on the side', price: 16 },
-      { id: 'wed-5', name: 'BBQ Chicken and Rice Bowl', desc: 'Black beans, sauteed onions, coleslaw and green onion', price: 16 },
+      { id: 'wed-5', name: 'BBQ Chicken and Rice Bowl', desc: 'Pulled BBQ chicken over jasmine rice with black beans, sautéed onions, coleslaw and green onion', price: 16 },
       { id: 'wed-6', name: 'Cheddar Cheese Quesadilla', desc: 'Vegan cheddar cheese, black beans and coleslaw', price: 13 },
     ],
   },
@@ -2081,11 +2248,11 @@ const MEAL_SECTIONS_TEMPLATE = [
     title: 'Thursday Meals',
     subtitle: 'Choose one or more',
     options: [
-      { id: 'thu-1', name: 'Shredded Chicken Breast and Rotini Pasta with steamed green beans', price: 13 },
+      { id: 'thu-1', name: 'Shredded Chicken Breast and Rotini Pasta', desc: 'Slow-roasted chicken breast, rotini pasta and steamed green beans', price: 13 },
       { id: 'thu-2', name: 'Thai Garden Salad', desc: 'Romaine, red cabbage, shredded carrot, cilantro, rice noodles and Thai peanut dressing', price: 16 },
-      { id: 'thu-3', name: 'Chicken Nuggets and Tater Tots Meal', price: 14 },
-      { id: 'thu-4', name: 'BEC Wrap', desc: 'Black beans, shredded carrot, romaine, tomato, avocado, crunchy noodles and creamy herb sauce on the side', price: 16 },
-      { id: 'thu-5', name: 'Pulled BBQ Chicken Sandwich with coleslaw and potato wedges', price: 18 },
+      { id: 'thu-3', name: 'Chicken Nuggets and Tater Tots Meal', desc: 'Crispy chicken nuggets, golden tater tots and a dipping sauce', price: 14 },
+      { id: 'thu-4', name: 'BEC Wrap', desc: 'Black beans, shredded carrot, romaine, tomato, avocado, crunchy noodles and creamy herb sauce on the side', price: 16, image: MEAL_IMAGES.becWrap },
+      { id: 'thu-5', name: 'Pulled BBQ Chicken Sandwich', desc: 'Saucy pulled BBQ chicken on a brioche bun with coleslaw and rotisserie potato wedges', price: 18 },
       { id: 'thu-6', name: 'Cheddar Cheese Quesadilla', desc: 'Vegan cheddar cheese, black beans and coleslaw', price: 13 },
     ],
   },
@@ -2100,74 +2267,45 @@ const MEAL_SECTIONS_TEMPLATE = [
       price: 28,
       includes: [
         '1× Individual Challah Roll (included)',
-        '1× Fluffy Jasmin Rice 8 oz (included)',
+        '1× Fluffy Jasmine Rice 8 oz (included)',
         '1× Rotisserie Chicken Leg and Thigh with Creamy Herb Sauce (included)',
-        '1× Sauteed Green Beans and Onions (included)',
-        '1× House Baked Double Chocolate Chip Brownie (included)',
+        '1× Sautéed Green Beans and Onions (included)',
+        '1× House-Baked Double Chocolate Chip Brownie (included)',
       ],
     },
     addons: [
-      { id: 'shab-soup', name: 'Chicken Noodle Soup 16 oz', desc: '$14 (standalone or add-on)', price: 14, requiresBase: false, image: MEAL_IMAGES.soup },
-      { id: 'shab-brisket', name: 'Swap Chicken for 8 oz Smoked Brisket with BBQ sauce', desc: '$12 extra', price: 12, requiresBase: true, image: MEAL_IMAGES.brisket8oz },
+      { id: 'shab-soup', name: 'Chicken Noodle Soup 16 oz', desc: 'Rich broth, egg noodles and tender chicken — $14 (standalone or add-on)', price: 14, requiresBase: false, image: MEAL_IMAGES.soup },
+      { id: 'shab-brisket', name: 'Upgrade: 8 oz Smoked Brisket with BBQ Sauce (instead of chicken)', desc: '+$12 — slow-smoked brisket in our signature BBQ glaze', price: 12, requiresBase: true, image: MEAL_IMAGES.brisket8oz },
     ],
   },
   {
     id: 'shabbat-lunch',
     title: 'Shabbat Lunch Options',
-    subtitle: 'Dropped off with dinner on Friday — store in fridge until ready',
+    subtitle: 'Dropped off with Friday dinner — refrigerate and enjoy at Shabbat lunch',
     options: [
       { id: 'sl-1', name: 'Asian Chicken Salad', desc: 'Romaine lettuce, cabbage mix, carrots, green onion, crunchy noodles and sesame dressing', price: 16, image: MEAL_IMAGES.asian },
-      { id: 'sl-2', name: 'Chicken Avocado Salad', desc: 'Romaine, tomato, carrots, rotini pasta, crunchy noodles and creamy herb sauce on the side', price: 16 },
+      { id: 'sl-2', name: 'Chicken Avocado Salad', desc: 'Romaine, tomato, carrots, rotini pasta, crunchy noodles and creamy herb dressing on the side', price: 16 },
       { id: 'sl-3', name: 'Southwest Chicken Salad', desc: 'Romaine lettuce, tomatoes, black beans, green onion, avocado, crunchy noodles and Southwest dressing', price: 16 },
-      { id: 'sl-4', name: 'Chicken Caesar Salad', desc: 'Romaine lettuce, house made sourdough croutons and Caesar dressing', price: 16 },
-      { id: 'sl-5', name: 'Veggie Quinoa Power Bowl', desc: 'Roasted veggie medley, chickpeas, avocado, coleslaw and tahini and basil dressing', price: 16 },
+      { id: 'sl-4', name: 'Chicken Caesar Salad', desc: 'Romaine lettuce, house-made sourdough croutons and Caesar dressing', price: 16 },
       { id: 'sl-6', name: 'Chicken Avocado Wrap', desc: 'Romaine, tomato, carrots, crunchy noodles and creamy herb sauce on the side', price: 16 },
       { id: 'sl-7', name: 'Chicken Caesar Wrap', desc: 'Romaine, tomato, crunchy noodles and Caesar dressing on the side', price: 16 },
       { id: 'sl-8', name: 'Asian Chicken Wrap', desc: 'Romaine lettuce, cabbage mix, carrots, green onion, crunchy noodles and sesame dressing', price: 16 },
       { id: 'sl-9', name: 'Southwest Chicken Wrap', desc: 'Romaine lettuce, tomatoes, black beans, green onion, avocado, crunchy noodles and Southwest dressing', price: 16 },
+      { id: 'sl-10', name: 'Smoked Brisket Plate', desc: '8 oz slow-smoked beef brisket with jasmine rice and seasonal roasted vegetables', price: 28, image: MEAL_IMAGES.brisket8oz },
+      { id: 'sl-11', name: 'Herb-Seasoned Salmon Fillet', desc: 'Pan-seared salmon fillet with lemon-herb seasoning, jasmine rice and steamed green beans', price: 24 },
+      { id: 'sl-5', name: 'Veggie Quinoa Power Bowl', desc: 'Roasted veggie medley, chickpeas, avocado, coleslaw and tahini-basil dressing', price: 16 },
+      { id: 'sl-12', name: 'Crispy Tofu Power Bowl', desc: 'Marinated crispy tofu, roasted veggie medley, quinoa, avocado and tahini-basil dressing (vegan)', price: 18 },
     ],
   },
 ];
 
-function buildMealSections(menuSet) {
-  const sections = JSON.parse(JSON.stringify(MEAL_SECTIONS_TEMPLATE));
-  sections.find(s => s.id === 'monday').options[4] = { ...MENU_VARIANTS.monday[menuSet] };
-  sections.find(s => s.id === 'thursday').options[3] = { ...MENU_VARIANTS.thursday[menuSet] };
-  return sections;
-}
-
-let selectedMenuSet = 'A';
-let MEAL_SECTIONS = [];
-
-function getAutoMenuSet() {
-  const anchorDate = new Date('2026-07-27T00:00:00-07:00');
-  const now = new Date();
-  const diffDays = Math.floor((now - anchorDate) / (1000 * 60 * 60 * 24));
-  const diffWeeks = Math.floor(diffDays / 7);
-  return (diffWeeks % 2 === 0 || diffWeeks < 0) ? 'A' : 'B';
-}
+const MEAL_SECTIONS = JSON.parse(JSON.stringify(MEAL_SECTIONS_TEMPLATE));
 
 function initOrderWeekMenu() {
-  selectedMenuSet = getAutoMenuSet();
-  MEAL_SECTIONS = buildMealSections(selectedMenuSet);
   openDaySections = new Set(MEAL_SECTIONS.map(s => s.id));
 }
 
-function setSelectedMenuSet(set) {
-  if ((set !== 'A' && set !== 'B') || set === selectedMenuSet) return;
-  selectedMenuSet = set;
-  MEAL_SECTIONS = buildMealSections(selectedMenuSet);
-  delete selections['mon-5'];
-  delete selections['thu-4'];
-  renderMenuSetToggle();
-  renderMealSections();
-  renderDayNav();
-  renderSummary();
-  persistState();
-  requestAnimationFrame(() => {
-    document.getElementById('section-monday')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-}
+
 
 function enforceShabbatAddonRules() {
   if (!selections['shab-dinner']) {
@@ -2311,14 +2449,15 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   renderWeekBanner();
-  renderMenuSetToggle();
   renderMealSections();
   renderDayNav();
   renderSummary();
 
-  document.getElementById('menu-set-toggle')?.addEventListener('click', e => {
-    const btn = e.target.closest('[data-menu-set]');
-    if (btn) setSelectedMenuSet(btn.dataset.menuSet);
+  // FAQ accordion
+  document.querySelectorAll('.faq-trigger').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.closest('.faq-item').classList.toggle('open');
+    });
   });
 
   document.getElementById('meal-sections')?.addEventListener('click', e => {
@@ -2454,23 +2593,6 @@ function renderWeekBanner() {
     </div>`;
 }
 
-function renderMenuSetToggle() {
-  const wrap = document.getElementById('menu-set-toggle');
-  const hint = document.getElementById('menu-set-hint');
-  if (!wrap) return;
-  wrap.innerHTML = ['A', 'B'].map(set => {
-    const copy = MENU_SET_COPY[set];
-    return `<button type="button" class="menu-set-btn${selectedMenuSet === set ? ' is-active' : ''}" data-menu-set="${set}">
-      <span class="menu-set-btn-label">${copy.label}</span>
-      <span class="menu-set-btn-detail">${copy.detail}</span>
-    </button>`;
-  }).join('');
-  if (hint) {
-    hint.textContent = selectedMenuSet === 'A'
-      ? 'Showing Menu 1. Monday and Thursday options below match this menu.'
-      : 'Showing Menu 2. Monday and Thursday options below match this menu.';
-  }
-}
 
 function renderMealSections() {
   const container = document.getElementById('meal-sections');
@@ -2611,7 +2733,6 @@ function persistState() {
       residentInfo,
       contactInfo,
       selections,
-      menuSet: selectedMenuSet,
       orderWeek: ORDER_WEEK.label,
       sameAsResident: !!document.getElementById('same-as-resident')?.checked,
       raffle: {
@@ -2642,11 +2763,6 @@ function restoreState() {
       document.getElementById('c-last').value = contactInfo.last || '';
       document.getElementById('c-email').value = contactInfo.email || '';
       document.getElementById('c-phone').value = contactInfo.phone || '';
-    }
-    if (data.menuSet === 'A' || data.menuSet === 'B') {
-      selectedMenuSet = data.menuSet;
-      MEAL_SECTIONS = buildMealSections(selectedMenuSet);
-      renderMenuSetToggle();
     }
     if (data.selections) {
       if (data.orderWeek && data.orderWeek !== ORDER_WEEK.label) {
@@ -3034,7 +3150,7 @@ async function submitPayment() {
           source: 'hatch-village-orders',
           order_type: 'village-dinner',
           week: ORDER_WEEK.label,
-          menu_set: selectedMenuSet === 'A' ? 'Menu 1' : 'Menu 2',
+          menu_set: 'fixed',
           resident_name: `${residentInfo.first} ${residentInfo.last}`,
           customer_name: `${contactInfo.first} ${contactInfo.last}`,
           customer_email: contactInfo.email,
