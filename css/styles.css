@@ -409,68 +409,89 @@ p  { color: var(--ink-soft); }
   }
 
   .site-header {
-    padding: 0;
+    padding: 4px 0 10px;
   }
   .nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 0;
-    gap: 6px;
+    padding: 6px 0;
+    gap: 8px 12px;
     flex-wrap: wrap;
   }
 
-  /* Logo positioning & sizing */
+  /* Logo positioning & sizing: FULL size logo & tagline */
   .logo {
-    gap: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    order: 1;
     flex-shrink: 0;
   }
   .logo-img {
-    height: 32px;
+    height: 40px;
     width: auto;
   }
   .logo-word {
-    font-size: 1.05rem;
+    font-size: 1.18rem;
     line-height: 1;
   }
   .logo-word small {
-    display: none;
+    display: block !important;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    margin-top: 2px;
+    white-space: nowrap;
+    opacity: 0.8;
   }
 
-  /* Nav CTA container: Keep Camp Orders & Village Dinners pills + Order Online button in header */
+  /* Nav CTA container: Order Online button (BIG) + Hamburger toggle on Row 1, Pills on Row 2 */
   .nav-cta {
+    order: 2;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     margin-left: auto;
     flex-wrap: wrap;
     justify-content: flex-end;
   }
 
-  .nav-cta .nav-pill {
-    display: inline-flex !important;
-    padding: 5px 9px;
-    font-size: 0.68rem;
-    letter-spacing: 0;
-    line-height: 1;
-    white-space: nowrap;
-  }
-
-  .nav-cta .btn {
-    padding: 0.46em 0.82em;
-    font-size: 0.76rem;
-    white-space: nowrap;
+  /* BIG, bold Order Online primary button on mobile */
+  .nav-cta .btn-primary {
+    order: 1;
+    padding: 0.65em 1.25em !important;
+    font-size: 0.88rem !important;
+    font-weight: 700 !important;
+    background: var(--red) !important;
+    color: var(--cream) !important;
+    border-radius: 999px !important;
+    box-shadow: 0 3px 12px rgba(18,17,16,0.3) !important;
+    white-space: nowrap !important;
   }
 
   .nav-toggle {
+    order: 2;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    margin-left: 2px;
+    width: 40px;
+    height: 40px;
+    margin-left: 4px;
     z-index: 1000;
     flex-shrink: 0;
+  }
+
+  /* Program Pills: Styled cleanly in Row 2 directly across header bar */
+  .nav-cta .nav-pill {
+    order: 3;
+    display: inline-flex !important;
+    padding: 6px 12px !important;
+    font-size: 0.76rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.01em !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    margin-top: 4px;
   }
 
   /* -------------------------------------------------------------
