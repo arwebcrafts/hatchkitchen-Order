@@ -1628,3 +1628,22 @@ footer { background: var(--ink); color: rgba(251,243,230,.72); padding-top: 70px
   text-align: right;
   margin-top: auto;
 }
+
+/* ================================================================
+   LOCAL GUIDE RESPONSIVE GRID
+   ================================================================ */
+.guide-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+@media (max-width: 980px) {
+  .guide-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .guide-grid {
+    grid-template-columns: 1fr;
+  }
+}
