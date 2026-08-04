@@ -389,23 +389,23 @@ p  { color: var(--ink-soft); }
    ================================================================ */
 @media (max-width: 880px) {
   .topbar {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     padding: 4px 0;
   }
   .topbar .container {
     justify-content: center;
-    gap: 6px 12px;
-    padding-top: 6px;
-    padding-bottom: 6px;
+    gap: 4px 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     text-align: center;
   }
   .topbar-left, .topbar-right {
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
   }
   .topbar-tag {
-    font-size: 0.68rem;
-    padding: 1px 8px;
+    font-size: 0.65rem;
+    padding: 1px 7px;
   }
 
   .site-header {
@@ -415,105 +415,131 @@ p  { color: var(--ink-soft); }
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 0;
-    gap: 8px;
+    padding: 8px 0;
+    gap: 6px;
+    flex-wrap: wrap;
   }
 
   /* Logo positioning & sizing */
   .logo {
-    order: 1;
-    gap: 8px;
+    gap: 6px;
     flex-shrink: 0;
   }
   .logo-img {
-    height: 36px;
+    height: 32px;
     width: auto;
   }
   .logo-word {
-    font-size: 1.15rem;
+    font-size: 1.05rem;
     line-height: 1;
   }
   .logo-word small {
     display: none;
   }
 
-  /* Nav CTA container: Order Online button + Hamburger toggle in a single clean row */
+  /* Nav CTA container: Keep Camp Orders & Village Dinners pills + Order Online button in header */
   .nav-cta {
-    order: 2;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     margin-left: auto;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 
-  /* Hide program pills from sticky header bar on mobile so it never stacks or overlaps */
   .nav-cta .nav-pill {
-    display: none !important;
+    display: inline-flex !important;
+    padding: 5px 9px;
+    font-size: 0.68rem;
+    letter-spacing: 0;
+    line-height: 1;
+    white-space: nowrap;
   }
 
   .nav-cta .btn {
-    padding: 0.52em 0.95em;
-    font-size: 0.82rem;
+    padding: 0.46em 0.82em;
+    font-size: 0.76rem;
     white-space: nowrap;
   }
 
   .nav-toggle {
-    order: 3;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     margin-left: 2px;
     z-index: 1000;
+    flex-shrink: 0;
   }
 
-  /* Mobile menu drawer when opened */
+  /* -------------------------------------------------------------
+     EXPANDED MOBILE MENU OVERLAY (FIXES BLEED-THROUGH & OVERLAP)
+     ------------------------------------------------------------- */
   .nav-links {
     position: fixed;
     inset: 0;
     top: 0;
-    background: var(--ink);
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #121110;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 22px;
+    gap: 26px;
     transform: translateX(100%);
     transition: transform 0.3s ease;
-    z-index: 999;
+    z-index: 99999;
     padding: 80px 24px 40px;
   }
   .nav-links[data-open="true"] {
-    transform: translateX(0);
+    transform: translateX(0) !important;
+    background-color: #121110 !important;
   }
   .nav-links a {
     font-family: var(--f-display);
-    font-size: 1.5rem;
+    font-size: 1.7rem;
     color: var(--cream);
+    font-weight: 700;
+    letter-spacing: -0.01em;
   }
 
-  /* Show program pills prominently at top of expanded mobile navigation drawer */
-  .mobile-drawer-pills {
-    display: flex !important;
-    gap: 10px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
+  /* Pin the X close button above the full-screen menu overlay */
+  .nav-toggle[aria-expanded="true"] {
+    position: fixed !important;
+    top: 14px !important;
+    right: 16px !important;
+    z-index: 100000 !important;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
   }
-  .mobile-drawer-pills .nav-pill {
-    display: inline-flex !important;
-    padding: 9px 18px;
-    font-size: 0.88rem;
+
+  /* Hide background pills & logo while mobile drawer overlay is open */
+  .site-header:has(.nav-links[data-open="true"]) .nav-cta,
+  .site-header:has(.nav-links[data-open="true"]) .logo {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .mobile-drawer-pills {
+    display: none !important;
   }
 }
 
 @media (max-width: 480px) {
   .logo-word {
-    font-size: 1.05rem;
+    font-size: 0.96rem;
+  }
+  .nav-cta .nav-pill {
+    padding: 4px 7px;
+    font-size: 0.64rem;
   }
   .nav-cta .btn {
-    padding: 0.5em 0.85em;
-    font-size: 0.78rem;
+    padding: 0.42em 0.72em;
+    font-size: 0.72rem;
   }
 }
 
