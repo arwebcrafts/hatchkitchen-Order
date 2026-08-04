@@ -384,39 +384,136 @@ p  { color: var(--ink-soft); }
 .nav-toggle[aria-expanded="true"] span::before    { transform: rotate(45deg) translate(5px,5px); background: var(--cream); }
 .nav-toggle[aria-expanded="true"] span::after     { transform: rotate(-45deg) translate(5px,-5px); background: var(--cream); }
 
+/* ================================================================
+   MOBILE HEADER & TOPBAR RESPONSIVE FIXES
+   ================================================================ */
 @media (max-width: 880px) {
+  .topbar {
+    font-size: 0.72rem;
+    padding: 4px 0;
+  }
+  .topbar .container {
+    justify-content: center;
+    gap: 6px 12px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    text-align: center;
+  }
+  .topbar-left, .topbar-right {
+    justify-content: center;
+    gap: 10px;
+  }
+  .topbar-tag {
+    font-size: 0.68rem;
+    padding: 1px 8px;
+  }
+
+  .site-header {
+    padding: 0;
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    gap: 8px;
+  }
+
+  /* Logo positioning & sizing */
+  .logo {
+    order: 1;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .logo-img {
+    height: 36px;
+    width: auto;
+  }
+  .logo-word {
+    font-size: 1.15rem;
+    line-height: 1;
+  }
+  .logo-word small {
+    display: none;
+  }
+
+  /* Nav CTA container: Order Online button + Hamburger toggle in a single clean row */
+  .nav-cta {
+    order: 2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  /* Hide program pills from sticky header bar on mobile so it never stacks or overlaps */
+  .nav-cta .nav-pill {
+    display: none !important;
+  }
+
+  .nav-cta .btn {
+    padding: 0.52em 0.95em;
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+
+  .nav-toggle {
+    order: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    margin-left: 2px;
+    z-index: 1000;
+  }
+
+  /* Mobile menu drawer when opened */
   .nav-links {
-    position:   fixed;
-    inset:      0;
+    position: fixed;
+    inset: 0;
+    top: 0;
     background: var(--ink);
     flex-direction: column;
     justify-content: center;
-    gap:        30px;
-    transform:  translateX(100%);
-    transition: transform .3s ease;
-    z-index:    999;
+    align-items: center;
+    gap: 22px;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 999;
+    padding: 80px 24px 40px;
   }
-  .nav-links[data-open="true"] { transform: translateX(0); }
+  .nav-links[data-open="true"] {
+    transform: translateX(0);
+  }
   .nav-links a {
     font-family: var(--f-display);
-    font-size:   1.6rem;
-    color:       var(--cream);
+    font-size: 1.5rem;
+    color: var(--cream);
   }
-  .nav-toggle { display: flex; order: 3; z-index: 1000; }
-  .nav-cta    { order: 2; }
-  .logo       { order: 1; }
-}
-@media (max-width: 420px) {
-  .nav-cta .btn { padding: .65em 1.05em; font-size: .85rem; }
-  .nav-pill { padding: 7px 10px; font-size: .72rem; }
-}
-@media (max-width: 880px) {
-  .nav-cta {
-    gap: 6px;
+
+  /* Show program pills prominently at top of expanded mobile navigation drawer */
+  .mobile-drawer-pills {
+    display: flex !important;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
-  .nav-pill {
-    padding: 7px 10px;
-    font-size: .7rem;
+  .mobile-drawer-pills .nav-pill {
+    display: inline-flex !important;
+    padding: 9px 18px;
+    font-size: 0.88rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-word {
+    font-size: 1.05rem;
+  }
+  .nav-cta .btn {
+    padding: 0.5em 0.85em;
+    font-size: 0.78rem;
   }
 }
 
