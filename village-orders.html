@@ -1403,6 +1403,80 @@ input, select, textarea { font: inherit; }
 .footer-links a:hover { color: var(--gold); }
 
 /* ---- Media ---- */
+@media (max-width: 768px) {
+  .topbar-inner {
+    padding: 6px 14px;
+    justify-content: center;
+    text-align: center;
+    gap: 6px;
+  }
+  .topbar-left, .topbar-right {
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.7rem;
+  }
+
+  .site-header {
+    padding: 4px 0 8px;
+  }
+  .nav {
+    padding: 8px 16px;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Logo positioning */
+  .logo {
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .logo-img {
+    height: 32px;
+  }
+  .logo-word {
+    font-size: 1.05rem;
+  }
+  .logo-word small {
+    display: none;
+  }
+
+  /* Back button sits neatly top right on Row 1 */
+  .nav-back {
+    font-size: 0.74rem;
+    margin-left: auto;
+    white-space: nowrap;
+    padding: 4px 10px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 999px;
+  }
+
+  /* Program links sit cleanly on Row 2 across header bar */
+  .nav-order-link {
+    font-size: 0.66rem;
+    padding: 5px 10px;
+    letter-spacing: 0;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Day Nav Tabs horizontally scrollable without breaking page layout */
+  .village-day-nav {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    scrollbar-width: none;
+    padding: 8px 12px !important;
+  }
+  .village-day-nav::-webkit-scrollbar { display: none; }
+  .day-tab {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    font-size: 0.78rem;
+  }
+}
+
 @media (max-width: 620px) {
   .camp-hero { min-height: 0; }
   .camp-hero-content { padding: 22px 16px 26px; }
