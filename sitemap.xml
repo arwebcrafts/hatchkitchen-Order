@@ -1,44 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://www.thehatchkitchen.com/</loc>
-    <lastmod>2026-07-16</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://www.thehatchkitchen.com/images/ai-hero.jpg</image:loc>
+      <image:title>Guests enjoying smoothies and bowls at Hatch Kitchen</image:title>
+      <image:caption>Hatch Kitchen — OK Kosher quick-kitchen on Pico Blvd, Pico-Robertson, Los Angeles</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.thehatchkitchen.com/images/ai-rotisserie.jpg</image:loc>
+      <image:title>Hatch Kitchen OK Kosher rotisserie chicken</image:title>
+      <image:caption>Slow-roasted OK Kosher rotisserie chicken at Hatch Kitchen, Pico-Robertson</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://www.thehatchkitchen.com/menu.html</loc>
-    <lastmod>2026-07-16</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://www.thehatchkitchen.com/images/ai-salad.jpg</image:loc>
+      <image:title>Hatch Kitchen kosher power salad</image:title>
+      <image:caption>Fresh OK Kosher power salad at Hatch Kitchen, Pico-Robertson, Los Angeles</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.thehatchkitchen.com/images/ai-wrap.jpg</image:loc>
+      <image:title>Hatch Kitchen kosher breakfast wrap</image:title>
+      <image:caption>OK Kosher breakfast wrap served fresh daily at Hatch Kitchen</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.thehatchkitchen.com/images/smoothies-lineup.jpg</image:loc>
+      <image:title>Hatch Kitchen superfood smoothies lineup</image:title>
+      <image:caption>Hand-blended OK Kosher superfood smoothies at Hatch Kitchen, Pico Blvd</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://www.thehatchkitchen.com/catering.html</loc>
-    <lastmod>2026-07-16</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://www.thehatchkitchen.com/images/ai-catering.jpg</image:loc>
+      <image:title>Hatch Kitchen kosher catering spread</image:title>
+      <image:caption>OK Kosher catering platters and boxed lunches from Hatch Kitchen, West LA</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://www.thehatchkitchen.com/contact.html</loc>
-    <lastmod>2026-07-16</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://www.thehatchkitchen.com/images/storefront-sign.jpg</image:loc>
+      <image:title>Hatch Kitchen storefront on Pico Blvd</image:title>
+      <image:caption>Hatch Kitchen storefront sign at 8947 W Pico Blvd, Los Angeles, CA 90035</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://www.thehatchkitchen.com/about.html</loc>
-    <lastmod>2026-07-16</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://www.thehatchkitchen.com/images/family-banner.jpg</image:loc>
+      <image:title>Adivi family behind Hatch Kitchen</image:title>
+      <image:caption>The Adivi family and Chef Elan — the founders of Hatch Kitchen, Pico-Robertson</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://www.thehatchkitchen.com/camp-orders.html</loc>
-    <lastmod>2026-07-16</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.thehatchkitchen.com/village-orders.html</loc>
-    <lastmod>2026-07-16</lastmod>
+    <lastmod>2026-08-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>

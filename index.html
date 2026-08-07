@@ -65,7 +65,7 @@
     "addressLocality": "Los Angeles",
     "addressRegion": "CA",
     "postalCode": "90035",
-    "addressCountry": "United States"
+    "addressCountry": "US"
   },
   "geo": {
     "@type": "GeoCoordinates",
@@ -73,12 +73,27 @@
     "longitude": -118.3870534
   },
   "hasMap": "https://www.google.com/maps?cid=17184789989184635926",
+  "paymentAccepted": "Cash, Credit Card, Debit Card",
+  "currenciesAccepted": "USD",
+  "amenityFeature": [
+    { "@type": "LocationFeatureSpecification", "name": "Takeout", "value": true },
+    { "@type": "LocationFeatureSpecification", "name": "Delivery", "value": true },
+    { "@type": "LocationFeatureSpecification", "name": "Dine-in", "value": true },
+    { "@type": "LocationFeatureSpecification", "name": "Outdoor Seating", "value": false },
+    { "@type": "LocationFeatureSpecification", "name": "Online Ordering", "value": true },
+    { "@type": "LocationFeatureSpecification", "name": "Catering", "value": true },
+    { "@type": "LocationFeatureSpecification", "name": "Kosher Certified", "value": true },
+    { "@type": "LocationFeatureSpecification", "name": "Wheelchair Accessible", "value": true }
+  ],
+  "keywords": "kosher restaurant Pico-Robertson, kosher rotisserie chicken Los Angeles, kosher breakfast Pico Blvd, OK Kosher restaurant LA, kosher catering West LA, kosher smoothies Los Angeles, kosher cafe near me, healthy kosher food 90035",
   "areaServed": [
-    { "@type": "Place", "name": "Pico-Robertson" },
+    { "@type": "Place", "name": "Pico-Robertson", "containedInPlace": { "@type": "City", "name": "Los Angeles", "sameAs": "https://www.wikidata.org/wiki/Q65" } },
     { "@type": "Place", "name": "Beverly Hills" },
     { "@type": "Place", "name": "Century City" },
     { "@type": "Place", "name": "Culver City" },
     { "@type": "Place", "name": "West Hollywood" },
+    { "@type": "Place", "name": "Westwood" },
+    { "@type": "Place", "name": "Cheviot Hills" },
     { "@type": "City", "name": "Los Angeles" }
   ],
   "openingHoursSpecification": [
@@ -104,7 +119,9 @@
   "sameAs": [
     "https://www.google.com/maps?cid=17184789989184635926",
     "https://www.instagram.com/thehatchkitchen/",
-    "https://www.yelp.com/biz/hatch-kitchen-los-angeles"
+    "https://www.yelp.com/biz/hatch-kitchen-los-angeles",
+    "https://www.facebook.com/thehatchkitchen",
+    "https://www.linkedin.com/company/thehatchkitchen"
   ]
 }
 </script>
@@ -115,7 +132,62 @@
   "name": "Hatch Kitchen",
   "url": "https://www.thehatchkitchen.com/",
   "publisher": { "@id": "https://www.thehatchkitchen.com/#restaurant" },
-  "inLanguage": "en-US"
+  "inLanguage": "en-US",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://www.thehatchkitchen.com/menu.html?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Hatch Kitchen", "item": "https://www.thehatchkitchen.com/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Hatch Kitchen kosher?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Hatch Kitchen is certified OK Kosher. Our full menu — rotisserie chicken, breakfast wraps, smoothies, salads, and catering — is certified under OK Kosher supervision. We are closed on Shabbat (Saturday)." }
+    },
+    {
+      "@type": "Question",
+      "name": "Where is Hatch Kitchen located?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Hatch Kitchen is located at 8947 W Pico Blvd, Los Angeles, CA 90035, in the Pico-Robertson neighborhood, near Beverly Hills and Century City." }
+    },
+    {
+      "@type": "Question",
+      "name": "What are Hatch Kitchen's hours?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Hatch Kitchen is open Sunday through Thursday from 9:00 AM to 8:00 PM, and Friday from 9:00 AM to 3:00 PM. We are closed on Saturday." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I order online from Hatch Kitchen?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. You can order online for pickup or delivery at hatchkitchen.toast.site/order. We offer same-day pickup and delivery through our online ordering system." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Hatch Kitchen offer catering?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Hatch Kitchen offers kosher catering for offices, simchas, schools, and summer camps across Pico-Robertson and West Los Angeles. Email info@thehatchkitchen.com or call (424) 455-3195 to inquire." }
+    },
+    {
+      "@type": "Question",
+      "name": "What kind of food does Hatch Kitchen serve?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Hatch Kitchen serves OK Kosher rotisserie chicken, breakfast wraps, power salads, superfood smoothies, espresso drinks, and kids meals. We focus on fresh, feel-good food that is quick-kitchen ready for grab-and-go or dine-in." }
+    }
+  ]
 }
 </script>
 </head>

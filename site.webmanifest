@@ -1,18 +1,43 @@
 {
   "name": "Hatch Kitchen",
   "short_name": "Hatch Kitchen",
-  "description": "OK Kosher quick-kitchen on Pico Blvd in Pico-Robertson, Los Angeles. Rotisserie, breakfast wraps, smoothies, catering.",
+  "description": "OK Kosher quick-kitchen on Pico Blvd in Pico-Robertson, Los Angeles. Rotisserie chicken, breakfast wraps, superfood smoothies, and kosher catering.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FBF9F1",
   "theme_color": "#4F6B3D",
   "lang": "en-US",
+  "dir": "ltr",
+  "orientation": "any",
+  "categories": ["food", "restaurants", "shopping"],
+  "shortcuts": [
+    {
+      "name": "Order Online",
+      "short_name": "Order",
+      "description": "Order kosher food for pickup or delivery",
+      "url": "https://hatchkitchen.toast.site/order",
+      "icons": [{ "src": "/favicon.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "View Menu",
+      "short_name": "Menu",
+      "description": "Browse the full kosher menu",
+      "url": "/menu.html",
+      "icons": [{ "src": "/favicon.png", "sizes": "96x96" }]
+    }
+  ],
   "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "/favicon.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
   ]
 }

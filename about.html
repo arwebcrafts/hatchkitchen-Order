@@ -11,6 +11,10 @@
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="manifest" href="site.webmanifest">
 <meta name="theme-color" content="#4F6B3D">
+<meta name="geo.region" content="US-CA">
+<meta name="geo.placename" content="Pico-Robertson, Los Angeles">
+<meta name="geo.position" content="34.0555889;-118.3870534">
+<meta name="ICBM" content="34.0555889, -118.3870534">
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
@@ -34,9 +38,52 @@
 {
   "@context": "https://schema.org",
   "@type": "AboutPage",
-  "name": "About Hatch Kitchen",
+  "name": "Our Story | Hatch Kitchen",
   "url": "https://www.thehatchkitchen.com/about.html",
-  "mainEntity": { "@id": "https://www.thehatchkitchen.com/#restaurant" }
+  "description": "Meet the Adivi family and Chef Elan behind Hatch Kitchen, a family-run OK Kosher quick-kitchen on Pico Blvd in Pico-Robertson, Los Angeles.",
+  "mainEntity": { "@id": "https://www.thehatchkitchen.com/#restaurant" },
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [".about-lead", ".story-body", "h1"]
+  },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type":"ListItem","position":1,"name":"Hatch Kitchen","item":"https://www.thehatchkitchen.com/"},
+      {"@type":"ListItem","position":2,"name":"Our Story","item":"https://www.thehatchkitchen.com/about.html"}
+    ]
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://www.thehatchkitchen.com/#chef-elan",
+  "name": "Chef Elan",
+  "jobTitle": "Executive Chef",
+  "worksFor": { "@id": "https://www.thehatchkitchen.com/#restaurant" },
+  "description": "Executive Chef at Hatch Kitchen, specializing in OK Kosher rotisserie, fresh salads, and feel-good breakfast fare in the Pico-Robertson community.",
+  "url": "https://www.thehatchkitchen.com/about.html"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://www.thehatchkitchen.com/#organization",
+  "name": "Hatch Kitchen",
+  "url": "https://www.thehatchkitchen.com/",
+  "logo": "https://www.thehatchkitchen.com/images/logo-lockup.png",
+  "email": "info@thehatchkitchen.com",
+  "telephone": "+1-424-455-3195",
+  "foundingLocation": { "@type": "Place", "name": "Pico-Robertson, Los Angeles, CA" },
+  "description": "Hatch Kitchen is a family-run, OK Kosher certified quick-kitchen at 8947 W Pico Blvd in Pico-Robertson, Los Angeles. Founded by the Adivi family and Chef Elan, Hatch Kitchen serves rotisserie chicken, breakfast wraps, superfood smoothies, and catering across West LA.",
+  "sameAs": [
+    "https://www.instagram.com/thehatchkitchen/",
+    "https://www.yelp.com/biz/hatch-kitchen-los-angeles",
+    "https://www.google.com/maps?cid=17184789989184635926"
+  ]
 }
 </script>
 <script type="application/ld+json">
@@ -45,7 +92,7 @@
   "@type": "BreadcrumbList",
   "itemListElement": [
     {"@type":"ListItem","position":1,"name":"Hatch Kitchen","item":"https://www.thehatchkitchen.com/"},
-    {"@type":"ListItem","position":2,"name":"About","item":"https://www.thehatchkitchen.com/about.html"}
+    {"@type":"ListItem","position":2,"name":"Our Story","item":"https://www.thehatchkitchen.com/about.html"}
   ]
 }
 </script>

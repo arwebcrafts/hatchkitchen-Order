@@ -11,6 +11,10 @@
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="manifest" href="site.webmanifest">
 <meta name="theme-color" content="#4F6B3D">
+<meta name="geo.region" content="US-CA">
+<meta name="geo.placename" content="Pico-Robertson, Los Angeles">
+<meta name="geo.position" content="34.0555889;-118.3870534">
+<meta name="ICBM" content="34.0555889, -118.3870534">
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_US">
@@ -37,13 +41,60 @@
   "name": "Hatch Kitchen Kosher Menu",
   "url": "https://www.thehatchkitchen.com/menu.html",
   "description": "OK Kosher menu featuring rotisserie chicken, breakfast wraps, salads, superfood smoothies, coffee, and kids meals at Hatch Kitchen in Pico-Robertson, Los Angeles.",
+  "inLanguage": "en-US",
+  "provider": { "@id": "https://www.thehatchkitchen.com/#restaurant" },
   "hasMenuSection": [
-    { "@type": "MenuSection", "name": "Breakfast", "url": "https://www.thehatchkitchen.com/menu.html#breakfast" },
-    { "@type": "MenuSection", "name": "Rotisserie", "url": "https://www.thehatchkitchen.com/menu.html#rotisserie" },
-    { "@type": "MenuSection", "name": "Smoothies & Coffee", "url": "https://www.thehatchkitchen.com/menu.html#drinks" },
-    { "@type": "MenuSection", "name": "Salads & Wraps", "url": "https://www.thehatchkitchen.com/menu.html#salads" }
-  ],
-  "provider": { "@id": "https://www.thehatchkitchen.com/#restaurant" }
+    {
+      "@type": "MenuSection",
+      "name": "Breakfast",
+      "url": "https://www.thehatchkitchen.com/menu.html#breakfast",
+      "description": "Kosher breakfast wraps, eggs, avocado toast, and morning bowls served daily from 9 AM.",
+      "hasMenuItem": [
+        { "@type": "MenuItem", "name": "Classic Breakfast Wrap", "description": "Scrambled eggs, vegetables, and your choice of protein in a warm tortilla.", "offers": { "@type": "Offer", "price": "14.00", "priceCurrency": "USD" } },
+        { "@type": "MenuItem", "name": "Avocado Toast", "description": "Fresh sourdough toast with smashed avocado, olive oil, and sea salt.", "offers": { "@type": "Offer", "price": "12.00", "priceCurrency": "USD" } }
+      ]
+    },
+    {
+      "@type": "MenuSection",
+      "name": "Rotisserie",
+      "url": "https://www.thehatchkitchen.com/menu.html#rotisserie",
+      "description": "OK Kosher whole and half rotisserie chicken with sides, sauces, and platters.",
+      "hasMenuItem": [
+        { "@type": "MenuItem", "name": "Half Rotisserie Chicken", "description": "Slow-roasted half kosher chicken with your choice of two sides.", "offers": { "@type": "Offer", "price": "18.00", "priceCurrency": "USD" } },
+        { "@type": "MenuItem", "name": "Whole Rotisserie Chicken", "description": "Full slow-roasted kosher chicken. Feeds 3–4 people.", "offers": { "@type": "Offer", "price": "32.00", "priceCurrency": "USD" } },
+        { "@type": "MenuItem", "name": "Chicken Nuggets", "description": "Crispy kosher chicken nuggets, perfect for kids and families.", "offers": { "@type": "Offer", "price": "10.00", "priceCurrency": "USD" } }
+      ]
+    },
+    {
+      "@type": "MenuSection",
+      "name": "Power Salads & Wraps",
+      "url": "https://www.thehatchkitchen.com/menu.html#salads",
+      "description": "Fresh, filling kosher salads and wraps loaded with seasonal greens, grains, and proteins.",
+      "hasMenuItem": [
+        { "@type": "MenuItem", "name": "Hatch Power Bowl", "description": "Mixed greens, quinoa, roasted vegetables, and tahini dressing.", "offers": { "@type": "Offer", "price": "16.00", "priceCurrency": "USD" } },
+        { "@type": "MenuItem", "name": "Sofritas Wrap", "description": "Spiced plant-based sofritas, slaw, avocado, and chipotle in a flour wrap. Vegan.", "offers": { "@type": "Offer", "price": "14.00", "priceCurrency": "USD" } }
+      ]
+    },
+    {
+      "@type": "MenuSection",
+      "name": "Superfood Smoothies & Coffee",
+      "url": "https://www.thehatchkitchen.com/menu.html#drinks",
+      "description": "Hand-blended superfood smoothies, cold-pressed juices, espresso, and specialty coffee drinks.",
+      "hasMenuItem": [
+        { "@type": "MenuItem", "name": "Green Machine Smoothie", "description": "Spinach, banana, mango, almond milk, and spirulina. Vegan and gluten-free.", "offers": { "@type": "Offer", "price": "11.00", "priceCurrency": "USD" } },
+        { "@type": "MenuItem", "name": "Hatch Latte", "description": "Double espresso with house oat milk and a hint of vanilla.", "offers": { "@type": "Offer", "price": "7.00", "priceCurrency": "USD" } }
+      ]
+    },
+    {
+      "@type": "MenuSection",
+      "name": "Kids Meals",
+      "url": "https://www.thehatchkitchen.com/menu.html#kids",
+      "description": "Kid-friendly kosher meals including nuggets, mini wraps, and apple juice.",
+      "hasMenuItem": [
+        { "@type": "MenuItem", "name": "Kids Nuggets Meal", "description": "Kosher chicken nuggets with a side and drink.", "offers": { "@type": "Offer", "price": "9.00", "priceCurrency": "USD" } }
+      ]
+    }
+  ]
 }
 </script>
 <script type="application/ld+json">
