@@ -32,7 +32,11 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Allura&family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Non-blocking font load: use media=print trick so fonts don't block first paint -->
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&family=Allura&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&family=Allura&display=swap"></noscript>
+<!-- Preload LCP hero image -->
+<link rel="preload" as="image" href="images/ai-hero.webp" type="image/webp">
 <link rel="stylesheet" href="css/styles.css">
 
 <script type="application/ld+json">
@@ -161,7 +165,10 @@
 
   <section class="hero">
     <div class="hero-media">
-      <img src="images/ai-hero.jpg" alt="Guests enjoying smoothies and bowls beneath the HATCH marquee wall" loading="eager">
+      <picture>
+        <source srcset="images/ai-hero.webp" type="image/webp">
+        <img src="images/ai-hero.jpg" alt="Guests enjoying smoothies and bowls beneath the HATCH marquee wall" loading="eager" fetchpriority="high" decoding="sync">
+      </picture>
     </div>
     <div class="hero-inner container">
       <span class="hero-kicker">Pico‑Robertson · Los Angeles · Est. 2025</span>
@@ -425,6 +432,6 @@
   </div>
 </footer>
 
-<script src="js/main.js"></script>
+<script src="js/main.js" defer></script>
 </body>
 </html>
