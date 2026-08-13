@@ -1,0 +1,2096 @@
+<!doctype html>
+<!--
+  ╔══════════════════════════════════════════════════════════╗
+  ║  HATCH KITCHEN — Admin Dashboard                        ║
+  ║  Manage Village orders, track abandoned carts,          ║
+  ║  and monitor real-time order activity.                  ║
+  ╚══════════════════════════════════════════════════════════╝
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard | Hatch Kitchen</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="favicon.png" type="image/png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   HATCH KITCHEN — Admin Dashboard Design System
+   ============================================================ */
+:root {
+  --ink:        #121110;
+  --ink-90:     rgba(18,17,16,.92);
+  --ink-soft:   #5B5346;
+  --cream:      #F5F1E3;
+  --cream-deep: #EAE2C7;
+  --paper:      #FBF9F1;
+  --gold:       #F3C457;
+  --gold-dark:  #C8941F;
+  --gold-tint:  #FCE9C0;
+  --peach:      #EFA862;
+  --sage:       #4F6B3D;
+  --sage-tint:  #E2E8D2;
+  --sage-dark:  #33431F;
+  --line:       rgba(18,17,16,.14);
+  --line-soft:  rgba(18,17,16,.08);
+  --red-alert:  #B91C1C;
+  --red-bg:     #FEF2F2;
+  --green-ok:   #15803D;
+  --green-bg:   #DCFCE7;
+  --blue-info:  #1D4ED8;
+  --blue-bg:    #EFF6FF;
+  --purple:     #7C3AED;
+  --purple-bg:  #F5F3FF;
+
+  --f-display: "Poppins", sans-serif;
+  --f-body:    "Hanken Grotesk", sans-serif;
+  --f-mono:    "IBM Plex Mono", monospace;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --shadow:    0 2px 8px rgba(18,17,16,.08), 0 12px 28px -12px rgba(18,17,16,.18);
+  --shadow-lg: 0 20px 48px -16px rgba(18,17,16,.32);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--f-body);
+  background: #0D0C0B;
+  color: var(--cream);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  font-size: 15px;
+  min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; border: none; background: none; }
+h1,h2,h3,h4,p { margin: 0; }
+input, select, textarea { font: inherit; }
+
+/* ---- Login Screen ---- */
+.login-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(79,107,61,.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(243,196,87,.08) 0%, transparent 50%),
+    #0D0C0B;
+  padding: 24px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(18,17,16,.65);
+  backdrop-filter: blur(40px);
+  border: 1px solid rgba(245,241,227,.08);
+  border-radius: var(--radius-lg);
+  padding: 48px 40px;
+  box-shadow: 0 32px 64px -24px rgba(0,0,0,.5);
+  animation: fadeInUp .5s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.login-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.login-logo img { width: 42px; height: 42px; border-radius: 10px; }
+.login-logo-text { font-family: var(--f-display); font-weight: 700; font-size: 1.15rem; }
+.login-logo-text small {
+  display: block;
+  font-family: var(--f-mono);
+  font-size: .6rem;
+  font-weight: 500;
+  letter-spacing: .2em;
+  color: rgba(245,241,227,.35);
+  margin-top: 2px;
+}
+
+.login-title {
+  font-family: var(--f-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+.login-subtitle {
+  color: rgba(245,241,227,.45);
+  font-size: .92rem;
+  margin-bottom: 28px;
+}
+
+.login-field {
+  position: relative;
+  margin-bottom: 20px;
+}
+.login-field label {
+  display: block;
+  font-size: .78rem;
+  font-weight: 700;
+  color: rgba(245,241,227,.5);
+  letter-spacing: .04em;
+  margin-bottom: 6px;
+}
+.login-field input {
+  width: 100%;
+  padding: 13px 16px;
+  background: rgba(245,241,227,.06);
+  border: 1.5px solid rgba(245,241,227,.1);
+  border-radius: var(--radius-sm);
+  color: var(--cream);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+.login-field input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(243,196,87,.15);
+}
+.login-field input::placeholder { color: rgba(245,241,227,.25); }
+
+.login-toggle-pw {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  color: rgba(245,241,227,.35);
+  font-size: .78rem;
+  font-weight: 600;
+  padding: 4px;
+  transition: color .15s;
+}
+.login-toggle-pw:hover { color: var(--gold); }
+
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+  color: var(--ink);
+  font-family: var(--f-display);
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  transition: transform .15s, box-shadow .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.login-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px -8px rgba(243,196,87,.4); }
+.login-btn:active { transform: translateY(0); }
+.login-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+.login-error {
+  background: rgba(185,28,28,.15);
+  border: 1px solid rgba(185,28,28,.3);
+  color: #FCA5A5;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: .85rem;
+  font-weight: 600;
+  margin-top: 14px;
+  display: none;
+}
+.login-error.show { display: block; animation: shake .4s ease; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+.login-spinner {
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(18,17,16,.2);
+  border-top-color: var(--ink);
+  border-radius: 50%;
+  animation: spin .6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- Dashboard Layout ---- */
+.dashboard { display: none; min-height: 100vh; }
+.dashboard.active { display: block; animation: fadeIn .3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---- Top Header ---- */
+.dash-header {
+  background: rgba(18,17,16,.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(245,241,227,.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.dash-header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 12px 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.dash-logo { display: flex; align-items: center; gap: 10px; }
+.dash-logo img { width: 34px; height: 34px; border-radius: 8px; }
+.dash-logo-text {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--cream);
+}
+.dash-logo-text small {
+  display: block;
+  font-family: var(--f-mono);
+  font-size: .55rem;
+  letter-spacing: .18em;
+  color: rgba(245,241,227,.3);
+  margin-top: 1px;
+}
+
+.dash-header-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dash-poll-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--f-mono);
+  font-size: .68rem;
+  color: rgba(245,241,227,.3);
+}
+.dash-poll-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--green-ok);
+  border-radius: 50%;
+  animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .3; }
+}
+
+.dash-notif-btn {
+  position: relative;
+  padding: 8px;
+  color: rgba(245,241,227,.5);
+  transition: color .15s;
+}
+.dash-notif-btn:hover { color: var(--gold); }
+.dash-notif-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 16px;
+  height: 16px;
+  background: var(--red-alert);
+  color: #fff;
+  font-size: .6rem;
+  font-weight: 800;
+  border-radius: 999px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+.dash-notif-badge.show { display: flex; }
+
+.dash-logout {
+  padding: 7px 16px;
+  font-family: var(--f-mono);
+  font-size: .72rem;
+  font-weight: 600;
+  color: rgba(245,241,227,.45);
+  border: 1px solid rgba(245,241,227,.1);
+  border-radius: 999px;
+  transition: all .15s;
+}
+.dash-logout:hover { border-color: rgba(245,241,227,.3); color: var(--cream); }
+
+/* ---- Main Content ---- */
+.dash-main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px 28px 60px;
+}
+
+/* ---- Stats Row ---- */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+@media (max-width: 900px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .stats-row { grid-template-columns: 1fr; } }
+
+.stat-card {
+  background: rgba(245,241,227,.04);
+  border: 1px solid rgba(245,241,227,.06);
+  border-radius: var(--radius-md);
+  padding: 20px 22px;
+  transition: border-color .2s, transform .15s;
+}
+.stat-card:hover { border-color: rgba(245,241,227,.12); transform: translateY(-2px); }
+.stat-label {
+  font-family: var(--f-mono);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(245,241,227,.35);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.stat-label .stat-icon { font-size: .85rem; }
+.stat-value {
+  font-family: var(--f-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--cream);
+  line-height: 1;
+}
+.stat-value.gold { color: var(--gold); }
+.stat-value.green { color: #86EFAC; }
+.stat-value.orange { color: var(--peach); }
+.stat-value.purple { color: #C4B5FD; }
+.stat-sub {
+  font-family: var(--f-mono);
+  font-size: .7rem;
+  color: rgba(245,241,227,.3);
+  margin-top: 6px;
+}
+
+/* ---- Tab Bar ---- */
+.dash-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  background: rgba(245,241,227,.04);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  width: fit-content;
+}
+.dash-tab {
+  padding: 10px 20px;
+  font-family: var(--f-mono);
+  font-size: .78rem;
+  font-weight: 600;
+  color: rgba(245,241,227,.4);
+  border-radius: 8px;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dash-tab:hover { color: rgba(245,241,227,.7); }
+.dash-tab.active { background: rgba(245,241,227,.1); color: var(--gold); }
+.dash-tab-badge {
+  background: rgba(245,241,227,.12);
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: .65rem;
+}
+.dash-tab.active .dash-tab-badge { background: rgba(243,196,87,.2); color: var(--gold); }
+
+/* ---- Filters Bar ---- */
+.filters-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.filter-search {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+.filter-search input {
+  width: 100%;
+  padding: 10px 14px 10px 36px;
+  background: rgba(245,241,227,.06);
+  border: 1px solid rgba(245,241,227,.08);
+  border-radius: var(--radius-sm);
+  color: var(--cream);
+  font-size: .88rem;
+  outline: none;
+  transition: border-color .2s;
+}
+.filter-search input:focus { border-color: var(--gold); }
+.filter-search input::placeholder { color: rgba(245,241,227,.25); }
+.filter-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(245,241,227,.25);
+  font-size: .9rem;
+}
+
+.filter-select {
+  padding: 10px 14px;
+  background: rgba(245,241,227,.06);
+  border: 1px solid rgba(245,241,227,.08);
+  border-radius: var(--radius-sm);
+  color: var(--cream);
+  font-size: .82rem;
+  outline: none;
+  cursor: pointer;
+  min-width: 140px;
+}
+.filter-select option { background: var(--ink); color: var(--cream); }
+
+.filter-date {
+  padding: 10px 14px;
+  background: rgba(245,241,227,.06);
+  border: 1px solid rgba(245,241,227,.08);
+  border-radius: var(--radius-sm);
+  color: var(--cream);
+  font-size: .82rem;
+  outline: none;
+  cursor: pointer;
+}
+.filter-date::-webkit-calendar-picker-indicator { filter: invert(.7); }
+
+.filter-btn {
+  padding: 10px 16px;
+  font-family: var(--f-mono);
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(245,241,227,.1);
+  color: rgba(245,241,227,.5);
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+.filter-btn-export {
+  background: rgba(79,107,61,.15);
+  border-color: rgba(79,107,61,.3);
+  color: #86EFAC;
+}
+.filter-btn-export:hover { background: rgba(79,107,61,.25); border-color: var(--sage); }
+
+.filter-btn-refresh {
+  background: rgba(243,196,87,.08);
+  border-color: rgba(243,196,87,.15);
+  color: var(--gold);
+}
+.filter-btn-refresh:hover { background: rgba(243,196,87,.15); }
+.filter-btn-refresh.loading .refresh-icon { animation: spin .6s linear infinite; }
+
+/* ---- Orders Table ---- */
+.orders-wrap {
+  background: rgba(245,241,227,.03);
+  border: 1px solid rgba(245,241,227,.06);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.orders-table th {
+  padding: 12px 16px;
+  font-family: var(--f-mono);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(245,241,227,.35);
+  text-align: left;
+  background: rgba(245,241,227,.04);
+  border-bottom: 1px solid rgba(245,241,227,.06);
+  cursor: pointer;
+  user-select: none;
+  transition: color .15s;
+  white-space: nowrap;
+}
+.orders-table th:hover { color: var(--gold); }
+.orders-table th.sorted { color: var(--gold); }
+.sort-arrow { font-size: .6rem; margin-left: 4px; }
+
+.orders-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(245,241,227,.04);
+  font-size: .88rem;
+  vertical-align: middle;
+}
+.orders-table tr { transition: background .15s; cursor: pointer; }
+.orders-table tbody tr:hover { background: rgba(245,241,227,.04); }
+.orders-table tbody tr.new-order-flash {
+  animation: flashGold .8s ease;
+}
+@keyframes flashGold {
+  0% { background: rgba(243,196,87,.2); }
+  100% { background: transparent; }
+}
+
+.order-date {
+  font-family: var(--f-mono);
+  font-size: .78rem;
+  color: rgba(245,241,227,.5);
+}
+.order-name { font-weight: 600; color: var(--cream); }
+.order-name-sub {
+  font-size: .78rem;
+  color: rgba(245,241,227,.35);
+  margin-top: 2px;
+}
+.order-week {
+  font-family: var(--f-mono);
+  font-size: .78rem;
+  color: rgba(245,241,227,.45);
+}
+.order-items-preview {
+  font-size: .78rem;
+  color: rgba(245,241,227,.4);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.order-amount {
+  font-family: var(--f-mono);
+  font-weight: 700;
+  color: var(--gold);
+}
+
+/* ---- Status Badges ---- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: var(--f-mono);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  white-space: nowrap;
+}
+.badge-paid { background: rgba(21,128,61,.15); color: #86EFAC; }
+.badge-new { background: rgba(243,196,87,.15); color: var(--gold); }
+.badge-fulfilled { background: rgba(79,107,61,.2); color: #A3D977; }
+.badge-cancelled { background: rgba(185,28,28,.15); color: #FCA5A5; }
+.badge-failed { background: rgba(185,28,28,.15); color: #FCA5A5; }
+.badge-incomplete { background: rgba(245,241,227,.08); color: rgba(245,241,227,.4); }
+.badge-flagged { background: rgba(239,168,98,.15); color: var(--peach); }
+.badge-followed-up { background: rgba(29,78,216,.15); color: #93C5FD; }
+
+/* ---- Empty State ---- */
+.empty-state {
+  text-align: center;
+  padding: 60px 24px;
+  color: rgba(245,241,227,.3);
+}
+.empty-state-icon { font-size: 2.5rem; margin-bottom: 12px; opacity: .5; }
+.empty-state-title {
+  font-family: var(--f-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: rgba(245,241,227,.4);
+}
+.empty-state-desc { font-size: .88rem; }
+
+/* ---- Loading ---- */
+.table-loading {
+  text-align: center;
+  padding: 60px 24px;
+  color: rgba(245,241,227,.3);
+  font-family: var(--f-mono);
+  font-size: .85rem;
+}
+.table-loading::before {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(245,241,227,.1);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  margin: 0 auto 14px;
+  animation: spin .7s linear infinite;
+}
+
+/* ---- Order Detail Modal ---- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(0,0,0,.6);
+  backdrop-filter: blur(4px);
+  display: none;
+  justify-content: flex-end;
+  animation: fadeIn .2s ease;
+}
+.modal-overlay.open { display: flex; }
+
+.modal-panel {
+  width: 520px;
+  max-width: 100%;
+  height: 100vh;
+  background: #151413;
+  border-left: 1px solid rgba(245,241,227,.06);
+  overflow-y: auto;
+  animation: slideInRight .3s ease;
+  display: flex;
+  flex-direction: column;
+}
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@media (max-width: 560px) { .modal-panel { width: 100%; } }
+
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(245,241,227,.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: #151413;
+  z-index: 1;
+}
+.modal-header h2 {
+  font-family: var(--f-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.modal-close {
+  padding: 6px;
+  color: rgba(245,241,227,.4);
+  transition: color .15s;
+  font-size: 1.2rem;
+}
+.modal-close:hover { color: var(--cream); }
+
+.modal-body {
+  padding: 24px;
+  flex: 1;
+}
+
+.modal-section {
+  margin-bottom: 24px;
+}
+.modal-section-title {
+  font-family: var(--f-mono);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(245,241,227,.3);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.modal-section-title::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  background: var(--gold);
+  border-radius: 50%;
+}
+
+.modal-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(245,241,227,.04);
+  gap: 12px;
+}
+.modal-field:last-child { border-bottom: none; }
+.modal-field-label {
+  font-size: .82rem;
+  color: rgba(245,241,227,.4);
+  flex-shrink: 0;
+}
+.modal-field-value {
+  font-size: .88rem;
+  color: var(--cream);
+  text-align: right;
+  word-break: break-word;
+}
+.modal-field-value.mono {
+  font-family: var(--f-mono);
+  font-size: .78rem;
+}
+
+.modal-items-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.modal-items-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(245,241,227,.04);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.modal-items-list li:last-child { border-bottom: none; }
+.modal-item-name { font-weight: 600; font-size: .88rem; }
+.modal-item-price {
+  font-family: var(--f-mono);
+  font-weight: 700;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.modal-notes-box {
+  background: rgba(245,241,227,.04);
+  border: 1px solid rgba(245,241,227,.06);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: .82rem;
+  white-space: pre-wrap;
+  color: rgba(245,241,227,.6);
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.modal-note-input {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.modal-note-input input {
+  flex: 1;
+  padding: 9px 12px;
+  background: rgba(245,241,227,.06);
+  border: 1px solid rgba(245,241,227,.08);
+  border-radius: 8px;
+  color: var(--cream);
+  font-size: .85rem;
+  outline: none;
+}
+.modal-note-input input:focus { border-color: var(--gold); }
+.modal-note-input input::placeholder { color: rgba(245,241,227,.2); }
+.modal-note-input button {
+  padding: 9px 16px;
+  background: var(--gold);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: .78rem;
+  border-radius: 8px;
+  transition: background .15s;
+}
+.modal-note-input button:hover { background: var(--gold-dark); }
+
+.modal-actions {
+  padding: 20px 24px;
+  border-top: 1px solid rgba(245,241,227,.06);
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  position: sticky;
+  bottom: 0;
+  background: #151413;
+}
+
+.modal-action-btn {
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-family: var(--f-mono);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.modal-action-btn.primary {
+  background: var(--sage);
+  color: var(--cream);
+}
+.modal-action-btn.primary:hover { background: var(--sage-dark); }
+.modal-action-btn.secondary {
+  border: 1px solid rgba(245,241,227,.12);
+  color: rgba(245,241,227,.6);
+}
+.modal-action-btn.secondary:hover { border-color: rgba(245,241,227,.3); color: var(--cream); }
+.modal-action-btn.danger {
+  border: 1px solid rgba(185,28,28,.3);
+  color: #FCA5A5;
+}
+.modal-action-btn.danger:hover { background: rgba(185,28,28,.15); }
+.modal-action-btn.flag {
+  border: 1px solid rgba(239,168,98,.3);
+  color: var(--peach);
+}
+.modal-action-btn.flag:hover { background: rgba(239,168,98,.15); }
+
+/* ---- Abandoned Orders Tab ---- */
+.abandoned-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+
+.abandoned-card {
+  background: rgba(245,241,227,.03);
+  border: 1px solid rgba(245,241,227,.06);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  transition: border-color .2s, transform .15s;
+}
+.abandoned-card:hover { border-color: rgba(245,241,227,.12); transform: translateY(-2px); }
+.abandoned-card.followed-up { opacity: .6; }
+
+.abandoned-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.abandoned-name {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 1rem;
+}
+.abandoned-time {
+  font-family: var(--f-mono);
+  font-size: .68rem;
+  color: rgba(245,241,227,.3);
+}
+
+.abandoned-detail {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: .82rem;
+  border-bottom: 1px solid rgba(245,241,227,.04);
+}
+.abandoned-detail:last-of-type { border-bottom: none; }
+.abandoned-detail-label { color: rgba(245,241,227,.35); }
+.abandoned-detail-value { color: rgba(245,241,227,.7); text-align: right; }
+
+.abandoned-items {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: rgba(245,241,227,.03);
+  border-radius: 8px;
+  font-size: .78rem;
+  color: rgba(245,241,227,.4);
+}
+
+.abandoned-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+.abandoned-action-btn {
+  flex: 1;
+  padding: 9px 12px;
+  border-radius: 999px;
+  font-family: var(--f-mono);
+  font-size: .68rem;
+  font-weight: 700;
+  text-align: center;
+  transition: all .15s;
+}
+.abandoned-action-btn.email-btn {
+  background: rgba(29,78,216,.15);
+  border: 1px solid rgba(29,78,216,.3);
+  color: #93C5FD;
+}
+.abandoned-action-btn.email-btn:hover { background: rgba(29,78,216,.25); }
+.abandoned-action-btn.followup-btn {
+  background: rgba(79,107,61,.15);
+  border: 1px solid rgba(79,107,61,.3);
+  color: #86EFAC;
+}
+.abandoned-action-btn.followup-btn:hover { background: rgba(79,107,61,.25); }
+.abandoned-action-btn.delete-btn {
+  background: rgba(185,28,28,.08);
+  border: 1px solid rgba(185,28,28,.15);
+  color: rgba(245,241,227,.35);
+  flex: 0;
+  padding: 9px 14px;
+}
+.abandoned-action-btn.delete-btn:hover { background: rgba(185,28,28,.2); color: #FCA5A5; }
+
+/* ---- Toast Notifications ---- */
+.toast-container {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.toast {
+  background: rgba(18,17,16,.92);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(245,241,227,.1);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  color: var(--cream);
+  font-size: .88rem;
+  box-shadow: var(--shadow-lg);
+  pointer-events: auto;
+  animation: slideInToast .3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 380px;
+}
+@keyframes slideInToast {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.toast.removing { animation: fadeOutToast .3s ease forwards; }
+@keyframes fadeOutToast {
+  to { opacity: 0; transform: translateX(40px); }
+}
+.toast-icon { font-size: 1.1rem; flex-shrink: 0; }
+.toast-success .toast-icon { color: #86EFAC; }
+.toast-error .toast-icon { color: #FCA5A5; }
+.toast-info .toast-icon { color: var(--gold); }
+.toast-order .toast-icon { color: var(--gold); }
+.toast-text { flex: 1; }
+.toast-text strong { color: var(--gold); }
+.toast-close {
+  padding: 2px;
+  color: rgba(245,241,227,.3);
+  font-size: .8rem;
+}
+.toast-close:hover { color: var(--cream); }
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .dash-header-inner { padding: 10px 16px; }
+  .dash-main { padding: 16px 16px 40px; }
+  .stat-value { font-size: 1.5rem; }
+  .filters-bar { flex-direction: column; align-items: stretch; }
+  .filter-search { min-width: 100%; }
+  .orders-table { font-size: .82rem; }
+  .orders-table th, .orders-table td { padding: 10px 12px; }
+  .hide-mobile { display: none !important; }
+  .abandoned-grid { grid-template-columns: 1fr; }
+}
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(245,241,227,.12); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(245,241,227,.2); }
+</style>
+</head>
+<body>
+
+<!-- ================================================================
+     LOGIN SCREEN
+     ================================================================ -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="favicon.png" alt="Hatch Kitchen">
+      <div class="login-logo-text">
+        Hatch Kitchen
+        <small>KITCHEN DASHBOARD</small>
+      </div>
+    </div>
+
+    <h1 class="login-title">Welcome back</h1>
+    <p class="login-subtitle">Enter your admin password to access the dashboard.</p>
+
+    <form id="login-form" onsubmit="handleLogin(event)">
+      <div class="login-field">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="Enter admin password" autocomplete="current-password" required>
+        <button type="button" class="login-toggle-pw" onclick="togglePasswordVisibility()" id="pw-toggle">Show</button>
+      </div>
+
+      <button type="submit" class="login-btn" id="login-btn">
+        <span id="login-btn-text">Sign in to Dashboard</span>
+        <div class="login-spinner" id="login-spinner"></div>
+      </button>
+    </form>
+
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ================================================================
+     DASHBOARD
+     ================================================================ -->
+<div class="dashboard" id="dashboard">
+
+  <!-- Top Header -->
+  <header class="dash-header">
+    <div class="dash-header-inner">
+      <a href="index.html" class="dash-logo">
+        <img src="favicon.png" alt="Hatch Kitchen">
+        <div class="dash-logo-text">
+          Hatch Kitchen
+          <small>DASHBOARD</small>
+        </div>
+      </a>
+
+      <div class="dash-header-right">
+        <div class="dash-poll-indicator" id="poll-indicator">
+          <div class="dash-poll-dot"></div>
+          <span id="poll-status">Live</span>
+        </div>
+
+        <button class="dash-notif-btn" onclick="requestNotifPermission()" title="Enable desktop notifications" id="notif-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <div class="dash-notif-badge" id="notif-badge">0</div>
+        </button>
+
+        <button class="dash-logout" onclick="logout()" id="logout-btn">
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="dash-main">
+
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label"><span class="stat-icon">📦</span> Total Orders</div>
+        <div class="stat-value" id="stat-total">—</div>
+        <div class="stat-sub" id="stat-total-sub">Loading...</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><span class="stat-icon">💰</span> Revenue</div>
+        <div class="stat-value gold" id="stat-revenue">—</div>
+        <div class="stat-sub" id="stat-revenue-sub">Loading...</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><span class="stat-icon">⏳</span> Pending</div>
+        <div class="stat-value orange" id="stat-pending">—</div>
+        <div class="stat-sub" id="stat-pending-sub">Unfulfilled orders</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label"><span class="stat-icon">👻</span> Abandoned</div>
+        <div class="stat-value purple" id="stat-abandoned">—</div>
+        <div class="stat-sub" id="stat-abandoned-sub">Didn't pay</div>
+      </div>
+    </div>
+
+    <!-- Tab Bar -->
+    <div class="dash-tabs">
+      <button class="dash-tab active" data-tab="orders" onclick="switchTab('orders')">
+        📋 Orders <span class="dash-tab-badge" id="tab-orders-count">0</span>
+      </button>
+      <button class="dash-tab" data-tab="abandoned" onclick="switchTab('abandoned')">
+        👻 Abandoned <span class="dash-tab-badge" id="tab-abandoned-count">0</span>
+      </button>
+    </div>
+
+    <!-- ============ ORDERS TAB ============ -->
+    <div id="orders-tab">
+      <!-- Filters -->
+      <div class="filters-bar">
+        <div class="filter-search">
+          <span class="filter-search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Search by name, email, or order ID..." oninput="applyFilters()">
+        </div>
+
+        <select class="filter-select" id="status-filter" onchange="applyFilters()">
+          <option value="all">All statuses</option>
+          <option value="new">🟡 New</option>
+          <option value="fulfilled">✅ Fulfilled</option>
+          <option value="cancelled">❌ Cancelled</option>
+          <option value="flagged">🚩 Flagged</option>
+          <option value="paid">💳 Paid</option>
+          <option value="failed">⚠️ Failed</option>
+        </select>
+
+        <input type="date" class="filter-date" id="date-from" onchange="applyFilters()" title="From date">
+        <input type="date" class="filter-date" id="date-to" onchange="applyFilters()" title="To date">
+
+        <button class="filter-btn filter-btn-refresh" onclick="refreshOrders()" id="refresh-btn" title="Refresh now">
+          <span class="refresh-icon">↻</span> Refresh
+        </button>
+
+        <button class="filter-btn filter-btn-export" onclick="exportCSV()" title="Export as CSV">
+          ↓ Export CSV
+        </button>
+      </div>
+
+      <!-- Table -->
+      <div class="orders-wrap">
+        <div class="table-loading" id="orders-loading">Loading orders from Stripe…</div>
+        <table class="orders-table" id="orders-table" style="display:none">
+          <thead>
+            <tr>
+              <th onclick="sortBy('created')" id="th-date">Date <span class="sort-arrow">▼</span></th>
+              <th onclick="sortBy('residentName')" id="th-resident">Resident</th>
+              <th onclick="sortBy('customerName')" id="th-contact" class="hide-mobile">Contact</th>
+              <th onclick="sortBy('week')" id="th-week" class="hide-mobile">Week</th>
+              <th class="hide-mobile">Items</th>
+              <th onclick="sortBy('amount')" id="th-amount">Amount</th>
+              <th>Payment</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="orders-tbody"></tbody>
+        </table>
+        <div class="empty-state" id="orders-empty" style="display:none">
+          <div class="empty-state-icon">📭</div>
+          <div class="empty-state-title">No orders found</div>
+          <div class="empty-state-desc">Try adjusting your filters or date range.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ ABANDONED TAB ============ -->
+    <div id="abandoned-tab" style="display:none">
+      <div class="filters-bar">
+        <div class="filter-search">
+          <span class="filter-search-icon">🔍</span>
+          <input type="text" id="abandoned-search" placeholder="Search abandoned orders..." oninput="renderAbandonedOrders()">
+        </div>
+        <button class="filter-btn filter-btn-refresh" onclick="refreshAbandoned()" title="Refresh">
+          <span class="refresh-icon">↻</span> Refresh
+        </button>
+      </div>
+      <div class="abandoned-grid" id="abandoned-grid">
+        <div class="table-loading">Loading abandoned orders…</div>
+      </div>
+      <div class="empty-state" id="abandoned-empty" style="display:none">
+        <div class="empty-state-icon">🎉</div>
+        <div class="empty-state-title">No abandoned orders</div>
+        <div class="empty-state-desc">Everyone who started an order completed their payment!</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================================================================
+     ORDER DETAIL MODAL
+     ================================================================ -->
+<div class="modal-overlay" id="order-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-panel">
+    <div class="modal-header">
+      <h2 id="modal-title">Order Details</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body">
+      <!-- Dynamic content -->
+    </div>
+    <div class="modal-actions" id="modal-actions">
+      <!-- Dynamic actions -->
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ================================================================
+     JAVASCRIPT
+     ================================================================ -->
+<script>
+'use strict';
+
+/* ================================================================
+   STATE
+   ================================================================ */
+let authToken = localStorage.getItem('hatch_admin_token') || null;
+let tokenExpiry = Number(localStorage.getItem('hatch_admin_token_exp')) || 0;
+let orders = [];
+let filteredOrders = [];
+let abandonedOrders = [];
+let currentTab = 'orders';
+let sortField = 'created';
+let sortDir = 'desc';
+let pollingTimer = null;
+let lastKnownOrderIds = new Set();
+let lastPollTime = 0;
+let currentModalOrder = null;
+let newOrderCount = 0;
+const POLL_INTERVAL = 30000; // 30 seconds
+const API_BASE = '';
+
+/* ================================================================
+   AUTH
+   ================================================================ */
+function isAuthenticated() {
+  return authToken && tokenExpiry > Date.now();
+}
+
+async function handleLogin(e) {
+  e.preventDefault();
+  const pw = document.getElementById('login-password').value;
+  const btn = document.getElementById('login-btn');
+  const btnText = document.getElementById('login-btn-text');
+  const spinner = document.getElementById('login-spinner');
+  const errorEl = document.getElementById('login-error');
+
+  errorEl.classList.remove('show');
+  btn.disabled = true;
+  btnText.style.display = 'none';
+  spinner.style.display = '';
+
+  try {
+    const res = await fetch(`${API_BASE}/api/admin-auth`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Authentication failed');
+
+    authToken = data.token;
+    tokenExpiry = data.expiresAt;
+    localStorage.setItem('hatch_admin_token', authToken);
+    localStorage.setItem('hatch_admin_token_exp', String(tokenExpiry));
+
+    showDashboard();
+  } catch (err) {
+    errorEl.textContent = err.message || 'Wrong password. Please try again.';
+    errorEl.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btnText.style.display = '';
+    spinner.style.display = 'none';
+  }
+}
+
+function logout() {
+  authToken = null;
+  tokenExpiry = 0;
+  localStorage.removeItem('hatch_admin_token');
+  localStorage.removeItem('hatch_admin_token_exp');
+  stopPolling();
+  document.getElementById('dashboard').classList.remove('active');
+  document.getElementById('login-screen').style.display = '';
+  document.getElementById('login-password').value = '';
+  document.title = 'Dashboard | Hatch Kitchen';
+}
+
+function togglePasswordVisibility() {
+  const input = document.getElementById('login-password');
+  const toggle = document.getElementById('pw-toggle');
+  if (input.type === 'password') {
+    input.type = 'text';
+    toggle.textContent = 'Hide';
+  } else {
+    input.type = 'password';
+    toggle.textContent = 'Show';
+  }
+}
+
+/* ================================================================
+   DASHBOARD INIT
+   ================================================================ */
+function showDashboard() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard').classList.add('active');
+
+  loadOrders();
+  loadAbandoned();
+  startPolling();
+  requestNotifPermission();
+}
+
+/* ================================================================
+   DATA FETCHING
+   ================================================================ */
+async function apiFetch(url, options = {}) {
+  const headers = { ...options.headers, Authorization: `Bearer ${authToken}` };
+  const res = await fetch(url, { ...options, headers });
+
+  if (res.status === 401) {
+    showToast('Session expired. Please log in again.', 'error');
+    logout();
+    throw new Error('Unauthorized');
+  }
+  return res;
+}
+
+async function loadOrders() {
+  try {
+    document.getElementById('orders-loading').style.display = '';
+    document.getElementById('orders-table').style.display = 'none';
+    document.getElementById('orders-empty').style.display = 'none';
+
+    const params = new URLSearchParams({ limit: '100' });
+    const res = await apiFetch(`${API_BASE}/api/admin-orders?${params}`);
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.error || 'Failed to load orders');
+
+    orders = data.orders || [];
+
+    // Detect new orders for notifications
+    if (lastKnownOrderIds.size > 0) {
+      const newOrders = orders.filter(o => !lastKnownOrderIds.has(o.id));
+      newOrders.forEach(o => {
+        if (o.paymentStatus === 'succeeded') {
+          notifyNewOrder(o);
+        }
+      });
+    }
+    lastKnownOrderIds = new Set(orders.map(o => o.id));
+    lastPollTime = Date.now();
+
+    applyFilters();
+    renderStats();
+  } catch (err) {
+    if (err.message !== 'Unauthorized') {
+      console.error('[loadOrders]', err);
+      showToast('Failed to load orders: ' + err.message, 'error');
+    }
+  } finally {
+    document.getElementById('orders-loading').style.display = 'none';
+  }
+}
+
+async function loadAbandoned() {
+  try {
+    const res = await apiFetch(`${API_BASE}/api/admin-abandoned`);
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.error || 'Failed to load abandoned orders');
+
+    abandonedOrders = data.abandoned || [];
+    document.getElementById('tab-abandoned-count').textContent = abandonedOrders.length;
+    document.getElementById('stat-abandoned').textContent = abandonedOrders.length;
+
+    if (currentTab === 'abandoned') renderAbandonedOrders();
+  } catch (err) {
+    if (err.message !== 'Unauthorized') {
+      console.error('[loadAbandoned]', err);
+    }
+  }
+}
+
+async function refreshOrders() {
+  const btn = document.getElementById('refresh-btn');
+  btn.classList.add('loading');
+  await loadOrders();
+  btn.classList.remove('loading');
+  showToast('Orders refreshed', 'success');
+}
+
+async function refreshAbandoned() {
+  await loadAbandoned();
+  renderAbandonedOrders();
+  showToast('Abandoned orders refreshed', 'success');
+}
+
+/* ================================================================
+   POLLING — Real-time Updates
+   ================================================================ */
+function startPolling() {
+  stopPolling();
+  pollingTimer = setInterval(() => {
+    loadOrders();
+    loadAbandoned();
+  }, POLL_INTERVAL);
+
+  updatePollStatus();
+}
+
+function stopPolling() {
+  if (pollingTimer) {
+    clearInterval(pollingTimer);
+    pollingTimer = null;
+  }
+}
+
+function updatePollStatus() {
+  const el = document.getElementById('poll-status');
+  if (el) {
+    const seconds = Math.round(POLL_INTERVAL / 1000);
+    el.textContent = `Live · ${seconds}s`;
+  }
+}
+
+/* ================================================================
+   NOTIFICATIONS
+   ================================================================ */
+function requestNotifPermission() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function notifyNewOrder(order) {
+  newOrderCount++;
+  const badge = document.getElementById('notif-badge');
+  badge.textContent = newOrderCount;
+  badge.classList.add('show');
+  document.title = `(${newOrderCount}) New Order! | Hatch Kitchen`;
+
+  // Toast
+  showToast(
+    `<strong>New order!</strong> ${order.customerName || order.residentName} — $${order.amount.toFixed(2)}`,
+    'order'
+  );
+
+  // Desktop notification
+  if ('Notification' in window && Notification.permission === 'granted') {
+    const notif = new Notification('🍽️ New Hatch Kitchen Order!', {
+      body: `${order.customerName || order.residentName} — $${order.amount.toFixed(2)}\n${order.itemCount} items · ${order.week}`,
+      icon: 'favicon.png',
+      tag: 'hatch-order-' + order.id,
+    });
+    notif.onclick = () => {
+      window.focus();
+      openModal(order);
+    };
+  }
+
+  // Sound
+  playNotificationSound();
+
+  // Flash the row after re-render
+  setTimeout(() => {
+    const row = document.querySelector(`tr[data-order-id="${order.id}"]`);
+    if (row) row.classList.add('new-order-flash');
+  }, 200);
+}
+
+function playNotificationSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    // Pleasant two-tone chime
+    [800, 1200].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.frequency.value = freq;
+      osc.type = 'sine';
+      gain.gain.value = 0.15;
+      const start = ctx.currentTime + i * 0.15;
+      osc.start(start);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.4);
+      osc.stop(start + 0.4);
+    });
+  } catch (_) { /* audio not available */ }
+}
+
+function clearNotifBadge() {
+  newOrderCount = 0;
+  const badge = document.getElementById('notif-badge');
+  badge.classList.remove('show');
+  document.title = 'Dashboard | Hatch Kitchen';
+}
+
+/* ================================================================
+   FILTERS & SORT
+   ================================================================ */
+function applyFilters() {
+  const search = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
+  const status = document.getElementById('status-filter')?.value || 'all';
+  const dateFrom = document.getElementById('date-from')?.value || '';
+  const dateTo = document.getElementById('date-to')?.value || '';
+
+  filteredOrders = orders.filter(o => {
+    // Search
+    if (search) {
+      const searchFields = [
+        o.residentName, o.customerName, o.customerEmail,
+        o.customerPhone, o.id, o.week, o.items
+      ].join(' ').toLowerCase();
+      if (!searchFields.includes(search)) return false;
+    }
+
+    // Status filter
+    if (status !== 'all') {
+      if (status === 'new' && !(o.paymentStatus === 'succeeded' && (!o.dashboardStatus || o.dashboardStatus === 'new'))) return false;
+      if (status === 'fulfilled' && o.dashboardStatus !== 'fulfilled') return false;
+      if (status === 'cancelled' && o.dashboardStatus !== 'cancelled') return false;
+      if (status === 'flagged' && !o.flagged) return false;
+      if (status === 'paid' && o.paymentStatus !== 'succeeded') return false;
+      if (status === 'failed' && o.paymentStatus === 'succeeded') return false;
+    }
+
+    // Date range
+    if (dateFrom) {
+      const from = new Date(dateFrom).getTime() / 1000;
+      if (o.created < from) return false;
+    }
+    if (dateTo) {
+      const to = new Date(dateTo).getTime() / 1000 + 86399;
+      if (o.created > to) return false;
+    }
+
+    return true;
+  });
+
+  // Sort
+  filteredOrders.sort((a, b) => {
+    let aVal = a[sortField];
+    let bVal = b[sortField];
+    if (typeof aVal === 'string') aVal = aVal.toLowerCase();
+    if (typeof bVal === 'string') bVal = bVal.toLowerCase();
+    if (aVal < bVal) return sortDir === 'asc' ? -1 : 1;
+    if (aVal > bVal) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  renderOrdersTable();
+  updateTabCounts();
+}
+
+function sortBy(field) {
+  if (sortField === field) {
+    sortDir = sortDir === 'desc' ? 'asc' : 'desc';
+  } else {
+    sortField = field;
+    sortDir = 'desc';
+  }
+
+  // Update header indicators
+  document.querySelectorAll('.orders-table th').forEach(th => th.classList.remove('sorted'));
+  const thMap = { created: 'th-date', residentName: 'th-resident', customerName: 'th-contact', week: 'th-week', amount: 'th-amount' };
+  const th = document.getElementById(thMap[field]);
+  if (th) {
+    th.classList.add('sorted');
+    const arrow = th.querySelector('.sort-arrow');
+    if (arrow) arrow.textContent = sortDir === 'desc' ? '▼' : '▲';
+  }
+
+  applyFilters();
+}
+
+/* ================================================================
+   RENDER — Orders Table
+   ================================================================ */
+function renderOrdersTable() {
+  const tbody = document.getElementById('orders-tbody');
+  const table = document.getElementById('orders-table');
+  const empty = document.getElementById('orders-empty');
+
+  if (!filteredOrders.length) {
+    table.style.display = 'none';
+    empty.style.display = '';
+    return;
+  }
+
+  table.style.display = '';
+  empty.style.display = 'none';
+
+  tbody.innerHTML = filteredOrders.map(o => {
+    const date = new Date(o.created * 1000);
+    const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const timeStr = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+    const payBadge = o.paymentStatus === 'succeeded'
+      ? '<span class="badge badge-paid">✓ Paid</span>'
+      : o.paymentStatus === 'canceled'
+        ? '<span class="badge badge-cancelled">Cancelled</span>'
+        : '<span class="badge badge-failed">⚠ ' + o.paymentStatus + '</span>';
+
+    let statusBadge = '';
+    if (o.flagged) statusBadge += '<span class="badge badge-flagged">🚩 Flagged</span> ';
+    if (o.dashboardStatus === 'fulfilled') statusBadge += '<span class="badge badge-fulfilled">✓ Fulfilled</span>';
+    else if (o.dashboardStatus === 'cancelled') statusBadge += '<span class="badge badge-cancelled">Cancelled</span>';
+    else statusBadge += '<span class="badge badge-new">New</span>';
+
+    return `<tr data-order-id="${esc(o.id)}" onclick="openModal(getOrderById('${esc(o.id)}'))">
+      <td><div class="order-date">${dateStr}<br>${timeStr}</div></td>
+      <td><div class="order-name">${esc(o.residentName || '—')}</div></td>
+      <td class="hide-mobile">
+        <div class="order-name">${esc(o.customerName || '—')}</div>
+        <div class="order-name-sub">${esc(o.customerEmail || '')}</div>
+      </td>
+      <td class="hide-mobile"><div class="order-week">${esc(o.week || '—')}</div></td>
+      <td class="hide-mobile">
+        <div class="order-items-preview" title="${esc(o.items)}">${o.itemCount} item${o.itemCount !== 1 ? 's' : ''}</div>
+      </td>
+      <td><div class="order-amount">$${o.amount.toFixed(2)}</div></td>
+      <td>${payBadge}</td>
+      <td>${statusBadge}</td>
+    </tr>`;
+  }).join('');
+}
+
+function getOrderById(id) {
+  return orders.find(o => o.id === id) || null;
+}
+
+/* ================================================================
+   RENDER — Stats
+   ================================================================ */
+function renderStats() {
+  const paidOrders = orders.filter(o => o.paymentStatus === 'succeeded');
+  const revenue = paidOrders.reduce((sum, o) => sum + o.amount, 0);
+  const pending = paidOrders.filter(o => !o.dashboardStatus || o.dashboardStatus === 'new').length;
+
+  document.getElementById('stat-total').textContent = paidOrders.length;
+  document.getElementById('stat-total-sub').textContent = `${orders.length} total (incl. failed)`;
+  document.getElementById('stat-revenue').textContent = '$' + revenue.toFixed(2);
+  document.getElementById('stat-revenue-sub').textContent = `From ${paidOrders.length} paid orders`;
+  document.getElementById('stat-pending').textContent = pending;
+  document.getElementById('stat-pending-sub').textContent = 'Unfulfilled orders';
+
+  document.getElementById('tab-orders-count').textContent = orders.length;
+}
+
+function updateTabCounts() {
+  document.getElementById('tab-orders-count').textContent = filteredOrders.length;
+  document.getElementById('tab-abandoned-count').textContent = abandonedOrders.length;
+}
+
+/* ================================================================
+   RENDER — Abandoned Orders
+   ================================================================ */
+function renderAbandonedOrders() {
+  const grid = document.getElementById('abandoned-grid');
+  const empty = document.getElementById('abandoned-empty');
+  const search = (document.getElementById('abandoned-search')?.value || '').toLowerCase().trim();
+
+  let filtered = abandonedOrders;
+  if (search) {
+    filtered = filtered.filter(a => {
+      const fields = [a.residentName, a.contactName, a.contactEmail, a.contactPhone, a.items].join(' ').toLowerCase();
+      return fields.includes(search);
+    });
+  }
+
+  if (!filtered.length) {
+    grid.innerHTML = '';
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+
+  grid.innerHTML = filtered.map(a => {
+    const date = new Date(a.abandonedAt);
+    const timeAgo = getTimeAgo(date);
+    const stepLabels = ['', 'Menu Selection', 'Resident Info', 'Payment'];
+    const stepLabel = stepLabels[a.stepReached] || `Step ${a.stepReached}`;
+
+    return `<div class="abandoned-card ${a.followedUp ? 'followed-up' : ''}">
+      <div class="abandoned-header">
+        <div>
+          <div class="abandoned-name">${esc(a.residentName || 'Unknown')}</div>
+          ${a.followedUp ? '<span class="badge badge-followed-up">✓ Followed up</span>' : ''}
+        </div>
+        <div class="abandoned-time">${timeAgo}</div>
+      </div>
+
+      ${a.contactEmail ? `<div class="abandoned-detail">
+        <span class="abandoned-detail-label">Email</span>
+        <span class="abandoned-detail-value"><a href="mailto:${esc(a.contactEmail)}" style="color:var(--gold)">${esc(a.contactEmail)}</a></span>
+      </div>` : ''}
+      ${a.contactPhone ? `<div class="abandoned-detail">
+        <span class="abandoned-detail-label">Phone</span>
+        <span class="abandoned-detail-value"><a href="tel:${esc(a.contactPhone)}" style="color:var(--gold)">${esc(a.contactPhone)}</a></span>
+      </div>` : ''}
+      <div class="abandoned-detail">
+        <span class="abandoned-detail-label">Week</span>
+        <span class="abandoned-detail-value">${esc(a.week || '—')}</span>
+      </div>
+      <div class="abandoned-detail">
+        <span class="abandoned-detail-label">Cart total</span>
+        <span class="abandoned-detail-value" style="color:var(--gold);font-family:var(--f-mono);font-weight:700">$${a.total.toFixed(2)}</span>
+      </div>
+      <div class="abandoned-detail">
+        <span class="abandoned-detail-label">Got to</span>
+        <span class="abandoned-detail-value">${stepLabel}</span>
+      </div>
+      ${a.items ? `<div class="abandoned-items">🍽️ ${esc(a.items)}</div>` : ''}
+
+      <div class="abandoned-actions">
+        ${a.contactEmail ? `<button class="abandoned-action-btn email-btn" onclick="emailAbandoned('${esc(a.contactEmail)}', '${esc(a.residentName)}')">📧 Email</button>` : ''}
+        <button class="abandoned-action-btn followup-btn" onclick="toggleFollowedUp('${esc(a.id)}', ${!a.followedUp})">
+          ${a.followedUp ? '↩ Undo' : '✓ Mark followed up'}
+        </button>
+        <button class="abandoned-action-btn delete-btn" onclick="deleteAbandoned('${esc(a.id)}')" title="Delete">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ================================================================
+   TABS
+   ================================================================ */
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.dash-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.getElementById('orders-tab').style.display = tab === 'orders' ? '' : 'none';
+  document.getElementById('abandoned-tab').style.display = tab === 'abandoned' ? '' : 'none';
+
+  if (tab === 'abandoned') renderAbandonedOrders();
+  if (tab === 'orders') clearNotifBadge();
+}
+
+/* ================================================================
+   ORDER DETAIL MODAL
+   ================================================================ */
+function openModal(order) {
+  if (!order) return;
+  currentModalOrder = order;
+  clearNotifBadge();
+
+  const date = new Date(order.created * 1000);
+  const dateStr = date.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' });
+  const timeStr = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+  const items = (order.items || '').split('; ').filter(Boolean);
+
+  document.getElementById('modal-title').textContent = `Order — ${order.residentName || order.customerName || order.id.slice(0, 12)}`;
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="modal-section">
+      <div class="modal-section-title">Payment</div>
+      <div class="modal-field">
+        <span class="modal-field-label">Amount</span>
+        <span class="modal-field-value" style="color:var(--gold);font-family:var(--f-display);font-weight:800;font-size:1.3rem">$${order.amount.toFixed(2)}</span>
+      </div>
+      <div class="modal-field">
+        <span class="modal-field-label">Payment status</span>
+        <span class="modal-field-value">${order.paymentStatus === 'succeeded' ? '<span class="badge badge-paid">✓ Paid</span>' : '<span class="badge badge-failed">' + order.paymentStatus + '</span>'}</span>
+      </div>
+      ${order.cardLast4 ? `<div class="modal-field">
+        <span class="modal-field-label">Card</span>
+        <span class="modal-field-value mono">${order.cardBrand ? order.cardBrand + ' ' : ''}•••• ${order.cardLast4}</span>
+      </div>` : ''}
+      <div class="modal-field">
+        <span class="modal-field-label">Date</span>
+        <span class="modal-field-value mono">${dateStr} at ${timeStr}</span>
+      </div>
+      <div class="modal-field">
+        <span class="modal-field-label">Stripe ID</span>
+        <span class="modal-field-value mono" style="font-size:.72rem;color:rgba(245,241,227,.35)">${order.id}</span>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Resident</div>
+      <div class="modal-field">
+        <span class="modal-field-label">Name</span>
+        <span class="modal-field-value">${esc(order.residentName || '—')}</span>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Contact / Payer</div>
+      <div class="modal-field">
+        <span class="modal-field-label">Name</span>
+        <span class="modal-field-value">${esc(order.customerName || '—')}</span>
+      </div>
+      <div class="modal-field">
+        <span class="modal-field-label">Email</span>
+        <span class="modal-field-value"><a href="mailto:${esc(order.customerEmail)}" style="color:var(--gold)">${esc(order.customerEmail || '—')}</a></span>
+      </div>
+      <div class="modal-field">
+        <span class="modal-field-label">Phone</span>
+        <span class="modal-field-value"><a href="tel:${esc(order.customerPhone)}" style="color:var(--gold)">${esc(order.customerPhone || '—')}</a></span>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Order Details</div>
+      <div class="modal-field">
+        <span class="modal-field-label">Week</span>
+        <span class="modal-field-value">${esc(order.week || '—')}</span>
+      </div>
+      <div class="modal-field">
+        <span class="modal-field-label">Items</span>
+        <span class="modal-field-value">${order.itemCount} item${order.itemCount !== 1 ? 's' : ''}</span>
+      </div>
+      ${order.allergies ? `<div class="modal-field">
+        <span class="modal-field-label">Allergies</span>
+        <span class="modal-field-value" style="color:var(--peach)">${esc(order.allergies)}</span>
+      </div>` : ''}
+      ${order.specialRequests ? `<div class="modal-field">
+        <span class="modal-field-label">Special requests</span>
+        <span class="modal-field-value">${esc(order.specialRequests)}</span>
+      </div>` : ''}
+      ${items.length ? `
+        <div style="margin-top:12px">
+          <ul class="modal-items-list">
+            ${items.map(i => `<li><span class="modal-item-name">${esc(i)}</span></li>`).join('')}
+          </ul>
+        </div>
+      ` : ''}
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Dashboard Notes</div>
+      ${order.dashboardNotes ? `<div class="modal-notes-box">${esc(order.dashboardNotes)}</div>` : '<div style="color:rgba(245,241,227,.3);font-size:.85rem">No notes yet.</div>'}
+      <div class="modal-note-input">
+        <input type="text" id="modal-note-input" placeholder="Add a note..." onkeydown="if(event.key==='Enter')addNote()">
+        <button onclick="addNote()">Add</button>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-title">Status</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${order.flagged ? '<span class="badge badge-flagged">🚩 Flagged</span>' : ''}
+        ${order.dashboardStatus === 'fulfilled'
+          ? '<span class="badge badge-fulfilled">✓ Fulfilled</span>'
+          : order.dashboardStatus === 'cancelled'
+            ? '<span class="badge badge-cancelled">Cancelled</span>'
+            : '<span class="badge badge-new">New</span>'}
+      </div>
+    </div>
+  `;
+
+  // Actions
+  const isFulfilled = order.dashboardStatus === 'fulfilled';
+  const isCancelled = order.dashboardStatus === 'cancelled';
+  const isFlagged = order.flagged;
+
+  document.getElementById('modal-actions').innerHTML = `
+    ${!isFulfilled ? `<button class="modal-action-btn primary" onclick="updateOrder('${order.id}', 'mark-fulfilled')">✓ Mark Fulfilled</button>` : ''}
+    ${isFulfilled ? `<button class="modal-action-btn secondary" onclick="updateOrder('${order.id}', 'mark-new')">↩ Reopen</button>` : ''}
+    ${!isCancelled ? `<button class="modal-action-btn danger" onclick="updateOrder('${order.id}', 'mark-cancelled')">✕ Cancel Order</button>` : ''}
+    ${isCancelled ? `<button class="modal-action-btn secondary" onclick="updateOrder('${order.id}', 'mark-new')">↩ Reopen</button>` : ''}
+    <button class="modal-action-btn flag" onclick="updateOrder('${order.id}', '${isFlagged ? 'unflag' : 'flag'}')">
+      ${isFlagged ? '🚩 Unflag' : '🚩 Flag'}
+    </button>
+    ${order.customerEmail ? `<a href="mailto:${esc(order.customerEmail)}?subject=${encodeURIComponent('Hatch Kitchen — Your Village Order')}" class="modal-action-btn secondary" style="text-decoration:none">📧 Email Customer</a>` : ''}
+  `;
+
+  document.getElementById('order-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('order-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  currentModalOrder = null;
+}
+
+/* ================================================================
+   ORDER ACTIONS
+   ================================================================ */
+async function updateOrder(intentId, action, data = {}) {
+  try {
+    const res = await apiFetch(`${API_BASE}/api/admin-order-action`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ intentId, action, data }),
+    });
+
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Action failed');
+
+    showToast(`Order ${action.replace('mark-', '').replace('-', ' ')}`, 'success');
+
+    // Refresh and reopen modal
+    await loadOrders();
+    const updated = getOrderById(intentId);
+    if (updated && document.getElementById('order-modal').classList.contains('open')) {
+      openModal(updated);
+    }
+  } catch (err) {
+    showToast('Error: ' + err.message, 'error');
+  }
+}
+
+async function addNote() {
+  if (!currentModalOrder) return;
+  const input = document.getElementById('modal-note-input');
+  const note = input.value.trim();
+  if (!note) return;
+
+  await updateOrder(currentModalOrder.id, 'add-note', { note });
+  input.value = '';
+}
+
+/* ================================================================
+   ABANDONED ORDER ACTIONS
+   ================================================================ */
+async function toggleFollowedUp(customerId, followedUp) {
+  try {
+    const action = followedUp ? 'mark-followed-up' : 'mark-not-followed-up';
+    const res = await apiFetch(`${API_BASE}/api/admin-abandoned`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, customerId }),
+    });
+    if (!res.ok) throw new Error('Failed');
+
+    showToast(followedUp ? 'Marked as followed up' : 'Unmarked', 'success');
+    await loadAbandoned();
+    renderAbandonedOrders();
+  } catch (err) {
+    showToast('Error: ' + err.message, 'error');
+  }
+}
+
+async function deleteAbandoned(customerId) {
+  if (!confirm('Delete this abandoned order record? This cannot be undone.')) return;
+  try {
+    const res = await apiFetch(`${API_BASE}/api/admin-abandoned`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'delete', customerId }),
+    });
+    if (!res.ok) throw new Error('Failed');
+
+    showToast('Abandoned order deleted', 'success');
+    await loadAbandoned();
+    renderAbandonedOrders();
+  } catch (err) {
+    showToast('Error: ' + err.message, 'error');
+  }
+}
+
+function emailAbandoned(email, name) {
+  const subject = encodeURIComponent('Hatch Kitchen — Complete Your Meals at the Village Order!');
+  const body = encodeURIComponent(
+    `Hi ${name || 'there'},\n\nWe noticed you started a Meals at the Village order but didn't complete it. We'd love to help you finish — and as a thank you, here's a special offer!\n\nVisit https://www.thehatchkitchen.com/village-orders.html to complete your order.\n\nQuestions? Reply to this email or call us at (424) 455-3195.\n\nHatch Kitchen\nFeel-Good Fuel`
+  );
+  window.open(`mailto:${email}?subject=${subject}&body=${body}`);
+}
+
+/* ================================================================
+   CSV EXPORT
+   ================================================================ */
+function exportCSV() {
+  if (!filteredOrders.length) {
+    showToast('No orders to export', 'error');
+    return;
+  }
+
+  const headers = ['Date', 'Resident', 'Contact', 'Email', 'Phone', 'Week', 'Items', 'Amount', 'Payment', 'Status', 'Stripe ID'];
+  const rows = filteredOrders.map(o => {
+    const date = new Date(o.created * 1000).toLocaleDateString('en-US');
+    return [
+      date,
+      o.residentName,
+      o.customerName,
+      o.customerEmail,
+      o.customerPhone,
+      o.week,
+      `"${(o.items || '').replace(/"/g, '""')}"`,
+      o.amount.toFixed(2),
+      o.paymentStatus,
+      o.dashboardStatus,
+      o.id,
+    ].join(',');
+  });
+
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `hatch-orders-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  showToast(`Exported ${filteredOrders.length} orders`, 'success');
+}
+
+/* ================================================================
+   TOAST NOTIFICATIONS
+   ================================================================ */
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toast-container');
+  const icons = { success: '✓', error: '✕', info: 'ℹ', order: '🍽️' };
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `
+    <span class="toast-icon">${icons[type] || 'ℹ'}</span>
+    <span class="toast-text">${message}</span>
+    <button class="toast-close" onclick="this.closest('.toast').remove()">✕</button>
+  `;
+  container.appendChild(toast);
+
+  // Auto-remove
+  setTimeout(() => {
+    toast.classList.add('removing');
+    setTimeout(() => toast.remove(), 300);
+  }, type === 'order' ? 8000 : 4000);
+}
+
+/* ================================================================
+   HELPERS
+   ================================================================ */
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function getTimeAgo(date) {
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+  if (seconds < 60) return 'Just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+/* ================================================================
+   INIT
+   ================================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  if (isAuthenticated()) {
+    showDashboard();
+  }
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'r' && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      refreshOrders();
+    }
+  });
+
+  // Re-focus: clear badge, refresh
+  window.addEventListener('focus', () => {
+    if (isAuthenticated()) {
+      clearNotifBadge();
+      loadOrders();
+    }
+  });
+});
+</script>
+
+</body>
+</html>

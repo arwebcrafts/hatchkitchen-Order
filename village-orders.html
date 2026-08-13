@@ -2193,8 +2193,8 @@ input, select, textarea { font: inherit; }
 'use strict';
 
 const STRIPE_PK = 'pk_live_51TWjEHHMqcxiN2xT842JWnIIIZee7ZxpUBh0hPDvaKgtnovvbhbW5kPG7YKiclZilDOPLTIQDew0iKEIr8qqiVGq00rSvNtj7P';
-const PAYMENT_ENDPOINT = '/api/create-payment-intent.js';
-const NOTIFY_ENDPOINT  = '/api/notify-order.js';
+const PAYMENT_ENDPOINT = '/api/create-payment-intent';
+const NOTIFY_ENDPOINT  = '/api/notify-order';
 const paymentsEnabled = STRIPE_PK && !STRIPE_PK.includes('YOUR_');
 const STORAGE_KEY = 'hatch-village-order';
 
@@ -3334,6 +3334,7 @@ async function notifyOwnerOfOrder(paymentIntent) {
 }
 
 function showSuccess(intent) {
+  orderCompleted = true; // Prevent abandoned order tracking
   const { lines, total, itemCount } = computeTotals();
   document.getElementById('confirm-order-id').textContent = intent.id || '—';
   document.getElementById('confirm-resident').textContent = `${residentInfo.first} ${residentInfo.last}`;
@@ -3365,6 +3366,64 @@ function showSuccess(intent) {
 }
 
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* ================================================================
+   ABANDONED ORDER TRACKING
+   Captures form data when a user fills the form + selects items
+   but leaves the page without completing payment.
+   ================================================================ */
+let orderCompleted = false;
+let abandonedSent = false;
+
+function buildAbandonedPayload() {
+  saveStep1();
+  saveContactInfo();
+  const { lines, total, itemCount } = computeTotals();
+  return {
+    residentInfo,
+    contactInfo,
+    items: lines.map(l => ({ label: l.label, name: l.label, section: l.section, amount: l.amount })),
+    total,
+    itemCount,
+    week: ORDER_WEEK.label,
+    step: currentStep,
+  };
+}
+
+function shouldTrackAbandoned() {
+  if (orderCompleted || abandonedSent) return false;
+  const hasResident = !!(residentInfo.first || residentInfo.last);
+  const hasContact = !!(contactInfo.email || contactInfo.phone);
+  const hasMeals = computeTotals().itemCount > 0;
+  // Track if they've entered a name OR selected meals
+  return hasResident || hasContact || hasMeals;
+}
+
+function sendAbandonedOrder() {
+  if (!shouldTrackAbandoned()) return;
+  abandonedSent = true;
+  const payload = buildAbandonedPayload();
+  try {
+    const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+    navigator.sendBeacon('/api/save-abandoned-order', blob);
+  } catch (_) {
+    // Fallback: fire-and-forget fetch
+    fetch('/api/save-abandoned-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    }).catch(() => {});
+  }
+}
+
+// Track when user leaves the page without completing
+window.addEventListener('beforeunload', sendAbandonedOrder);
+
+// Track when page is hidden (mobile tab switch, app switch)
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') sendAbandonedOrder();
+});
 </script>
 
 </body>

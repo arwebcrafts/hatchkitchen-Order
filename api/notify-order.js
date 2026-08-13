@@ -88,6 +88,19 @@ module.exports = async function handler(req, res) {
       });
     }
 
+    // 3) Stamp for dashboard tracking
+    try {
+      await stripe.paymentIntents.update(paymentIntentId, {
+        metadata: {
+          ...intent.metadata,
+          dashboard_status: 'new',
+          dashboard_ordered_at: new Date().toISOString(),
+        },
+      });
+    } catch (metaErr) {
+      console.warn('[notify-order] Could not update dashboard metadata:', metaErr.message);
+    }
+
     return res.status(200).json({ ok: true });
   } catch (err) {
     console.error('[notify-order]', err.message);

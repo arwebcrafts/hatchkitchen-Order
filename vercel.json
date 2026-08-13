@@ -1,56 +1,41 @@
 {
   "version": 2,
   "name": "hatch-kitchen",
-  "builds": [
-    {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "*.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "css/**",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "js/**",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "images/**",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "robots.txt",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "sitemap.xml",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "llms.txt",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "site.webmanifest",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "favicon.png",
-      "use": "@vercel/static"
-    }
-  ],
   "routes": [
+    {
+      "src": "/api/create-payment-intent",
+      "dest": "/api/create-payment-intent.js"
+    },
+    {
+      "src": "/api/notify-order",
+      "dest": "/api/notify-order.js"
+    },
+    {
+      "src": "/api/admin-auth",
+      "dest": "/api/admin-auth.js"
+    },
+    {
+      "src": "/api/admin-orders",
+      "dest": "/api/admin-orders.js"
+    },
+    {
+      "src": "/api/admin-order-action",
+      "dest": "/api/admin-order-action.js"
+    },
+    {
+      "src": "/api/admin-abandoned",
+      "dest": "/api/admin-abandoned.js"
+    },
+    {
+      "src": "/api/save-abandoned-order",
+      "dest": "/api/save-abandoned-order.js"
+    },
     {
       "src": "/api/(.*)\\.js",
       "dest": "/api/$1.js"
     },
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1.js"
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
@@ -62,6 +47,22 @@
       "source": "/api/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "no-store" }
+      ]
+    },
+    {
+      "source": "/(.*\\.html)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+        { "key": "Pragma", "value": "no-cache" },
+        { "key": "Expires", "value": "0" }
+      ]
+    },
+    {
+      "source": "/",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+        { "key": "Pragma", "value": "no-cache" },
+        { "key": "Expires", "value": "0" }
       ]
     },
     {
