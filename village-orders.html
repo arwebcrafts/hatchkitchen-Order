@@ -2199,32 +2199,32 @@ const paymentsEnabled = STRIPE_PK && !STRIPE_PK.includes('YOUR_');
 const STORAGE_KEY = 'hatch-village-order';
 
 // Auto-rotating week calculation — no manual updates needed
-// Week runs Monday–Saturday, cutoff is Sunday at 5:00pm PT for the following Mon–Sat
+// Ordering for the upcoming week (Monday–Saturday) opens EVERY THURSDAY AT 10:00 AM PT
+// and closes on SUNDAY AT 5:00 PM PT (cutoff right before the meal week begins).
 function calculateCurrentOrderWeek() {
   const now = new Date();
   const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const dayOfWeek = now.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+  const hour = now.getHours();
 
-  // Find the upcoming Monday (start of the ordering week)
-  // Logic: 
-  //   - Sunday before 5pm: the upcoming Monday is tomorrow → order for that Mon–Sat
-  //   - Sunday after 5pm: the upcoming Monday is 8 days away → order for NEXT Mon–Sat
-  //   - Mon–Sat: the current week's Monday (already started) → order for this Mon–Sat
-  //     BUT if we're on Sat, and the week is ending, we should show next week after cutoff
-  
+  // Find the target Monday for ordering:
+  // - Thursday (4) from 10:00 AM onwards: Open for NEXT week's Monday (+4 days)
+  // - Friday (5): Open for NEXT week's Monday (+3 days)
+  // - Saturday (6): Open for NEXT week's Monday (+2 days)
+  // - Sunday (0) before 5:00 PM (17:00): Open for TOMORROW's Monday (+1 day)
+  // - Sunday (0) after 5:00 PM (17:00): Closed for TOMORROW's Monday (+1 day)
+  // - Mon (1), Tue (2), Wed (3), Thu (4) before 10 AM: Closed for THIS week's Monday (-(dayOfWeek - 1) days)
   let daysUntilMonday;
-  if (dayOfWeek === 0) {
-    // Sunday
-    const cutoffHour = 17; // 5pm
-    if (now.getHours() < cutoffHour) {
-      daysUntilMonday = 1; // Tomorrow is Monday
-    } else {
-      daysUntilMonday = 8; // Next Monday (skip this coming week)
-    }
+  if (dayOfWeek === 4 && hour >= 10) {
+    daysUntilMonday = 4; // Next week's Monday
+  } else if (dayOfWeek === 5) {
+    daysUntilMonday = 3; // Next week's Monday
+  } else if (dayOfWeek === 6) {
+    daysUntilMonday = 2; // Next week's Monday
+  } else if (dayOfWeek === 0) {
+    daysUntilMonday = 1; // Tomorrow's Monday
   } else {
-    // Mon(1)–Sat(6): show the current week (Monday of this week)
-    // daysUntilMonday for current week's Monday = -(dayOfWeek - 1)
-    // e.g., if today is Wed(3), Monday was 2 days ago → -2
+    // Mon, Tue, Wed, or Thu morning before 10am
     daysUntilMonday = -(dayOfWeek - 1);
   }
 
@@ -2235,7 +2235,7 @@ function calculateCurrentOrderWeek() {
   const saturday = new Date(monday);
   saturday.setDate(monday.getDate() + 5);
 
-  // The cutoff is the Sunday BEFORE this Monday at 5pm
+  // The cutoff is the Sunday BEFORE this Monday at 5:00 PM
   const cutoffSunday = new Date(monday);
   cutoffSunday.setDate(monday.getDate() - 1);
   cutoffSunday.setHours(17, 0, 0, 0);
