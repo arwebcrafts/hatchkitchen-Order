@@ -2198,20 +2198,76 @@ const NOTIFY_ENDPOINT  = '/api/notify-order';
 const paymentsEnabled = STRIPE_PK && !STRIPE_PK.includes('YOUR_');
 const STORAGE_KEY = 'hatch-village-order';
 
-// Update weekly — matches Google Form menu structure
-function buildOrderWeekConfig(weekStartDate, meta) {
-  const weekStart = new Date(weekStartDate);
-  const cutoff = new Date(weekStart);
-  cutoff.setHours(17, 0, 0, 0);
+// Auto-rotating week calculation — no manual updates needed
+// Week runs Monday–Saturday, cutoff is Sunday at 5:00pm PT for the following Mon–Sat
+function calculateCurrentOrderWeek() {
+  const now = new Date();
   const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  const cutoffLabel = `Sunday ${monthNames[cutoff.getMonth()]} ${cutoff.getDate()} at 5:00pm`;
-  return { ...meta, weekStart, cutoffLabel, cutoffDate: cutoff };
+  const dayOfWeek = now.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+
+  // Find the upcoming Monday (start of the ordering week)
+  // Logic: 
+  //   - Sunday before 5pm: the upcoming Monday is tomorrow → order for that Mon–Sat
+  //   - Sunday after 5pm: the upcoming Monday is 8 days away → order for NEXT Mon–Sat
+  //   - Mon–Sat: the current week's Monday (already started) → order for this Mon–Sat
+  //     BUT if we're on Sat, and the week is ending, we should show next week after cutoff
+  
+  let daysUntilMonday;
+  if (dayOfWeek === 0) {
+    // Sunday
+    const cutoffHour = 17; // 5pm
+    if (now.getHours() < cutoffHour) {
+      daysUntilMonday = 1; // Tomorrow is Monday
+    } else {
+      daysUntilMonday = 8; // Next Monday (skip this coming week)
+    }
+  } else {
+    // Mon(1)–Sat(6): show the current week (Monday of this week)
+    // daysUntilMonday for current week's Monday = -(dayOfWeek - 1)
+    // e.g., if today is Wed(3), Monday was 2 days ago → -2
+    daysUntilMonday = -(dayOfWeek - 1);
+  }
+
+  const monday = new Date(now);
+  monday.setDate(now.getDate() + daysUntilMonday);
+  monday.setHours(0, 0, 0, 0);
+
+  const saturday = new Date(monday);
+  saturday.setDate(monday.getDate() + 5);
+
+  // The cutoff is the Sunday BEFORE this Monday at 5pm
+  const cutoffSunday = new Date(monday);
+  cutoffSunday.setDate(monday.getDate() - 1);
+  cutoffSunday.setHours(17, 0, 0, 0);
+
+  // Build labels
+  const monMonth = monthNames[monday.getMonth()];
+  const satMonth = monthNames[saturday.getMonth()];
+  const monDay = monday.getDate();
+  const satDay = saturday.getDate();
+  const year = monday.getFullYear();
+
+  let label, dates;
+  if (monMonth === satMonth) {
+    label = `${monMonth} ${monDay} – ${satDay}`;
+    dates = `Monday ${monMonth} ${monDay} through Saturday ${monMonth} ${satDay}, ${year}`;
+  } else {
+    label = `${monMonth} ${monDay} – ${satMonth} ${satDay}`;
+    dates = `Monday ${monMonth} ${monDay} through Saturday ${satMonth} ${satDay}, ${year}`;
+  }
+
+  const cutoffLabel = `Sunday ${monthNames[cutoffSunday.getMonth()]} ${cutoffSunday.getDate()} at 5:00pm`;
+
+  return {
+    label,
+    dates,
+    weekStart: monday,
+    cutoffLabel,
+    cutoffDate: cutoffSunday,
+  };
 }
 
-const ORDER_WEEK = buildOrderWeekConfig(new Date('2026-07-27T00:00:00-07:00'), {
-  label: 'July 27 – August 1',
-  dates: 'Sunday July 27 through Friday August 1, 2026',
-});
+const ORDER_WEEK = calculateCurrentOrderWeek();
 
 const MEAL_IMAGES = {
   pasta:      'images/menu/kids-pasta-and-chicken-bowl-dd6e78d2f807.jpg',
