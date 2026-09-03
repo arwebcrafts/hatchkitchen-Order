@@ -1787,7 +1787,7 @@ input, select, textarea { font: inherit; }
       <div class="panel">
         <div class="panel-title">Resident details</div>
         <div class="notice">
-          Tell us who this order is for. Orders close <strong>Sunday at 5:00pm</strong> for the following week.
+          Tell us who this order is for. Orders open <strong>Thursday at 5:00pm PT</strong> and close <strong>Sunday at 5:00pm PT</strong> for the following week.
         </div>
         <div class="notice" style="background:var(--sage-tint); border-color:rgba(79,107,61,.3); color:var(--sage-dark);">
           <strong>Weekday pickup:</strong> Available in the <strong>#303 refrigerator by 3pm</strong>, Monday through Thursday.<br>
@@ -2197,7 +2197,7 @@ const paymentsEnabled = STRIPE_PK && !STRIPE_PK.includes('YOUR_');
 const STORAGE_KEY = 'hatch-village-order';
 
 // Auto-rotating week calculation — no manual updates needed
-// Ordering for the upcoming week (Monday–Saturday) opens EVERY THURSDAY AT 10:00 AM PT
+// Ordering for the upcoming week (Monday–Saturday) opens EVERY THURSDAY AT 5:00 PM PT
 // and closes on SUNDAY AT 5:00 PM PT (cutoff right before the meal week begins).
 function calculateCurrentOrderWeek() {
   const now = new Date();
@@ -2206,24 +2206,28 @@ function calculateCurrentOrderWeek() {
   const hour = now.getHours();
 
   // Find the target Monday for ordering:
-  // - Thursday (4) from 10:00 AM onwards: Open for NEXT week's Monday (+4 days)
+  // - Thursday (4) from 5:00 PM (17:00) onwards: Open for NEXT week's Monday (+4 days)
   // - Friday (5): Open for NEXT week's Monday (+3 days)
   // - Saturday (6): Open for NEXT week's Monday (+2 days)
   // - Sunday (0) before 5:00 PM (17:00): Open for TOMORROW's Monday (+1 day)
-  // - Sunday (0) after 5:00 PM (17:00): Closed for TOMORROW's Monday (+1 day)
-  // - Mon (1), Tue (2), Wed (3), Thu (4) before 10 AM: Closed for THIS week's Monday (-(dayOfWeek - 1) days)
+  // - Sunday (0) after 5:00 PM (17:00): Target following week's Monday (+8 days)
+  // - Mon (1), Tue (2), Wed (3), Thu (4) before 5 PM: Target upcoming Monday
   let daysUntilMonday;
-  if (dayOfWeek === 4 && hour >= 10) {
+  if (dayOfWeek === 4 && hour >= 17) {
     daysUntilMonday = 4; // Next week's Monday
   } else if (dayOfWeek === 5) {
     daysUntilMonday = 3; // Next week's Monday
   } else if (dayOfWeek === 6) {
     daysUntilMonday = 2; // Next week's Monday
-  } else if (dayOfWeek === 0) {
+  } else if (dayOfWeek === 0 && hour < 17) {
     daysUntilMonday = 1; // Tomorrow's Monday
+  } else if (dayOfWeek === 0 && hour >= 17) {
+    daysUntilMonday = 8; // Following week's Monday
+  } else if (dayOfWeek === 4 && hour < 17) {
+    daysUntilMonday = 4; // Upcoming Monday (e.g. Sept 7 when today is Thu Sept 3)
   } else {
-    // Mon, Tue, Wed, or Thu morning before 10am
-    daysUntilMonday = -(dayOfWeek - 1);
+    // Mon (1), Tue (2), Wed (3)
+    daysUntilMonday = (8 - dayOfWeek); // Upcoming Monday
   }
 
   const monday = new Date(now);
@@ -2233,7 +2237,12 @@ function calculateCurrentOrderWeek() {
   const saturday = new Date(monday);
   saturday.setDate(monday.getDate() + 5);
 
-  // The cutoff is the Sunday BEFORE this Monday at 5:00 PM
+  // The open date is the Thursday BEFORE this Monday at 5:00 PM PT
+  const openThursday = new Date(monday);
+  openThursday.setDate(monday.getDate() - 4);
+  openThursday.setHours(17, 0, 0, 0);
+
+  // The cutoff is the Sunday BEFORE this Monday at 5:00 PM PT
   const cutoffSunday = new Date(monday);
   cutoffSunday.setDate(monday.getDate() - 1);
   cutoffSunday.setHours(17, 0, 0, 0);
@@ -2254,12 +2263,15 @@ function calculateCurrentOrderWeek() {
     dates = `Monday ${monMonth} ${monDay} through Saturday ${satMonth} ${satDay}, ${year}`;
   }
 
+  const openLabel = `Thursday ${monthNames[openThursday.getMonth()]} ${openThursday.getDate()} at 5:00pm PT`;
   const cutoffLabel = `Sunday ${monthNames[cutoffSunday.getMonth()]} ${cutoffSunday.getDate()} at 5:00pm`;
 
   return {
     label,
     dates,
     weekStart: monday,
+    openLabel,
+    openDate: openThursday,
     cutoffLabel,
     cutoffDate: cutoffSunday,
   };
@@ -2525,7 +2537,10 @@ function handleAccessSubmit(e) {
 
 function isOrderLocked() {
   try {
-    return ORDER_WEEK.cutoffDate && new Date() > ORDER_WEEK.cutoffDate;
+    const now = new Date();
+    if (ORDER_WEEK.openDate && now < ORDER_WEEK.openDate) return true;
+    if (ORDER_WEEK.cutoffDate && now > ORDER_WEEK.cutoffDate) return true;
+    return false;
   } catch (e) {
     return false;
   }
@@ -2721,13 +2736,21 @@ function accordionHeader(section, countLabel) {
 function renderWeekBanner() {
   const el = document.getElementById('week-banner');
   if (!el) return;
+  const now = new Date();
+  let cutoffText = `Order by ${ORDER_WEEK.cutoffLabel}`;
+  if (ORDER_WEEK.openDate && now < ORDER_WEEK.openDate) {
+    cutoffText = `Ordering opens ${ORDER_WEEK.openLabel}`;
+  } else if (ORDER_WEEK.cutoffDate && now > ORDER_WEEK.cutoffDate) {
+    cutoffText = 'Orders closed for this week';
+  }
+
   el.innerHTML = `
     <div>
       <div class="week-banner-title">${ORDER_WEEK.label}</div>
       <div class="week-banner-dates">${ORDER_WEEK.dates}</div>
     </div>
     <div class="week-banner-cutoff ${orderLocked ? 'closed' : ''}">
-      ${orderLocked ? 'Orders closed for this week' : `Order by ${ORDER_WEEK.cutoffLabel}`}
+      ${cutoffText}
     </div>`;
 }
 
@@ -3221,7 +3244,11 @@ async function submitPayment() {
   }
 
   if (orderLocked) {
-    const msg = 'Orders for this week are closed. The cutoff was ' + ORDER_WEEK.cutoffLabel + '.';
+    const now = new Date();
+    let msg = 'Orders for this week are closed. The cutoff was ' + ORDER_WEEK.cutoffLabel + '.';
+    if (ORDER_WEEK.openDate && now < ORDER_WEEK.openDate) {
+      msg = 'Ordering for ' + ORDER_WEEK.label + ' opens ' + ORDER_WEEK.openLabel + '.';
+    }
     errEl.textContent = msg;
     errEl.classList.add('show');
     notifyFormIssue(msg);
