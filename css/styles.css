@@ -337,12 +337,7 @@ p  { color: var(--ink-soft); }
 }
 .nav-pill:hover { transform: translateY(-1px); }
 .nav-pill-camp {
-  background: var(--gold);
-  color: var(--ink);
-}
-.nav-pill-camp:hover {
-  background: var(--gold-dark);
-  color: var(--cream);
+  display: none !important;
 }
 .nav-pill-village {
   background: #4F6B3D;

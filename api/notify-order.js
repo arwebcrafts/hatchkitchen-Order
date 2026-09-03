@@ -48,8 +48,11 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Missing order details' });
     }
 
+    console.log('[notify-order] Starting for PI:', paymentIntentId);
+
     const intent = await stripe.paymentIntents.retrieve(paymentIntentId);
     if (intent.status !== 'succeeded') {
+      console.error('[notify-order] Payment not succeeded, status:', intent.status);
       return res.status(400).json({ error: 'Payment has not succeeded' });
     }
 
@@ -58,34 +61,74 @@ module.exports = async function handler(req, res) {
     const currency = (intent.currency || 'usd').toUpperCase();
     const ctx = { order, paidFormatted, currency, paymentIntentId };
 
+    // Create and verify SMTP connection
     const transporter = createTransporter();
     const from = process.env.SMTP_FROM || `Hatch Kitchen <${process.env.SMTP_USER}>`;
 
-    // 1) Kitchen alert
-    await transporter.sendMail({
-      from,
-      to: OWNER_EMAIL,
-      replyTo: order.customerEmail
-        ? (order.customerName
-          ? `"${String(order.customerName).replace(/"/g, '')}" <${order.customerEmail}>`
-          : order.customerEmail)
-        : undefined,
-      subject: `[Hatch Kitchen] New ${order.type || 'order'} — ${paidFormatted}`,
-      text: buildOwnerText(ctx),
-      html: buildOwnerHtml(ctx),
-    });
-
-    // 2) Customer confirmation
-    if (order.customerEmail) {
-      const firstName = (order.customerName || '').trim().split(/\s+/)[0] || 'there';
-      await transporter.sendMail({
-        from,
-        to: order.customerEmail,
-        replyTo: OWNER_EMAIL,
-        subject: `Your Hatch Kitchen order is confirmed — ${paidFormatted}`,
-        text: buildCustomerText({ ...ctx, firstName }),
-        html: buildCustomerHtml({ ...ctx, firstName }),
+    // Verify SMTP credentials work BEFORE trying to send
+    console.log('[notify-order] Verifying SMTP connection...');
+    try {
+      await transporter.verify();
+      console.log('[notify-order] SMTP connection verified OK');
+    } catch (verifyErr) {
+      console.error('[notify-order] SMTP verification FAILED:', verifyErr.message);
+      console.error('[notify-order] SMTP config: host=%s, port=%s, user=%s, pass-length=%d',
+        process.env.SMTP_HOST,
+        process.env.SMTP_PORT,
+        process.env.SMTP_USER,
+        (process.env.SMTP_PASS || '').length
+      );
+      return res.status(500).json({
+        error: 'SMTP connection failed: ' + verifyErr.message,
       });
+    }
+
+    const results = { ownerEmail: null, customerEmail: null };
+
+    // 1) Kitchen alert — send to owner
+    console.log('[notify-order] Sending owner email to:', OWNER_EMAIL);
+    try {
+      const ownerResult = await sendWithRetry(transporter, {
+        from,
+        to: OWNER_EMAIL,
+        replyTo: order.customerEmail
+          ? (order.customerName
+            ? `"${String(order.customerName).replace(/"/g, '')}" <${order.customerEmail}>`
+            : order.customerEmail)
+          : undefined,
+        subject: `[Hatch Kitchen] New ${order.type || 'order'} — ${paidFormatted}`,
+        text: buildOwnerText(ctx),
+        html: buildOwnerHtml(ctx),
+      });
+      results.ownerEmail = 'sent';
+      console.log('[notify-order] Owner email SENT, messageId:', ownerResult.messageId);
+    } catch (ownerErr) {
+      results.ownerEmail = 'failed: ' + ownerErr.message;
+      console.error('[notify-order] Owner email FAILED:', ownerErr.message);
+    }
+
+    // 2) Customer confirmation — always attempt even if owner email failed
+    if (order.customerEmail) {
+      console.log('[notify-order] Sending customer email to:', order.customerEmail);
+      const firstName = (order.customerName || '').trim().split(/\s+/)[0] || 'there';
+      try {
+        const custResult = await sendWithRetry(transporter, {
+          from,
+          to: order.customerEmail,
+          replyTo: OWNER_EMAIL,
+          subject: `Your Hatch Kitchen order is confirmed — ${paidFormatted}`,
+          text: buildCustomerText({ ...ctx, firstName }),
+          html: buildCustomerHtml({ ...ctx, firstName }),
+        });
+        results.customerEmail = 'sent';
+        console.log('[notify-order] Customer email SENT, messageId:', custResult.messageId);
+      } catch (custErr) {
+        results.customerEmail = 'failed: ' + custErr.message;
+        console.error('[notify-order] Customer email FAILED:', custErr.message);
+      }
+    } else {
+      results.customerEmail = 'skipped (no email provided)';
+      console.warn('[notify-order] No customer email provided, skipping customer confirmation');
     }
 
     // 3) Stamp for dashboard tracking
@@ -97,16 +140,57 @@ module.exports = async function handler(req, res) {
           dashboard_ordered_at: new Date().toISOString(),
         },
       });
+      console.log('[notify-order] Dashboard metadata updated OK');
     } catch (metaErr) {
       console.warn('[notify-order] Could not update dashboard metadata:', metaErr.message);
     }
 
-    return res.status(200).json({ ok: true });
+    // Check if either email failed
+    const anyFailed = results.ownerEmail !== 'sent' || (order.customerEmail && results.customerEmail !== 'sent');
+    if (anyFailed) {
+      console.error('[notify-order] One or more emails failed:', JSON.stringify(results));
+      return res.status(207).json({
+        ok: false,
+        warning: 'Some emails may not have been delivered',
+        results,
+      });
+    }
+
+    console.log('[notify-order] All emails sent successfully');
+    return res.status(200).json({ ok: true, results });
   } catch (err) {
-    console.error('[notify-order]', err.message);
+    console.error('[notify-order] UNHANDLED ERROR:', err.message, err.stack);
     return res.status(500).json({ error: err.message || 'Could not send order email' });
   }
 };
+
+/**
+ * Send an email with up to 2 retries for transient errors.
+ */
+async function sendWithRetry(transporter, mailOptions, maxRetries = 2) {
+  let lastErr;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      if (attempt > 0) {
+        console.log(`[notify-order] Retry attempt ${attempt} for email to: ${mailOptions.to}`);
+        await sleep(1000 * attempt); // 1s, then 2s backoff
+      }
+      const result = await transporter.sendMail(mailOptions);
+      return result;
+    } catch (err) {
+      lastErr = err;
+      console.warn(`[notify-order] Send attempt ${attempt + 1} failed:`, err.message);
+      // Only retry on transient errors (connection issues, timeouts)
+      const transient = /ECONN|ETIMEDOUT|ESOCKET|ECONNRESET|ECONNREFUSED|rate|try again/i.test(err.message);
+      if (!transient) throw err; // Non-transient (auth, bad address, etc.) — fail immediately
+    }
+  }
+  throw lastErr;
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function createTransporter() {
   const host = process.env.SMTP_HOST;
@@ -117,12 +201,24 @@ function createTransporter() {
     throw new Error('SMTP not configured (need SMTP_HOST, SMTP_USER, SMTP_PASS)');
   }
 
+  // Trim any whitespace/newline that may have crept in from .env
+  const cleanPass = pass.trim();
+
   const port = Number(process.env.SMTP_PORT || 587);
+  console.log('[notify-order] Creating SMTP transporter: host=%s, port=%d, user=%s, passLen=%d',
+    host, port, user, cleanPass.length);
+
   return nodemailer.createTransport({
     host,
     port,
     secure: port === 465,
-    auth: { user, pass },
+    auth: { user, pass: cleanPass },
+    // Timeout settings to avoid hanging
+    connectionTimeout: 10000,  // 10s to connect
+    greetingTimeout: 10000,    // 10s for SMTP greeting
+    socketTimeout: 15000,      // 15s for socket inactivity
+    // Force TLS for port 587
+    ...(port === 587 ? { requireTLS: true } : {}),
   });
 }
 
