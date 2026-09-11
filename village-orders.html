@@ -2342,19 +2342,6 @@ function resolveMealImage(name) {
 
 const MEAL_SECTIONS_TEMPLATE = [
   {
-    id: 'sunday',
-    title: 'Sunday Meals',
-    subtitle: 'Choose one or more',
-    options: [
-      { id: 'sun-1', name: 'Shredded Chicken Breast and Rotini Pasta', desc: 'Slow-roasted chicken breast, rotini pasta and a steamed seasonal veggie medley', price: 13 },
-      { id: 'sun-2', name: 'Veggie Quinoa Power Bowl', desc: 'Roasted veggie medley, chickpeas, avocado, coleslaw and tahini-basil dressing', price: 16 },
-      { id: 'sun-3', name: 'Chicken Nuggets and Tater Tots Meal', desc: 'Crispy chicken nuggets, golden tater tots and a dipping sauce', price: 14 },
-      { id: 'sun-4', name: 'Chicken Caesar Wrap', desc: 'Romaine lettuce, tomato, crunchy noodles and Caesar dressing on the side', price: 16 },
-      { id: 'sun-5', name: 'BBQ Chicken and Rice Bowl', desc: 'Pulled BBQ chicken over jasmine rice with black beans, sautéed onions, coleslaw and green onion', price: 16 },
-      { id: 'sun-6', name: 'Cheddar Cheese Quesadilla', desc: 'Vegan cheddar cheese, black beans and coleslaw', price: 13 },
-    ],
-  },
-  {
     id: 'monday',
     title: 'Monday Meals',
     subtitle: 'Choose one or more',
@@ -2469,7 +2456,7 @@ let contactInfo = {};
 let currentStep = 1;
 let stripe, cardNumberEl, cardExpiryEl, cardCvcEl, cardMounted = false;
 let orderLocked = false;
-let openDaySections = new Set(['sunday']);
+let openDaySections = new Set(['monday']);
 
 function getItemById(id) {
   for (const section of MEAL_SECTIONS) {
@@ -2676,7 +2663,6 @@ function openAccordion(sectionId) {
 
 function dayNavLabel(section) {
   const map = {
-    sunday: 'Sun',
     monday: 'Mon',
     tuesday: 'Tue',
     wednesday: 'Wed',
