@@ -1747,8 +1747,8 @@ input, select, textarea { font: inherit; }
         </div>
         <div class="bulk-discount-banner" style="background:var(--gold-tint);border:1px solid rgba(200,148,31,.35);border-radius:var(--radius-md);padding:12px 16px;margin-top:14px;display:flex;align-items:center;gap:10px;">
           <span style="font-size:1.15rem;line-height:1;">🏷️</span>
-          <div style="font-size:.88rem;color:#6B4A0A;line-height:1.45;">
-            Order meals on 4 or more days of the week and receive 10% off your entire order!
+          <div style="font-size:.88rem;color:#6B4A0A;line-height:1.45;font-weight:600;">
+            Activate a 10% discount if 4 meals or more are ordered each week.
           </div>
         </div>
       </div>
@@ -2386,12 +2386,12 @@ const MEAL_SECTIONS_TEMPLATE = [
     title: 'Monday Meals',
     subtitle: 'Choose one or more',
     options: [
-      { id: 'mon-1', name: 'Rotisserie Chicken Breast', desc: 'Slow-turned rotisserie chicken breast with jasmine rice and sautéed cauliflower', price: 16 },
-      { id: 'mon-2', name: 'Southwest Chicken Salad', desc: 'Romaine lettuce, tomatoes, black beans, green onion, avocado, crunchy noodles and Southwest dressing', price: 16 },
-      { id: 'mon-3', name: 'Chicken Nuggets and Tater Tots Meal', desc: 'Crispy chicken nuggets, golden tater tots and a dipping sauce', price: 14 },
-      { id: 'mon-4', name: 'BBQ Chicken Wings', desc: 'Sauced BBQ chicken wings with rotisserie potato wedges and ranch dipping sauce', price: 16 },
-      { id: 'mon-5', name: 'Steak Tacos', desc: 'Grilled steak, lettuce, sautéed onions, black beans and coleslaw', price: 18, image: MEAL_IMAGES.taco },
-      { id: 'mon-6', name: 'Chicken, Beans and Rice Burrito', desc: 'Flour tortilla stuffed with rotisserie chicken, black beans, jasmine rice and side coleslaw', price: 15 },
+      { id: 'mon-1', name: 'Rotisserie Chicken Breast', desc: 'with rice and sauteed cauliflower', price: 18 },
+      { id: 'mon-2', name: 'Southwest Chicken Salad', desc: 'with romaine lettuce, tomatoes, black beans, green onion, avocado, crunchy noodles and Southwest dressing', price: 18 },
+      { id: 'mon-3', name: 'Chicken Nuggets and Tater Tots Meal', desc: 'Crispy chicken nuggets, golden tater tots and a dipping sauce', price: 16 },
+      { id: 'mon-4', name: 'Buffalo Chicken Wings', desc: 'rotisserie potatoes with ranch dipping sauce', price: 18, image: MEAL_IMAGES.wings },
+      { id: 'mon-5', name: 'Smoked Burger', desc: 'with rotisserie potato wedges', price: 20, image: MEAL_IMAGES.burger },
+      { id: 'mon-6', name: 'Salmon Tacos', desc: 'with grilled onions, black beans and coleslaw', price: 18, image: MEAL_IMAGES.taco },
     ],
   },
   {
@@ -2399,12 +2399,12 @@ const MEAL_SECTIONS_TEMPLATE = [
     title: 'Tuesday Meals',
     subtitle: 'Choose one or more',
     options: [
-      { id: 'tue-1', name: 'Rotisserie Chicken Leg and Thigh', desc: 'Slow-turned rotisserie chicken leg and thigh with jasmine rice and steamed green beans', price: 16 },
-      { id: 'tue-2', name: 'Asian Chicken Salad', desc: 'Romaine lettuce, cabbage mix, carrots, green onion, crunchy noodles and sesame dressing', price: 16 },
-      { id: 'tue-3', name: 'Chicken Caesar Salad', desc: 'Romaine lettuce, house-made sourdough croutons, Caesar dressing and shaved chicken breast', price: 16 },
-      { id: 'tue-4', name: 'Cheddar Cheese Quesadilla', desc: 'Vegan cheddar cheese, black beans and coleslaw on the side', price: 13 },
-      { id: 'tue-5', name: 'Chicken Nuggets and Tater Tots Meal', desc: 'Crispy chicken nuggets, golden tater tots and a dipping sauce', price: 14 },
-      { id: 'tue-6', name: 'Chicken Avocado Wrap', desc: 'Romaine, tomato, carrots, crunchy noodles and creamy herb sauce on the side', price: 16 },
+      { id: 'tue-1', name: 'Rotisserie Chicken Leg and Thigh', desc: 'with rice and steamed veggie mix', price: 18 },
+      { id: 'tue-2', name: 'Asian Chicken Salad', desc: 'with romaine lettuce, cabbage mix, carrots, green onion, crunchy noodles and sesame dressing', price: 18 },
+      { id: 'tue-3', name: 'Chicken Caesar Salad', desc: 'with romaine lettuce, house made sourdough croutons and Caesar dressing', price: 18 },
+      { id: 'tue-4', name: 'Cheddar Cheese Quesadilla', desc: 'with vegan cheddar cheese, black beans and coleslaw on the side', price: 14 },
+      { id: 'tue-5', name: 'Summer Harvest Salad', desc: 'with arugula, chickpeas, pickled red onion, quinoa, avocado and Tahini dressing', price: 18 },
+      { id: 'tue-6', name: 'Chicken Avocado Wrap', desc: 'with romaine, tomato, carrots, crunchy noodles and creamy herb sauce on the side', price: 18 },
     ],
   },
   {
@@ -2412,12 +2412,12 @@ const MEAL_SECTIONS_TEMPLATE = [
     title: 'Wednesday Meals',
     subtitle: 'Choose one or more',
     options: [
-      { id: 'wed-1', name: 'Shredded Chicken Breast and Rotini Pasta', desc: 'Slow-roasted chicken breast, rotini pasta and a steamed seasonal veggie medley', price: 13 },
-      { id: 'wed-2', name: 'Veggie Quinoa Power Bowl', desc: 'Roasted veggie medley, chickpeas, avocado, coleslaw and tahini-basil dressing', price: 16 },
-      { id: 'wed-3', name: 'Chicken Nuggets and Tater Tots Meal', desc: 'Crispy chicken nuggets, golden tater tots and a dipping sauce', price: 14 },
-      { id: 'wed-4', name: 'Chicken Caesar Wrap', desc: 'Romaine lettuce, tomato, crunchy noodles and Caesar dressing on the side', price: 16 },
-      { id: 'wed-5', name: 'BBQ Chicken and Rice Bowl', desc: 'Pulled BBQ chicken over jasmine rice with black beans, sautéed onions, coleslaw and green onion', price: 16 },
-      { id: 'wed-6', name: 'Cheddar Cheese Quesadilla', desc: 'Vegan cheddar cheese, black beans and coleslaw', price: 13 },
+      { id: 'wed-1', name: 'Shredded Chicken Breast and Rotini Pasta', desc: 'with steamed veggie medley', price: 15 },
+      { id: 'wed-2', name: 'Veggie Quinoa Power Bowl', desc: 'with roasted veggie medley, chickpeas, avocado, coleslaw and tahini and basil dressing', price: 18 },
+      { id: 'wed-3', name: 'Chicken Nuggets and Tater Tots Meal', desc: 'Crispy chicken nuggets, golden tater tots and a dipping sauce', price: 16 },
+      { id: 'wed-4', name: 'Chicken Caesar Wrap', desc: 'with romaine, tomato, crunchy noodles and Caesar dressing sauce on the side', price: 18 },
+      { id: 'wed-5', name: 'BBQ Chicken and Rice Bowl', desc: 'with black beans, sauteed onions, coleslaw and green onion', price: 18 },
+      { id: 'wed-6', name: 'Cheddar Cheese Quesadilla', desc: 'with vegan cheddar cheese, black beans and coleslaw on the side', price: 14 },
     ],
   },
   {
@@ -2425,53 +2425,51 @@ const MEAL_SECTIONS_TEMPLATE = [
     title: 'Thursday Meals',
     subtitle: 'Choose one or more',
     options: [
-      { id: 'thu-1', name: 'Shredded Chicken Breast and Rotini Pasta', desc: 'Slow-roasted chicken breast, rotini pasta and steamed green beans', price: 13 },
-      { id: 'thu-2', name: 'Thai Garden Salad', desc: 'Romaine, red cabbage, shredded carrot, cilantro, rice noodles and Thai peanut dressing', price: 16 },
-      { id: 'thu-3', name: 'Chicken Nuggets and Tater Tots Meal', desc: 'Crispy chicken nuggets, golden tater tots and a dipping sauce', price: 14 },
-      { id: 'thu-4', name: 'BEC Wrap', desc: 'Black beans, shredded carrot, romaine, tomato, avocado, crunchy noodles and creamy herb sauce on the side', price: 16, image: MEAL_IMAGES.becWrap },
-      { id: 'thu-5', name: 'Pulled BBQ Chicken Sandwich', desc: 'Saucy pulled BBQ chicken on a brioche bun with coleslaw and rotisserie potato wedges', price: 18 },
-      { id: 'thu-6', name: 'Cheddar Cheese Quesadilla', desc: 'Vegan cheddar cheese, black beans and coleslaw', price: 13 },
+      { id: 'thu-1', name: 'Shredded Chicken Breast and Rotini Pasta', desc: 'with steamed veggie medley', price: 15 },
+      { id: 'thu-2', name: 'Classic Breakfast Burrito', desc: 'with a side of tater tots', price: 16, image: MEAL_IMAGES.breakfastBurrito },
+      { id: 'thu-3', name: 'Chicken Nuggets and Tater Tots Meal', desc: 'Crispy chicken nuggets, golden tater tots and a dipping sauce', price: 16 },
+      { id: 'thu-4', name: 'Pulled BBQ Chicken Sandwich', desc: 'with coleslaw and potato wedges', price: 18, image: MEAL_IMAGES.sandwich },
+      { id: 'thu-5', name: 'Summer Harvest Salad', desc: 'with arugula, chickpeas, pickled red onion, quinoa, avocado and Tahini dressing', price: 18 },
+      { id: 'thu-6', name: 'Cheddar Cheese Quesadilla', desc: 'with vegan cheddar cheese, black beans and coleslaw on the side', price: 14 },
     ],
   },
   {
     id: 'shabbat-dinner',
     title: 'Shabbat Dinner Chicken Meal',
-    subtitle: '$28 base — includes challah, rice, chicken, green beans & brownie',
+    subtitle: 'AVAILABLE FOR PICK UP ONLY AT HATCH KITCHEN ON FRIDAY BETWEEN 1 PM AND 3 PM',
     type: 'shabbat-dinner',
     base: {
       id: 'shab-dinner',
       name: 'Shabbat Dinner Chicken Meal',
       price: 28,
       includes: [
-        '1× Individual Challah Roll (included)',
-        '1× Fluffy Jasmine Rice 8 oz (included)',
-        '1× Rotisserie Chicken Leg and Thigh with Creamy Herb Sauce (included)',
-        '1× Sautéed Green Beans and Onions (included)',
-        '1× House-Baked Double Chocolate Chip Brownie (included)',
+        '1 x Individual Challah Roll',
+        'Fluffy Jasmine Rice 6 oz',
+        'Rotisserie Chicken Leg and Thigh with Creamy Herb Sauce',
+        '1 x Sauteed veggie medley of mushrooms, peppers, cauliflower chickpeas and onions',
+        '1 x House Baked Double Chocolate Chip Brownie (Included)',
       ],
     },
     addons: [
-      { id: 'shab-soup', name: 'Chicken Noodle Soup 16 oz', desc: 'Rich broth, egg noodles and tender chicken — $14 (standalone or add-on)', price: 14, requiresBase: false, image: MEAL_IMAGES.soup },
-      { id: 'shab-brisket', name: 'Upgrade: 8 oz Smoked Brisket with BBQ Sauce (instead of chicken)', desc: '+$12 — slow-smoked brisket in our signature BBQ glaze', price: 12, requiresBase: true, image: MEAL_IMAGES.brisket8oz },
+      { id: 'shab-soup', name: 'Chicken Noodle Soup 16 oz ($14 extra)', desc: 'Rich broth, egg noodles and tender chicken', price: 14, requiresBase: false, image: MEAL_IMAGES.soup },
+      { id: 'shab-steak', name: 'Swap Chicken for ribeye steak strips ($12 extra)', desc: 'Upgrade to tender ribeye steak strips', price: 12, requiresBase: true, image: MEAL_IMAGES.brisket8oz },
     ],
   },
   {
     id: 'shabbat-lunch',
     title: 'Shabbat Lunch Options',
-    subtitle: 'Dropped off with Friday dinner — refrigerate and enjoy at Shabbat lunch',
+    subtitle: 'AVAILABLE FOR PICK UP ONLY AT HATCH KITCHEN ON FRIDAY BETWEEN 2 PM AND 3 PM',
     options: [
-      { id: 'sl-1', name: 'Asian Chicken Salad', desc: 'Romaine lettuce, cabbage mix, carrots, green onion, crunchy noodles and sesame dressing', price: 16, image: MEAL_IMAGES.asian },
-      { id: 'sl-2', name: 'Chicken Avocado Salad', desc: 'Romaine, tomato, carrots, rotini pasta, crunchy noodles and creamy herb dressing on the side', price: 16 },
-      { id: 'sl-3', name: 'Southwest Chicken Salad', desc: 'Romaine lettuce, tomatoes, black beans, green onion, avocado, crunchy noodles and Southwest dressing', price: 16 },
-      { id: 'sl-4', name: 'Chicken Caesar Salad', desc: 'Romaine lettuce, house-made sourdough croutons and Caesar dressing', price: 16 },
-      { id: 'sl-6', name: 'Chicken Avocado Wrap', desc: 'Romaine, tomato, carrots, crunchy noodles and creamy herb sauce on the side', price: 16 },
-      { id: 'sl-7', name: 'Chicken Caesar Wrap', desc: 'Romaine, tomato, crunchy noodles and Caesar dressing on the side', price: 16 },
-      { id: 'sl-8', name: 'Asian Chicken Wrap', desc: 'Romaine lettuce, cabbage mix, carrots, green onion, crunchy noodles and sesame dressing', price: 16 },
-      { id: 'sl-9', name: 'Southwest Chicken Wrap', desc: 'Romaine lettuce, tomatoes, black beans, green onion, avocado, crunchy noodles and Southwest dressing', price: 16 },
-      { id: 'sl-10', name: 'Smoked Brisket Plate', desc: '8 oz slow-smoked beef brisket with jasmine rice and seasonal roasted vegetables', price: 28, image: MEAL_IMAGES.brisket8oz },
-      { id: 'sl-11', name: 'Herb-Seasoned Salmon Fillet', desc: 'Pan-seared salmon fillet with lemon-herb seasoning, jasmine rice and steamed green beans', price: 24 },
-      { id: 'sl-5', name: 'Veggie Quinoa Power Bowl', desc: 'Roasted veggie medley, chickpeas, avocado, coleslaw and tahini-basil dressing', price: 16 },
-      { id: 'sl-12', name: 'Crispy Tofu Power Bowl', desc: 'Marinated crispy tofu, roasted veggie medley, quinoa, avocado and tahini-basil dressing (vegan)', price: 18 },
+      { id: 'sl-1', name: 'Asian Chicken Salad', desc: 'with romaine lettuce, cabbage mix, carrots, green onion, crunchy noodles and sesame dressing', price: 18, image: MEAL_IMAGES.asian },
+      { id: 'sl-2', name: 'Chicken Avocado Salad', desc: 'with romaine, tomato, carrots, rotini pasta, crunchy noodles and creamy herb sauce on the side', price: 18 },
+      { id: 'sl-3', name: 'Southwest Chicken Salad', desc: 'with romaine lettuce, tomatoes, black beans, green onion, avocado, crunchy noodles and Southwest dressing', price: 18 },
+      { id: 'sl-4', name: 'Chicken Caesar Salad', desc: 'with romaine lettuce, house made sourdough croutons and Caesar dressing', price: 18 },
+      { id: 'sl-5', name: 'Veggie Quinoa Power Bowl', desc: 'with roasted veggie medley, chickpeas, avocado, coleslaw and tahini and basil dressing', price: 18 },
+      { id: 'sl-6', name: 'Chicken Avocado Wrap', desc: 'with romaine, tomato, carrots, crunchy noodles and creamy herb sauce on the side', price: 18 },
+      { id: 'sl-7', name: 'Chicken Caesar Wrap', desc: 'with romaine, tomato, crunchy noodles and Caesar dressing sauce on the side', price: 18 },
+      { id: 'sl-8', name: 'Asian Chicken Wrap', desc: 'with romaine lettuce, cabbage mix, carrots, green onion, crunchy noodles and sesame dressing', price: 18 },
+      { id: 'sl-9', name: 'Southwest Chicken Wrap', desc: 'with romaine lettuce, tomatoes, black beans, green onion, avocado, crunchy noodles and Southwest dressing', price: 18 },
+      { id: 'sl-10', name: 'Summer Harvest Salad', desc: 'with arugula, chickpeas, pickled red onion, quinoa, avocado and Tahini dressing', price: 18 },
     ],
   },
 ];
@@ -2486,7 +2484,7 @@ function initOrderWeekMenu() {
 
 function enforceShabbatAddonRules() {
   if (!selections['shab-dinner']) {
-    delete selections['shab-brisket'];
+    delete selections['shab-steak'];
   }
 }
 
@@ -2846,14 +2844,14 @@ function toggleItem(id) {
   if (!item) return;
 
   if (item.requiresBase && !selections['shab-dinner']) {
-    notifyFormIssue('Select the Shabbat Dinner meal first before adding the brisket swap.', '#section-shabbat-dinner');
+    notifyFormIssue('Select the Shabbat Dinner meal first before adding the steak swap.', '#section-shabbat-dinner');
     return;
   }
 
   if (selections[id]) {
     delete selections[id];
     if (id === 'shab-dinner') {
-      delete selections['shab-brisket'];
+      delete selections['shab-steak'];
     }
   } else {
     selections[id] = true;
@@ -2989,6 +2987,7 @@ function computeTotals() {
   const lines = [];
   let subtotal = 0;
   let itemCount = 0;
+  let mealCount = 0;
   const daysWithMeals = new Set();
   const dayMap = {
     monday: 'monday',
@@ -3005,6 +3004,9 @@ function computeTotals() {
     lines.push({ id, label: item.label, section: item.section, sectionId: item.sectionId, amount: item.price });
     subtotal += item.price;
     itemCount += 1;
+    if (id !== 'shab-steak') {
+      mealCount += 1;
+    }
     if (item.sectionId) {
       const day = dayMap[item.sectionId] || item.sectionId;
       daysWithMeals.add(day);
@@ -3012,15 +3014,15 @@ function computeTotals() {
   });
 
   const dayCount = daysWithMeals.size;
-  const qualifiesForDiscount = dayCount >= 4;
+  const qualifiesForDiscount = mealCount >= 4 || dayCount >= 4;
   const discount = qualifiesForDiscount ? Math.round(subtotal * 0.10 * 100) / 100 : 0;
   const total = Math.max(0, subtotal - discount);
 
-  return { lines, subtotal, discount, total, itemCount, dayCount, qualifiesForDiscount };
+  return { lines, subtotal, discount, total, itemCount, mealCount, dayCount, qualifiesForDiscount };
 }
 
 function renderSummary() {
-  const { lines, subtotal, discount, total, itemCount, dayCount, qualifiesForDiscount } = computeTotals();
+  const { lines, subtotal, discount, total, itemCount, mealCount: mealsOrdered, dayCount, qualifiesForDiscount } = computeTotals();
 
   ['', '-2', '-3'].forEach(suffix => {
     const emptyEl = document.getElementById(`summary-empty${suffix}`);
@@ -3056,7 +3058,7 @@ function renderSummary() {
     if (qualifiesForDiscount) {
       linesHtml += `
         <div class="summary-line summary-discount" style="border-top:1px dashed rgba(134,239,172,.35);margin-top:6px;padding-top:8px;">
-          <span class="s-label" style="color:#86EFAC;font-weight:600;">10% Multi-Day Savings</span>
+          <span class="s-label" style="color:#86EFAC;font-weight:600;">10% Weekly Order Discount</span>
           <span class="s-val" style="color:#86EFAC;font-weight:700;">-$${discount.toFixed(2)}</span>
         </div>`;
     }
@@ -3067,10 +3069,10 @@ function renderSummary() {
 
     if (mealCount) {
       if (qualifiesForDiscount) {
-        mealCount.innerHTML = `<span style="color:#86EFAC;font-weight:700;">🎉 10% Savings Applied (-$${discount.toFixed(2)})</span><br><span style="opacity:.65;">${itemCount} item${itemCount !== 1 ? 's' : ''} across ${dayCount} days</span>`;
-      } else if (dayCount > 0) {
-        const needed = 4 - dayCount;
-        mealCount.innerHTML = `${itemCount} item${itemCount !== 1 ? 's' : ''} on ${dayCount} day${dayCount > 1 ? 's' : ''}<br><span style="color:var(--gold-tint);font-size:.74rem;">Order on ${needed} more day${needed > 1 ? 's' : ''} to save 10%!</span>`;
+        mealCount.innerHTML = `<span style="color:#86EFAC;font-weight:700;">🎉 10% Discount Applied (-$${discount.toFixed(2)})</span><br><span style="opacity:.65;">${mealsOrdered} meal${mealsOrdered !== 1 ? 's' : ''} ordered this week</span>`;
+      } else if (mealsOrdered > 0) {
+        const needed = 4 - mealsOrdered;
+        mealCount.innerHTML = `${mealsOrdered} meal${mealsOrdered !== 1 ? 's' : ''} selected<br><span style="color:var(--gold-tint);font-size:.74rem;">Order ${needed} more meal${needed > 1 ? 's' : ''} to activate 10% discount!</span>`;
       } else {
         mealCount.textContent = `${itemCount} item${itemCount !== 1 ? 's' : ''}`;
       }
@@ -3289,7 +3291,7 @@ function buildReview() {
           <td style="padding:10px 12px;text-align:right;font-family:var(--f-mono);font-weight:600;">$${subtotal.toFixed(2)}</td>
         </tr>
         <tr style="color:var(--green-ok);background:rgba(21,128,61,.08);">
-          <td style="padding:10px 12px;font-weight:700;">10% Multi-Day Discount (4+ days)</td>
+          <td style="padding:10px 12px;font-weight:700;">10% Weekly Order Discount (4+ meals)</td>
           <td style="padding:10px 12px;text-align:right;font-family:var(--f-mono);font-weight:700;">-$${discount.toFixed(2)}</td>
         </tr>` : ''}
         <tr style="background:var(--ink);">
@@ -3476,7 +3478,7 @@ async function notifyOwnerOfOrder(paymentIntent) {
           })),
           notes: [
             `Items: ${itemCount}`,
-            discount > 0 ? `10% Multi-Day Discount: -$${discount.toFixed(2)}` : null,
+            discount > 0 ? `10% Weekly Order Discount: -$${discount.toFixed(2)}` : null,
             `Charged: $${total.toFixed(2)}`,
             raffleBits.length ? `Raffle notes:\n${raffleBits.join('\n')}` : null,
           ].filter(Boolean).join('\n'),
