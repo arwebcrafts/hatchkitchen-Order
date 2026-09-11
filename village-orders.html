@@ -1748,7 +1748,8 @@ input, select, textarea { font: inherit; }
         <div class="bulk-discount-banner" style="background:var(--gold-tint);border:1px solid rgba(200,148,31,.35);border-radius:var(--radius-md);padding:12px 16px;margin-top:14px;display:flex;align-items:center;gap:10px;">
           <span style="font-size:1.15rem;line-height:1;">🏷️</span>
           <div style="font-size:.88rem;color:#6B4A0A;line-height:1.45;font-weight:600;">
-            Activate a 10% discount if 4 meals or more are ordered each week.
+            Order meals on 4 or more days of the week and receive 10% off your entire order!
+            <div style="font-size:.78rem;font-weight:500;opacity:.85;margin-top:2px;">Activate a 10% discount if 4 meals or more are ordered each week.</div>
           </div>
         </div>
       </div>
@@ -3069,10 +3070,11 @@ function renderSummary() {
 
     if (mealCount) {
       if (qualifiesForDiscount) {
-        mealCount.innerHTML = `<span style="color:#86EFAC;font-weight:700;">🎉 10% Discount Applied (-$${discount.toFixed(2)})</span><br><span style="opacity:.65;">${mealsOrdered} meal${mealsOrdered !== 1 ? 's' : ''} ordered this week</span>`;
+        mealCount.innerHTML = `<span style="color:#86EFAC;font-weight:700;">🎉 10% Discount Applied (-$${discount.toFixed(2)})</span><br><span style="opacity:.65;">${mealsOrdered} meal${mealsOrdered !== 1 ? 's' : ''} across ${dayCount} day${dayCount !== 1 ? 's' : ''}</span>`;
       } else if (mealsOrdered > 0) {
-        const needed = 4 - mealsOrdered;
-        mealCount.innerHTML = `${mealsOrdered} meal${mealsOrdered !== 1 ? 's' : ''} selected<br><span style="color:var(--gold-tint);font-size:.74rem;">Order ${needed} more meal${needed > 1 ? 's' : ''} to activate 10% discount!</span>`;
+        const neededMeals = Math.max(1, 4 - mealsOrdered);
+        const neededDays = Math.max(1, 4 - dayCount);
+        mealCount.innerHTML = `${mealsOrdered} meal${mealsOrdered !== 1 ? 's' : ''} on ${dayCount} day${dayCount > 1 ? 's' : ''}<br><span style="color:var(--gold-tint);font-size:.74rem;">Order on ${neededDays} more day${neededDays > 1 ? 's' : ''} (or ${neededMeals} more meal${neededMeals > 1 ? 's' : ''}) to save 10%!</span>`;
       } else {
         mealCount.textContent = `${itemCount} item${itemCount !== 1 ? 's' : ''}`;
       }
