@@ -1741,6 +1741,12 @@ input, select, textarea { font: inherit; }
         <div class="village-menu-actions">
           <span class="hint" style="margin:0;">Same kitchen, same quality standards.</span>
         </div>
+        <div class="bulk-discount-banner" style="background:var(--gold-tint);border:1px solid rgba(200,148,31,.35);border-radius:var(--radius-md);padding:12px 16px;margin-top:14px;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:1.15rem;line-height:1;">🏷️</span>
+          <div style="font-size:.88rem;color:#6B4A0A;line-height:1.45;">
+            Order meals on 4 or more days of the week and receive 10% off your entire order!
+          </div>
+        </div>
       </div>
 
       <nav class="village-day-nav" id="village-day-nav" aria-label="Jump to day on this week&rsquo;s menu"></nav>
@@ -2461,12 +2467,12 @@ let openDaySections = new Set(['monday']);
 function getItemById(id) {
   for (const section of MEAL_SECTIONS) {
     if (section.type === 'shabbat-dinner') {
-      if (section.base.id === id) return { ...section.base, section: section.title, label: section.base.name };
+      if (section.base.id === id) return { ...section.base, section: section.title, sectionId: section.id, label: section.base.name };
       const addon = section.addons.find(a => a.id === id);
-      if (addon) return { ...addon, section: section.title, label: addon.name };
+      if (addon) return { ...addon, section: section.title, sectionId: section.id, label: addon.name };
     } else {
       const opt = section.options.find(o => o.id === id);
-      if (opt) return { ...opt, section: section.title, label: opt.name };
+      if (opt) return { ...opt, section: section.title, sectionId: section.id, label: opt.name };
     }
   }
   return null;
@@ -2947,22 +2953,40 @@ function clearStep1Errors() {
 
 function computeTotals() {
   const lines = [];
-  let total = 0;
+  let subtotal = 0;
   let itemCount = 0;
+  const daysWithMeals = new Set();
+  const dayMap = {
+    monday: 'monday',
+    tuesday: 'tuesday',
+    wednesday: 'wednesday',
+    thursday: 'thursday',
+    'shabbat-dinner': 'friday',
+    'shabbat-lunch': 'saturday'
+  };
 
   Object.keys(selections).forEach(id => {
     const item = getItemById(id);
     if (!item) return;
-    lines.push({ id, label: item.label, section: item.section, amount: item.price });
-    total += item.price;
+    lines.push({ id, label: item.label, section: item.section, sectionId: item.sectionId, amount: item.price });
+    subtotal += item.price;
     itemCount += 1;
+    if (item.sectionId) {
+      const day = dayMap[item.sectionId] || item.sectionId;
+      daysWithMeals.add(day);
+    }
   });
 
-  return { lines, total, itemCount };
+  const dayCount = daysWithMeals.size;
+  const qualifiesForDiscount = dayCount >= 4;
+  const discount = qualifiesForDiscount ? Math.round(subtotal * 0.10 * 100) / 100 : 0;
+  const total = Math.max(0, subtotal - discount);
+
+  return { lines, subtotal, discount, total, itemCount, dayCount, qualifiesForDiscount };
 }
 
 function renderSummary() {
-  const { lines, total, itemCount } = computeTotals();
+  const { lines, subtotal, discount, total, itemCount, dayCount, qualifiesForDiscount } = computeTotals();
 
   ['', '-2', '-3'].forEach(suffix => {
     const emptyEl = document.getElementById(`summary-empty${suffix}`);
@@ -2989,14 +3013,34 @@ function renderSummary() {
     if (hrEl) hrEl.style.display = '';
     if (totalWrap) totalWrap.style.display = '';
 
-    contentEl.innerHTML = lines.map(l => `
+    let linesHtml = lines.map(l => `
       <div class="summary-line">
         <span class="s-label">${l.label}<br><span style="font-size:.72rem;opacity:.55;">${l.section}</span></span>
         <span class="s-val">$${l.amount.toFixed(2)}</span>
       </div>`).join('');
 
+    if (qualifiesForDiscount) {
+      linesHtml += `
+        <div class="summary-line summary-discount" style="border-top:1px dashed rgba(134,239,172,.35);margin-top:6px;padding-top:8px;">
+          <span class="s-label" style="color:#86EFAC;font-weight:600;">10% Multi-Day Savings</span>
+          <span class="s-val" style="color:#86EFAC;font-weight:700;">-$${discount.toFixed(2)}</span>
+        </div>`;
+    }
+
+    contentEl.innerHTML = linesHtml;
+
     if (totalAmt) totalAmt.textContent = `$${total.toFixed(2)}`;
-    if (mealCount) mealCount.textContent = `${itemCount} item${itemCount !== 1 ? 's' : ''}`;
+
+    if (mealCount) {
+      if (qualifiesForDiscount) {
+        mealCount.innerHTML = `<span style="color:#86EFAC;font-weight:700;">🎉 10% Savings Applied (-$${discount.toFixed(2)})</span><br><span style="opacity:.65;">${itemCount} item${itemCount !== 1 ? 's' : ''} across ${dayCount} days</span>`;
+      } else if (dayCount > 0) {
+        const needed = 4 - dayCount;
+        mealCount.innerHTML = `${itemCount} item${itemCount !== 1 ? 's' : ''} on ${dayCount} day${dayCount > 1 ? 's' : ''}<br><span style="color:var(--gold-tint);font-size:.74rem;">Order on ${needed} more day${needed > 1 ? 's' : ''} to save 10%!</span>`;
+      } else {
+        mealCount.textContent = `${itemCount} item${itemCount !== 1 ? 's' : ''}`;
+      }
+    }
   });
 
   const amountStr = total > 0 ? `($${total.toFixed(2)})` : '';
@@ -3176,7 +3220,7 @@ function validateContactInfo() {
 }
 
 function buildReview() {
-  const { lines, total } = computeTotals();
+  const { lines, subtotal, discount, total } = computeTotals();
   document.getElementById('review-details').innerHTML = `
     <div style="margin-bottom:20px;">
       <div class="eyebrow" style="margin-bottom:8px;">Resident</div>
@@ -3205,6 +3249,15 @@ function buildReview() {
           </tr>`).join('')}
       </tbody>
       <tfoot>
+        ${discount > 0 ? `
+        <tr style="border-top:1px solid var(--line-soft);">
+          <td style="padding:10px 12px;color:var(--ink-soft);font-weight:600;">Subtotal</td>
+          <td style="padding:10px 12px;text-align:right;font-family:var(--f-mono);font-weight:600;">$${subtotal.toFixed(2)}</td>
+        </tr>
+        <tr style="color:var(--green-ok);background:rgba(21,128,61,.08);">
+          <td style="padding:10px 12px;font-weight:700;">10% Multi-Day Discount (4+ days)</td>
+          <td style="padding:10px 12px;text-align:right;font-family:var(--f-mono);font-weight:700;">-$${discount.toFixed(2)}</td>
+        </tr>` : ''}
         <tr style="background:var(--ink);">
           <td style="padding:14px 12px;font-family:var(--f-display);font-weight:800;color:var(--cream);">Total Due</td>
           <td style="padding:14px 12px;text-align:right;font-family:var(--f-display);font-size:1.35rem;font-weight:800;color:var(--gold);">$${total.toFixed(2)}</td>
@@ -3360,7 +3413,7 @@ async function submitPayment() {
 async function notifyOwnerOfOrder(paymentIntent) {
   if (!paymentIntent || !paymentIntent.id || String(paymentIntent.id).startsWith('ORD-')) return;
 
-  const { lines, total, itemCount } = computeTotals();
+  const { lines, discount, total, itemCount } = computeTotals();
   const raffleBits = [
     document.getElementById('raffle-improve')?.value.trim(),
     document.getElementById('raffle-dislike')?.value.trim(),
@@ -3389,6 +3442,7 @@ async function notifyOwnerOfOrder(paymentIntent) {
           })),
           notes: [
             `Items: ${itemCount}`,
+            discount > 0 ? `10% Multi-Day Discount: -$${discount.toFixed(2)}` : null,
             `Charged: $${total.toFixed(2)}`,
             raffleBits.length ? `Raffle notes:\n${raffleBits.join('\n')}` : null,
           ].filter(Boolean).join('\n'),
