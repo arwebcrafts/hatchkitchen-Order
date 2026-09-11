@@ -1401,6 +1401,10 @@ input, select, textarea { font: inherit; }
 .footer-links { display: flex; gap: 20px; }
 .footer-links a { transition: color .15s; }
 .footer-links a:hover { color: var(--gold); }
+.terms-scroll-box::-webkit-scrollbar { width: 6px; }
+.terms-scroll-box::-webkit-scrollbar-track { background: rgba(255,255,255,.05); border-radius: 4px; }
+.terms-scroll-box::-webkit-scrollbar-thumb { background: rgba(245,241,227,.25); border-radius: 4px; }
+.terms-scroll-box::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
 /* ---- Media ---- */
 @media (max-width: 768px) {
@@ -2173,6 +2177,36 @@ input, select, textarea { font: inherit; }
 
 <!-- Footer -->
 <footer class="site-footer">
+  <div class="footer-terms-container" style="max-width:1100px;margin:0 auto;padding:36px 24px 0;">
+    <div style="font-family:var(--f-display);font-size:1.05rem;font-weight:700;color:var(--gold);margin-bottom:12px;letter-spacing:.02em;">The Village Resident Ordering Terms</div>
+    <div class="terms-scroll-box" style="height:190px;overflow-y:auto;background:rgba(255,255,255,.05);border:1px solid rgba(245,241,227,.12);border-radius:var(--radius-md);padding:18px 22px;font-size:.82rem;line-height:1.65;color:rgba(245,241,227,.75);">
+      <p style="margin-top:0;margin-bottom:14px;color:var(--cream);font-weight:600;">This special menu and associated pricing are available exclusively to eligible residents of The Village.</p>
+
+      <h5 style="margin:14px 0 6px;color:var(--gold);font-size:.86rem;font-family:var(--f-display);letter-spacing:.02em;">Credits &amp; Refunds</h5>
+      <p style="margin:0 0 12px;">Approved refunds will be issued as a credit toward future Hatch Kitchen meals rather than returned to the original form of payment. Any missing, incorrect, or otherwise problematic orders should be reported within 24 hours so that we can make it right.</p>
+
+      <h5 style="margin:14px 0 6px;color:var(--gold);font-size:.86rem;font-family:var(--f-display);letter-spacing:.02em;">Changes &amp; Cancellations</h5>
+      <p style="margin:0 0 12px;">Orders may be changed or canceled prior to the applicable ordering cutoff. Once an order has entered preparation, we may be unable to accommodate changes or cancellations.</p>
+
+      <h5 style="margin:14px 0 6px;color:var(--gold);font-size:.86rem;font-family:var(--f-display);letter-spacing:.02em;">Pickup, Delivery &amp; Distribution</h5>
+      <p style="margin:0 0 8px;">Hatch Kitchen is responsible for preparing and packaging orders through the time they are picked up or transferred to the resident, The Village or its staff, or a third-party delivery provider.</p>
+      <p style="margin:0 0 8px;">Once an order leaves Hatch Kitchen's possession, transportation, receipt, storage, holding, reheating, and distribution of the meal are outside of Hatch Kitchen's control. Hatch Kitchen is not responsible for delays, loss, damage, improper handling, or deterioration occurring after this handoff.</p>
+      <p style="margin:0 0 12px;">Any delivery or distribution times provided are estimates and may be affected by third-party delivery services or The Village's internal distribution process.</p>
+
+      <h5 style="margin:14px 0 6px;color:var(--gold);font-size:.86rem;font-family:var(--f-display);letter-spacing:.02em;">Food Safety</h5>
+      <p style="margin:0 0 12px;">For quality and food-safety purposes, meals should be consumed promptly or refrigerated as appropriate after receipt. Hatch Kitchen cannot be responsible for food that has been improperly transported, stored, held, reheated, or handled after leaving our possession.</p>
+
+      <h5 style="margin:14px 0 6px;color:var(--gold);font-size:.86rem;font-family:var(--f-display);letter-spacing:.02em;">Allergies &amp; Dietary Needs</h5>
+      <p style="margin:0 0 8px;">Please notify us of any food allergies or dietary restrictions when ordering. While we take reasonable precautions, Hatch Kitchen is not an allergen-free facility and cannot guarantee that any menu item is completely free from cross-contact with allergens.</p>
+      <p style="margin:0 0 12px;">Residents, families, and caregivers are responsible for determining whether a particular menu item is appropriate for the resident's individual dietary, medical, or nutritional needs.</p>
+
+      <h5 style="margin:14px 0 6px;color:var(--gold);font-size:.86rem;font-family:var(--f-display);letter-spacing:.02em;">Availability &amp; Substitutions</h5>
+      <p style="margin:0 0 12px;">Menu items are subject to availability. Occasionally, an ingredient or menu item may become unavailable after an order is placed. When appropriate, we may offer a comparable substitution or meal credit.</p>
+
+      <h5 style="margin:14px 0 6px;color:var(--gold);font-size:.86rem;font-family:var(--f-display);letter-spacing:.02em;">Village Program</h5>
+      <p style="margin:0;">The Village resident menu, pricing, meal credits, and related benefits are intended solely for eligible Village residents and may not be transferred, redeemed for cash, or combined with other Hatch Kitchen promotions unless specifically stated otherwise.</p>
+    </div>
+  </div>
   <div class="footer-inner">
     <div class="footer-brand-row">
       <img src="favicon.png" alt="Hatch Kitchen" style="width:28px;height:28px;border-radius:50%;">
