@@ -2343,16 +2343,18 @@ const MEAL_IMAGES = {
   ebcWrap:    'images/menu/bec-wrap.png',
   burrito:    'images/menu/beans-rice-chicken-burrito.jpg',
   brisket8oz: 'images/menu/smoked-brisket-shabbat.jpg',
+  ribeye:     'images/menu/shaved-ribeye-5-oz.jpg',
   avocadoSalad: 'images/menu/hatch-chicken-salad-708c75ff249e.jpg',
   asianWrap:  'images/menu/asian-chicken-wrap-a21ea7bd0c13.jpg',
   swWrap:     'images/menu/asian-chicken-wrap-a21ea7bd0c13.jpg',
-  shabbat:    'images/family-story.jpg',
+  shabbat:    'images/menu/chicken-family-meal.jpg',
   default:    'images/ai-hero.jpg',
 };
 
 function resolveMealImage(name) {
   const n = name.toLowerCase();
-  if (n.includes('shabbat')) return MEAL_IMAGES.shabbat;
+  if (n.includes('shabbat') || n.includes('family meal')) return MEAL_IMAGES.shabbat;
+  if (n.includes('ribeye') || n.includes('steak strip')) return MEAL_IMAGES.ribeye;
   if (n.includes('chicken noodle soup') || n.includes('soup')) return MEAL_IMAGES.soup;
   if (n.includes('smoked brisket') || n.includes('brisket')) return MEAL_IMAGES.brisket8oz;
   if (n.includes('nugget') || n.includes('tater tot')) return MEAL_IMAGES.nuggets;
@@ -2443,6 +2445,9 @@ const MEAL_SECTIONS_TEMPLATE = [
       id: 'shab-dinner',
       name: 'Shabbat Dinner Chicken Meal',
       price: 28,
+      status: 'In Stock',
+      inStock: true,
+      image: MEAL_IMAGES.shabbat,
       includes: [
         '1 x Individual Challah Roll',
         'Fluffy Jasmine Rice 6 oz',
@@ -2452,8 +2457,8 @@ const MEAL_SECTIONS_TEMPLATE = [
       ],
     },
     addons: [
-      { id: 'shab-soup', name: 'Chicken Noodle Soup 16 oz ($14 extra)', desc: 'Rich broth, egg noodles and tender chicken', price: 14, requiresBase: false, image: MEAL_IMAGES.soup },
-      { id: 'shab-steak', name: 'Swap Chicken for ribeye steak strips ($12 extra)', desc: 'Upgrade to tender ribeye steak strips', price: 12, requiresBase: true, image: MEAL_IMAGES.brisket8oz },
+      { id: 'shab-soup', name: 'Chicken Noodle Soup 16 oz ($14 extra)', desc: 'Rich broth, egg noodles and tender chicken', price: 14, requiresBase: false, status: 'In Stock', inStock: true, image: MEAL_IMAGES.soup },
+      { id: 'shab-steak', name: 'Swap Chicken for ribeye strips ($12 extra)', desc: 'Upgrade to tender ribeye steak strips', price: 12, requiresBase: true, status: 'In Stock', inStock: true, image: MEAL_IMAGES.ribeye },
     ],
   },
   {
@@ -2820,13 +2825,12 @@ function renderMealSections() {
 
 function renderOptionRow(item, selected, needsBase) {
   const img = item.image || resolveMealImage(item.name);
-  const blocked = needsBase || (item.requiresBase && !selections['shab-dinner']);
   return `
-    <div class="meal-option-row ${selected ? 'selected' : ''} ${blocked ? 'addon-muted' : ''}"
-         data-meal-id="${blocked ? '' : item.id}"
+    <div class="meal-option-row ${selected ? 'selected' : ''}"
+         data-meal-id="${item.id}"
          role="button"
-         tabindex="${blocked ? '-1' : '0'}"
-         aria-disabled="${blocked ? 'true' : 'false'}"
+         tabindex="0"
+         aria-disabled="false"
          aria-pressed="${selected ? 'true' : 'false'}">
       <div class="meal-option-check ${selected ? 'checked' : ''}"></div>
       <div class="meal-option-img">
@@ -2845,8 +2849,7 @@ function toggleItem(id) {
   if (!item) return;
 
   if (item.requiresBase && !selections['shab-dinner']) {
-    notifyFormIssue('Select the Shabbat Dinner meal first before adding the steak swap.', '#section-shabbat-dinner');
-    return;
+    selections['shab-dinner'] = true;
   }
 
   if (selections[id]) {
