@@ -2151,7 +2151,36 @@ function escapeCsvValue(val) {
   return str;
 }
 
-function exportCSV() {
+async function exportCSV() {
+  const btn = document.querySelector('.filter-btn-export');
+  if (btn) btn.classList.add('loading');
+
+  try {
+    const token = authToken || localStorage.getItem('hatch_admin_token') || '';
+    const res = await fetch(`/api/export-csv?token=${encodeURIComponent(token)}&t=${Date.now()}`);
+    if (res.ok) {
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `hatch-orders-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Exported orders CSV successfully', 'success');
+      return;
+    }
+  } catch (err) {
+    console.warn('Backend export fetch error, falling back to client generator:', err);
+  } finally {
+    if (btn) btn.classList.remove('loading');
+  }
+
+  exportClientSideCSV();
+}
+
+function exportClientSideCSV() {
   if (!filteredOrders.length) {
     showToast('No orders to export', 'error');
     return;
@@ -2207,7 +2236,9 @@ function exportCSV() {
   const a = document.createElement('a');
   a.href = url;
   a.download = `hatch-orders-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
   URL.revokeObjectURL(url);
 
   showToast(`Exported ${filteredOrders.length} orders`, 'success');

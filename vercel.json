@@ -19,6 +19,10 @@
       "dest": "/api/admin-orders.js"
     },
     {
+      "src": "/api/export-csv",
+      "dest": "/api/export-csv.js"
+    },
+    {
       "src": "/api/admin-order-action",
       "dest": "/api/admin-order-action.js"
     },
