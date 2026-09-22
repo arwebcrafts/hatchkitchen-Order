@@ -1985,34 +1985,224 @@ function emailAbandoned(email, name) {
 }
 
 /* ================================================================
-   CSV EXPORT
+   CSV EXPORT & MEAL CATEGORIZATION BY DAY
    ================================================================ */
+const MENU_DAY_MAPPING = {
+  // Monday Meals
+  'rotisserie chicken breast': ['monday'],
+  'salmon tacos': ['monday'],
+  'buffalo chicken wings': ['monday'],
+  'smoked burger': ['monday'],
+
+  // Tuesday Meals
+  'rotisserie chicken leg and thigh': ['tuesday'],
+
+  // Wednesday Meals
+  'bbq chicken and rice bowl': ['wednesday'],
+
+  // Thursday Meals
+  'classic breakfast burrito': ['thursday'],
+  'pulled bbq chicken sandwich': ['thursday'],
+
+  // Shabbat Dinner (Friday)
+  'shabbat dinner chicken meal': ['shabbat-dinner'],
+  'chicken noodle soup': ['shabbat-dinner'],
+  'swap chicken for ribeye strips': ['shabbat-dinner'],
+  'ribeye': ['shabbat-dinner'],
+
+  // Shabbat Lunch (Saturday)
+  'chicken avocado salad': ['shabbat-lunch'],
+  'asian chicken wrap': ['shabbat-lunch'],
+  'southwest chicken wrap': ['shabbat-lunch'],
+
+  // Multi-day meals
+  'cheddar cheese quesadilla': ['tuesday', 'wednesday', 'thursday'],
+  'shredded chicken breast and rotini pasta': ['wednesday', 'thursday'],
+  'chicken nuggets and tater tots meal': ['monday', 'wednesday', 'thursday'],
+  'summer harvest salad': ['tuesday', 'thursday', 'shabbat-lunch'],
+  'veggie quinoa power bowl': ['wednesday', 'shabbat-lunch'],
+  'chicken avocado wrap': ['tuesday', 'shabbat-lunch'],
+  'chicken caesar wrap': ['wednesday', 'shabbat-lunch'],
+  'chicken caesar salad': ['tuesday', 'shabbat-lunch'],
+  'asian chicken salad': ['tuesday', 'shabbat-lunch'],
+  'southwest chicken salad': ['monday', 'shabbat-lunch'],
+};
+
+function normalizeMealName(str) {
+  return (str || '')
+    .toLowerCase()
+    .replace(/\s*\(\$\d+(\.\d+)?\s*(extra)?\)/i, '')
+    .replace(/[^\w\s]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function findDaysForMeal(rawName) {
+  const norm = normalizeMealName(rawName);
+  for (const [key, days] of Object.entries(MENU_DAY_MAPPING)) {
+    if (norm.includes(key) || key.includes(norm)) {
+      return days;
+    }
+  }
+  return [];
+}
+
+function categorizeOrderMeals(order) {
+  const result = {
+    monday: [],
+    tuesday: [],
+    wednesday: [],
+    thursday: [],
+    'shabbat-dinner': [],
+    'shabbat-lunch': [],
+    other: [],
+  };
+
+  // If explicit day fields already exist on the order object (from new metadata)
+  let hasExplicitFields = false;
+  if (order.mondayMeals) { result.monday.push(...order.mondayMeals.split('; ').filter(Boolean)); hasExplicitFields = true; }
+  if (order.tuesdayMeals) { result.tuesday.push(...order.tuesdayMeals.split('; ').filter(Boolean)); hasExplicitFields = true; }
+  if (order.wednesdayMeals) { result.wednesday.push(...order.wednesdayMeals.split('; ').filter(Boolean)); hasExplicitFields = true; }
+  if (order.thursdayMeals) { result.thursday.push(...order.thursdayMeals.split('; ').filter(Boolean)); hasExplicitFields = true; }
+  if (order.shabbatDinner) { result['shabbat-dinner'].push(...order.shabbatDinner.split('; ').filter(Boolean)); hasExplicitFields = true; }
+  if (order.shabbatLunch) { result['shabbat-lunch'].push(...order.shabbatLunch.split('; ').filter(Boolean)); hasExplicitFields = true; }
+
+  if (hasExplicitFields) {
+    return formatCategorizedResult(result);
+  }
+
+  // Parse items string
+  const rawItems = (order.items || '').split('; ').map(s => s.trim()).filter(Boolean);
+  const pendingMultiDay = [];
+
+  rawItems.forEach(item => {
+    // Check if item has a day prefix, e.g. "Monday Meals: Rotisserie Chicken" or "[Monday Meals] ..."
+    const prefixMatch = item.match(/^(Monday|Tuesday|Wednesday|Thursday|Shabbat Dinner|Shabbat Lunch)(\s+Meals)?[:\-–\]]\s*(.*)$/i);
+    if (prefixMatch) {
+      const dayPart = prefixMatch[1].toLowerCase().replace(/\s+/g, '-');
+      const mealName = prefixMatch[3].trim() || item;
+      const key = dayPart.includes('shabbat-dinner') || dayPart === 'friday' ? 'shabbat-dinner'
+        : dayPart.includes('shabbat-lunch') || dayPart === 'saturday' ? 'shabbat-lunch'
+        : dayPart;
+      if (result[key]) {
+        result[key].push(mealName);
+        return;
+      }
+    }
+
+    // Otherwise match against menu mapping
+    const possibleDays = findDaysForMeal(item);
+    if (possibleDays.length === 1) {
+      result[possibleDays[0]].push(item);
+    } else if (possibleDays.length > 1) {
+      pendingMultiDay.push({ item, possibleDays });
+    } else {
+      result.other.push(item);
+    }
+  });
+
+  // Assign multi-day items intelligently (prioritize unfilled days)
+  pendingMultiDay.sort((a, b) => a.possibleDays.length - b.possibleDays.length);
+  pendingMultiDay.forEach(({ item, possibleDays }) => {
+    let chosenDay = possibleDays.find(d => result[d].length === 0);
+    if (!chosenDay) {
+      chosenDay = possibleDays.reduce((minDay, d) => result[d].length < result[minDay].length ? d : minDay, possibleDays[0]);
+    }
+    result[chosenDay].push(item);
+  });
+
+  return formatCategorizedResult(result);
+}
+
+function formatCategorizedResult(result) {
+  const monday = result.monday.join('; ');
+  const tuesday = result.tuesday.join('; ');
+  const wednesday = result.wednesday.join('; ');
+  const thursday = result.thursday.join('; ');
+  const shabbatDinner = result['shabbat-dinner'].join('; ');
+  const shabbatLunch = result['shabbat-lunch'].join('; ');
+
+  // Build sorted chronological all-items string
+  const allParts = [];
+  if (monday) allParts.push(`Monday Meals: ${monday}`);
+  if (tuesday) allParts.push(`Tuesday Meals: ${tuesday}`);
+  if (wednesday) allParts.push(`Wednesday Meals: ${wednesday}`);
+  if (thursday) allParts.push(`Thursday Meals: ${thursday}`);
+  if (shabbatDinner) allParts.push(`Shabbat Dinner: ${shabbatDinner}`);
+  if (shabbatLunch) allParts.push(`Shabbat Lunch: ${shabbatLunch}`);
+  if (result.other && result.other.length) allParts.push(`Other: ${result.other.join('; ')}`);
+
+  return {
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    shabbatDinner,
+    shabbatLunch,
+    allItems: allParts.join(' | '),
+  };
+}
+
+function escapeCsvValue(val) {
+  const str = String(val == null ? '' : val);
+  if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes(';')) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
 function exportCSV() {
   if (!filteredOrders.length) {
     showToast('No orders to export', 'error');
     return;
   }
 
-  const headers = ['Date', 'Resident', 'Contact', 'Email', 'Phone', 'Week', 'Items', 'Amount', 'Payment', 'Status', 'Stripe ID'];
+  const headers = [
+    'Date',
+    'Resident',
+    'Contact',
+    'Email',
+    'Phone',
+    'Week',
+    'Monday Meals',
+    'Tuesday Meals',
+    'Wednesday Meals',
+    'Thursday Meals',
+    'Shabbat Dinner',
+    'Shabbat Lunch',
+    'All Items',
+    'Amount',
+    'Payment',
+    'Status',
+    'Stripe ID'
+  ];
+
   const rows = filteredOrders.map(o => {
     const date = new Date(o.created * 1000).toLocaleDateString('en-US');
+    const cat = categorizeOrderMeals(o);
     return [
-      date,
-      o.residentName,
-      o.customerName,
-      o.customerEmail,
-      o.customerPhone,
-      o.week,
-      `"${(o.items || '').replace(/"/g, '""')}"`,
-      o.amount.toFixed(2),
-      o.paymentStatus,
-      o.dashboardStatus,
-      o.id,
+      escapeCsvValue(date),
+      escapeCsvValue(o.residentName),
+      escapeCsvValue(o.customerName),
+      escapeCsvValue(o.customerEmail),
+      escapeCsvValue(o.customerPhone),
+      escapeCsvValue(o.week),
+      escapeCsvValue(cat.monday),
+      escapeCsvValue(cat.tuesday),
+      escapeCsvValue(cat.wednesday),
+      escapeCsvValue(cat.thursday),
+      escapeCsvValue(cat.shabbatDinner),
+      escapeCsvValue(cat.shabbatLunch),
+      escapeCsvValue(cat.allItems),
+      escapeCsvValue(o.amount.toFixed(2)),
+      escapeCsvValue(o.paymentStatus),
+      escapeCsvValue(o.dashboardStatus),
+      escapeCsvValue(o.id),
     ].join(',');
   });
 
   const csv = [headers.join(','), ...rows].join('\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
