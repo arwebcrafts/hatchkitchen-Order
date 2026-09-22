@@ -3002,6 +3002,26 @@ function computeTotals() {
     'shabbat-lunch': 'saturday'
   };
 
+  const DAY_ORDER = {
+    monday: 1,
+    tuesday: 2,
+    wednesday: 3,
+    thursday: 4,
+    'shabbat-dinner': 5,
+    'shabbat-lunch': 6,
+  };
+
+  const ITEM_MENU_ORDER = new Map();
+  let menuIdx = 0;
+  MEAL_SECTIONS.forEach(section => {
+    if (section.type === 'shabbat-dinner') {
+      if (section.base) ITEM_MENU_ORDER.set(section.base.id, menuIdx++);
+      (section.addons || []).forEach(addon => ITEM_MENU_ORDER.set(addon.id, menuIdx++));
+    } else {
+      (section.options || []).forEach(opt => ITEM_MENU_ORDER.set(opt.id, menuIdx++));
+    }
+  });
+
   Object.keys(selections).forEach(id => {
     const item = getItemById(id);
     if (!item) return;
@@ -3015,6 +3035,13 @@ function computeTotals() {
       const day = dayMap[item.sectionId] || item.sectionId;
       daysWithMeals.add(day);
     }
+  });
+
+  lines.sort((a, b) => {
+    const orderA = DAY_ORDER[a.sectionId] || 99;
+    const orderB = DAY_ORDER[b.sectionId] || 99;
+    if (orderA !== orderB) return orderA - orderB;
+    return (ITEM_MENU_ORDER.get(a.id) || 0) - (ITEM_MENU_ORDER.get(b.id) || 0);
   });
 
   const dayCount = daysWithMeals.size;

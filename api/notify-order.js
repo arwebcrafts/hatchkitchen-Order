@@ -230,8 +230,24 @@ function esc(s) {
     .replace(/"/g, '&quot;');
 }
 
+function getDaySortWeight(item) {
+  const text = `${item.detail || ''} ${item.label || ''}`.toLowerCase();
+  if (text.includes('monday')) return 1;
+  if (text.includes('tuesday')) return 2;
+  if (text.includes('wednesday')) return 3;
+  if (text.includes('thursday')) return 4;
+  if (text.includes('shabbat dinner') || text.includes('friday')) return 5;
+  if (text.includes('shabbat lunch') || text.includes('saturday') || text.includes('shabbat')) return 6;
+  if (text.includes('sunday')) return 7;
+  return 99;
+}
+
 function itemLines(order) {
-  return (order.items || []).map((item) => {
+  const items = [...(order.items || [])].sort((a, b) => {
+    return getDaySortWeight(a) - getDaySortWeight(b);
+  });
+
+  return items.map((item) => {
     const amt = typeof item.amount === 'number' ? `$${item.amount.toFixed(2)}` : '';
     const disc = item.discount ? ` (discount -$${Number(item.discount).toFixed(2)})` : '';
     return {
