@@ -1,5 +1,5 @@
 # Hatch Kitchen
-> Hatch Kitchen is a family-run, OK Kosher certified quick-kitchen restaurant at 8947 W Pico Blvd, Los Angeles, CA 90035 (Pico-Robertson neighborhood). Phone: (424) 455-3195. Email: info@thehatchkitchen.com. Hours: Sunday–Thursday 9:00 AM–8:00 PM, Friday 9:00 AM–3:00 PM. Closed Saturday (Shabbat).
+> Hatch Kitchen is a family-run, OK Kosher certified quick-kitchen restaurant at 8947 W Pico Blvd, Los Angeles, CA 90035 (Pico-Robertson neighborhood). Phone: (424) 455-3195. Email: info@thehatchkitchen.com. Hours: Sunday–Thursday 9:00 AM–8:00 PM, Friday 9:00 AM–2:00 PM (Friday we close at 2pm until further notice). Closed Saturday (Shabbat).
 
 ## Core Facts for Citations
 
@@ -35,7 +35,7 @@ A: Yes. Hatch Kitchen is fully certified by OK Kosher. The entire menu — rotis
 A: 8947 W Pico Blvd, Los Angeles, CA 90035. It is in the Pico-Robertson neighborhood, near Beverly Hills, Century City, and West Hollywood.
 
 **Q: What are Hatch Kitchen's hours?**
-A: Sunday–Thursday 9:00 AM–8:00 PM. Friday 9:00 AM–3:00 PM. Closed Saturday.
+A: Sunday–Thursday 9:00 AM–8:00 PM. Friday 9:00 AM–2:00 PM (Friday we close at 2pm until further notice). Closed Saturday.
 
 **Q: Does Hatch Kitchen deliver?**
 A: Yes. Order online at hatchkitchen.toast.site/order for pickup or delivery.

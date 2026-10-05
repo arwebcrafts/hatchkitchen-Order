@@ -102,7 +102,7 @@
   ],
   "openingHoursSpecification": [
     { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Sunday","Monday","Tuesday","Wednesday","Thursday"], "opens": "09:00", "closes": "20:00" },
-    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Friday"], "opens": "09:00", "closes": "15:00" }
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Friday"], "opens": "09:00", "closes": "14:00" }
   ],
   "potentialAction": {
     "@type": "OrderAction",
@@ -174,7 +174,7 @@
     {
       "@type": "Question",
       "name": "What are Hatch Kitchen's hours?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Hatch Kitchen is open Sunday through Thursday from 9:00 AM to 8:00 PM, and Friday from 9:00 AM to 3:00 PM. We are closed on Saturday." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Hatch Kitchen is open Sunday through Thursday from 9:00 AM to 8:00 PM, and Friday from 9:00 AM to 2:00 PM (Friday we close at 2pm until further notice). We are closed on Saturday." }
     },
     {
       "@type": "Question",
@@ -203,7 +203,7 @@
     <div class="topbar-left">
       <span class="topbar-tag">Certified Kosher · OK Kosher</span>
       <a href="tel:+14244553195">(424) 455-3195</a>
-      <span>Sun–Thu 9AM–8PM · Fri 9AM–3PM</span>
+      <span>Sun–Thu 9AM–8PM · Fri 9AM–2PM</span>
     </div>
     <div class="topbar-right">
       <a href="catering.html">Catering &amp; Events</a>
@@ -443,9 +443,13 @@
           </div>
           <table class="hours-table">
             <tr class="today"><td>Sunday – Thursday</td><td>9:00 AM – 8:00 PM</td></tr>
-            <tr><td>Friday</td><td>9:00 AM – 3:00 PM</td></tr>
+            <tr><td>Friday</td><td>9:00 AM – 2:00 PM</td></tr>
             <tr><td>Saturday</td><td>Closed</td></tr>
           </table>
+          <div class="hours-notice">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>Friday we close at 2pm until further notice</span>
+          </div>
           <a class="btn btn-primary btn-block" style="margin-top:24px;" href="https://hatchkitchen.toast.site/order" target="_blank" rel="noopener">Order Pickup or Delivery</a>
         </div>
       </div>
@@ -494,7 +498,8 @@
           <li>8947 W Pico Blvd</li>
           <li>Los Angeles, CA 90035, United States</li>
           <li><a href="tel:+14244553195">(424) 455-3195</a></li>
-          <li>Sun–Thu 9AM–8PM · Fri 9AM–3PM</li>
+          <li>Sun–Thu 9AM–8PM · Fri 9AM–2PM</li>
+          <li class="footer-hours-note">Friday we close at 2pm until further notice</li>
         </ul>
       </div>
     </div>
