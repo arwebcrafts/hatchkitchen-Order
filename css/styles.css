@@ -1505,6 +1505,28 @@ footer { background: var(--ink); color: rgba(251,243,230,.72); padding-top: 70px
 .callout-strip span  { opacity: .65; }
 .callout-strip strong { font-size: 1.35rem; font-family: var(--f-display); }
 
+/* Review section action buttons */
+.review-actions {
+  display:         flex;
+  gap:             14px;
+  flex-wrap:       wrap;
+  justify-content: center;
+  align-items:     center;
+  margin-top:      24px;
+}
+@media (max-width: 640px) {
+  .review-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .review-actions .btn {
+    width: 100%;
+    max-width: 290px;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
 /* Skip link */
 .skip-link {
   position:      absolute;
