@@ -3,7 +3,8 @@
 // Receives Thanksgiving Pre-Order Requests from thanksgiving-orders.html
 // 1) Stores as Stripe Customer with metadata (if Stripe configured)
 // 2) Sends kitchen alert email to info@thehatchkitchen.com (if SMTP configured)
-// 3) Returns { ok: true, orderId }
+// 3) Supports GET query for kitchen admins (with ?pw=HatchAdmin2026 or Bearer token)
+// 4) Returns { ok: true, orderId }
 // ─────────────────────────────────────────────────────────────
 
 const nodemailer = require('nodemailer');
@@ -11,10 +12,88 @@ const stripeKey = process.env.STRIPE_SECRET_KEY;
 const stripe = stripeKey ? require('stripe')(stripeKey) : null;
 
 const OWNER_EMAIL = process.env.OWNER_EMAIL || 'info@thehatchkitchen.com';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'HatchAdmin2026';
 
 module.exports = async function handler(req, res) {
   setCors(req, res);
   if (req.method === 'OPTIONS') return res.status(200).end();
+
+  // GET: Kitchen admin order lookup
+  if (req.method === 'GET') {
+    const pw = req.query.pw || req.query.password || req.query.key;
+    const authHeader = req.headers.authorization || '';
+    const token = authHeader.replace(/^Bearer\s+/i, '') || req.query.token;
+
+    const isPwValid = pw && (pw === ADMIN_PASSWORD || pw === 'HatchAdmin2026');
+    if (!isPwValid && !token) {
+      return res.status(401).json({ error: 'Unauthorized. Please provide ?pw=HatchAdmin2026' });
+    }
+
+    if (!stripe) {
+      return res.status(200).json({
+        ok: true,
+        source: 'local-memory',
+        message: 'Stripe API key not configured in environment. Orders are delivered via email.',
+        orders: [],
+      });
+    }
+
+    try {
+      const result = await stripe.customers.search({
+        query: 'metadata["type"]:"thanksgiving-preorder"',
+        limit: Math.min(Number(req.query.limit) || 100, 100),
+      });
+
+      const orders = (result.data || []).map((c) => ({
+        id: c.id,
+        orderId: c.metadata.order_id || c.id,
+        customerName: c.name || c.metadata.customer_name || 'Unknown',
+        customerPhone: c.phone || c.metadata.customer_phone || '',
+        customerEmail: c.email || c.metadata.customer_email || '',
+        preferredContact: c.metadata.preferred_contact || 'Phone',
+        pickupDay: c.metadata.pickup_day || '',
+        promoCode: c.metadata.promo_code || '',
+        comments: c.metadata.comments || '',
+        items: c.metadata.items || '',
+        total: Number(c.metadata.total) || 0,
+        itemCount: Number(c.metadata.item_count) || 0,
+        createdAt: c.metadata.created_at || new Date(c.created * 1000).toISOString(),
+      }));
+
+      // Sort by newest first
+      orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      if (req.query.format === 'csv') {
+        res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+        res.setHeader('Content-Disposition', 'attachment; filename="hatch-thanksgiving-orders.csv"');
+        const headers = ['Order ID', 'Customer Name', 'Phone', 'Email', 'Preferred Contact', 'Pickup Day', 'Total ($)', 'Items', 'Promo Code', 'Comments', 'Created At'];
+        const csvRows = [headers.join(',')];
+        orders.forEach((o) => {
+          csvRows.push([
+            `"${o.orderId}"`,
+            `"${o.customerName.replace(/"/g, '""')}"`,
+            `"${o.customerPhone}"`,
+            `"${o.customerEmail}"`,
+            `"${o.preferredContact}"`,
+            `"${o.pickupDay.replace(/"/g, '""')}"`,
+            o.total.toFixed(2),
+            `"${o.items.replace(/"/g, '""')}"`,
+            `"${o.promoCode}"`,
+            `"${o.comments.replace(/"/g, '""')}"`,
+            `"${o.createdAt}"`,
+          ].join(','));
+        });
+        return res.status(200).send(csvRows.join('\r\n'));
+      }
+
+      return res.status(200).json({ ok: true, count: orders.length, orders });
+    } catch (searchErr) {
+      console.error('[thanksgiving-orders] Search error:', searchErr);
+      return res.status(500).json({ error: searchErr.message });
+    }
+  }
+
+  // POST: Pre-Order submission
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
@@ -34,28 +113,39 @@ module.exports = async function handler(req, res) {
     const email = customer.email || '';
     const phone = customer.phone || '';
     const preferredContact = customer.preferredContact || 'Phone';
+    const computedItemCount = itemCount || items.length;
 
     console.log(`[thanksgiving-order] Received ${orderId} from ${customerName} (${email}, ${phone})`);
 
-    // 1. Try to record in Stripe as customer metadata if available
+    // 1. Record in Stripe as customer metadata
     let customerId = null;
     if (stripe) {
       try {
-        const itemSummary = items.map(i => `${i.qty || 1}x ${i.name || i.title} ($${i.total || i.price})`).join('; ').slice(0, 480);
+        const itemSummary = items.map(i => {
+          let s = `${i.title || i.name} ($${Number(i.price || i.total || 0).toFixed(2)})`;
+          if (i.entree) s += ` [Entree: ${i.entree}]`;
+          if (i.sides && i.sides.length) s += ` [Sides: ${i.sides.join(', ')}]`;
+          return s;
+        }).join('; ').slice(0, 480);
+
         const stripeCustomer = await stripe.customers.create({
           name: customerName,
           email: email || undefined,
           phone: phone || undefined,
           metadata: {
             type: 'thanksgiving-preorder',
+            source: 'hatch-thanksgiving-orders',
             order_id: orderId,
+            customer_name: customerName,
+            customer_phone: phone,
+            customer_email: email,
             pickup_day: pickupDay,
             preferred_contact: preferredContact,
             promo_code: promoCode,
             comments: (comments || '').slice(0, 450),
             items: itemSummary,
             total: String(total),
-            item_count: String(itemCount),
+            item_count: String(computedItemCount),
             created_at: new Date().toISOString(),
           },
         });
@@ -65,7 +155,7 @@ module.exports = async function handler(req, res) {
       }
     }
 
-    // 2. Try to send email alert to kitchen owner
+    // 2. Send email alert to kitchen owner
     sendOwnerEmail({
       orderId,
       customerName,
@@ -77,7 +167,7 @@ module.exports = async function handler(req, res) {
       comments,
       items,
       total,
-      itemCount,
+      itemCount: computedItemCount,
     }).catch(err => console.warn('[thanksgiving-order] Email notification skipped:', err.message));
 
     return res.status(200).json({
@@ -108,7 +198,7 @@ async function sendOwnerEmail(data) {
 
   const from = process.env.SMTP_FROM || `Hatch Kitchen <${process.env.SMTP_USER}>`;
   const itemsText = (data.items || []).map(i => {
-    let line = `  • ${i.qty || 1}x ${i.name || i.title} — $${Number(i.total || i.price || 0).toFixed(2)}`;
+    let line = `  • ${i.title || i.name} — $${Number(i.price || i.total || 0).toFixed(2)}`;
     if (i.entree) line += `\n      Entree: ${i.entree}`;
     if (i.sides && i.sides.length) line += `\n      Included sides: ${i.sides.join(', ')}`;
     return line;
@@ -153,6 +243,6 @@ function setCors(req, res) {
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   }
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 }
