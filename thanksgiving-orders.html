@@ -1,32 +1,27 @@
 <!doctype html>
 <!--
   ╔══════════════════════════════════════════════════════════╗
-  ║  HATCH KITCHEN — Thanksgiving Dinner Pre-Orders          ║
-  ║  Custom Ordering System & User Order Dashboard           ║
+  ║  HATCH KITCHEN — Thanksgiving Meal Pre-Order             ║
+  ║  Clean Custom Ordering Form & Customer Order Dashboard   ║
   ╚══════════════════════════════════════════════════════════╝
 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thanksgiving Dinner Pre-Orders | Kosher Holiday Meals | Hatch Kitchen</title>
-<meta name="description" content="Pre-order your kosher Thanksgiving dinner from Hatch Kitchen in Pico-Robertson, Los Angeles. Whole rotisserie turkey, wine-braised brisket, and scratch-made holiday sides. Pre-order closes 11/24.">
-<meta name="keywords" content="Kosher Thanksgiving Los Angeles, Thanksgiving dinner pre-order Pico-Robertson, Hatch Kitchen Thanksgiving, OK Kosher rotisserie turkey LA">
+<title>Thanksgiving Meal Pre-Order | Hatch Kitchen</title>
+<meta name="description" content="Pre-order your kosher Thanksgiving dinner from Hatch Kitchen in Pico-Robertson, Los Angeles. Whole rotisserie turkey, wine-braised brisket, and holiday sides.">
+<meta name="keywords" content="Kosher Thanksgiving Los Angeles, Thanksgiving dinner pre-order, Hatch Kitchen Thanksgiving, OK Kosher rotisserie turkey">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://www.thehatchkitchen.com/thanksgiving-orders.html">
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="manifest" href="site.webmanifest">
-<meta name="theme-color" content="#4F6B3D">
+<meta name="theme-color" content="#121110">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Hatch Kitchen">
-<meta property="og:title" content="Thanksgiving Dinner Pre-Orders | Hatch Kitchen">
+<meta property="og:title" content="Thanksgiving Meal Pre-Order | Hatch Kitchen">
 <meta property="og:description" content="Pre-order OK Kosher Thanksgiving family packages, rotisserie turkey, braised brisket, and holiday sides from Hatch Kitchen.">
 <meta property="og:image" content="https://www.thehatchkitchen.com/images/og-logo.png">
-<meta property="og:image:secure_url" content="https://www.thehatchkitchen.com/images/og-logo.png">
-<meta property="og:image:type" content="image/png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Hatch Kitchen Official Logo">
 <meta property="og:url" content="https://www.thehatchkitchen.com/thanksgiving-orders.html">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://www.thehatchkitchen.com/images/og-logo.png">
@@ -34,2156 +29,1505 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Allura&family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
 
 <style>
 /* ============================================================
-   HATCH KITCHEN — Thanksgiving Pre-Orders Design System
-   (Matches Village Meals Design System & Layout 100%)
+   HATCH KITCHEN — CUSTOM THANKSGIVING PRE-ORDER FORM STYLES
+   (Uses Website Theme, Palette & Typography 100%)
    ============================================================ */
-:root {
-  --ink:        #121110;
-  --ink-soft:   #5B5346;
-  --cream:      #F5F1E3;
-  --cream-deep: #EAE2C7;
-  --paper:      #FBF9F1;
-  --gold:       #F3C457;
-  --gold-dark:  #C8941F;
-  --gold-tint:  #FCE9C0;
-  --peach:      #EFA862;
-  --sage:       #4F6B3D;
-  --sage-tint:  #E2E8D2;
-  --sage-dark:  #33431F;
-  --line:       rgba(18,17,16,.14);
-  --line-soft:  rgba(18,17,16,.08);
-  --red-alert:  #B91C1C;
-  --green-ok:   #15803D;
-  --green-bg:   #DCFCE7;
-
-  --f-display: "Poppins", sans-serif;
-  --f-script:  "Allura", cursive;
-  --f-body:    "Hanken Grotesk", sans-serif;
-  --f-mono:    "IBM Plex Mono", monospace;
-
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --radius-xl: 32px;
-  --shadow:    0 2px 8px rgba(18,17,16,.08), 0 12px 28px -12px rgba(18,17,16,.18);
-  --shadow-lg: 0 20px 48px -16px rgba(18,17,16,.32);
+.tg-page-wrap {
+  max-width: 860px;
+  margin: 36px auto 72px;
+  padding: 0 20px;
 }
 
-*, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; overflow-x: clip; }
-body {
-  margin: 0;
-  font-family: var(--f-body);
-  background: var(--cream);
-  color: var(--ink);
-  line-height: 1.55;
-  -webkit-font-smoothing: antialiased;
-  font-size: 16px;
-  overflow-x: clip;
-}
-img { max-width: 100%; display: block; }
-ul  { margin: 0; padding: 0; list-style: none; }
-a   { color: inherit; text-decoration: none; }
-button { font: inherit; cursor: pointer; }
-h1,h2,h3,h4,p,figure { margin: 0; }
-input, select, textarea { font: inherit; }
-
-/* ---- Top bar ---- */
-.topbar {
+/* Form Hero Header Card */
+.tg-header-card {
   background: var(--ink);
   color: var(--cream);
+  border-radius: var(--radius-lg);
+  padding: 40px 36px 36px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-pop);
+}
+.tg-header-card::before {
+  content: "";
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(243,196,87,.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.tg-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--f-mono);
   font-size: .75rem;
-  letter-spacing: .03em;
-}
-.topbar-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 8px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.topbar a { opacity: .82; transition: color .15s, opacity .15s; }
-.topbar a:hover { color: var(--gold); opacity: 1; }
-.topbar-tag {
-  background: var(--gold);
-  color: var(--ink);
-  padding: 2px 9px;
-  border-radius: 999px;
   font-weight: 700;
-  font-size: .7rem;
-}
-.topbar-left, .topbar-right { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-
-/* Dashboard notification bar if order exists */
-.existing-order-bar {
-  display: none;
-  background: var(--gold-tint);
-  border-bottom: 1px solid rgba(200,148,31,.35);
-  padding: 8px 16px;
-  font-size: .84rem;
-  color: #6B4A0A;
-  text-align: center;
-  font-weight: 600;
-}
-.existing-order-bar a {
-  color: var(--ink);
-  text-decoration: underline;
-  margin-left: 8px;
-  font-weight: 700;
-}
-
-/* ---- Header ---- */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(18,17,16,.96);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(245,241,227,.1);
-  box-shadow: 0 4px 24px -8px rgba(0,0,0,.35);
-}
-.nav {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 12px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.logo { display: flex; align-items: center; gap: 10px; }
-.logo-img { height: 38px; width: auto; border-radius: 7px; }
-.logo-word { font-family: var(--f-display); font-weight: 700; font-size: 1.15rem; color: var(--cream); line-height: 1; }
-.logo-word small {
-  display: block;
-  font-family: var(--f-mono);
-  font-size: .5rem;
-  letter-spacing: .24em;
-  color: rgba(245,241,227,.45);
-  margin-top: 2px;
-}
-.nav-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-family: var(--f-mono);
-  font-size: .78rem;
-  color: rgba(245,241,227,.65);
-  transition: color .15s;
-}
-.nav-back:hover { color: var(--gold); }
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.nav-order-link {
-  display: inline-flex;
-  align-items: center;
-  font-family: var(--f-mono);
-  font-size: .72rem;
-  font-weight: 700;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  background: #4F6B3D;
-  color: var(--cream);
-  padding: 7px 14px;
-  border-radius: 999px;
-  transition: background .15s, transform .15s;
-  white-space: nowrap;
-}
-.nav-order-link:hover { background: #33431F; transform: translateY(-1px); }
-.nav-order-link.is-active {
-  background: var(--gold);
-  color: var(--ink);
-}
-
-/* ---- Hero Banner ---- */
-.camp-hero {
-  position: relative;
-  background: var(--ink);
-  overflow: hidden;
-  min-height: 220px;
-}
-.camp-hero-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: .45;
-}
-.camp-hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(18,17,16,.82) 0%, rgba(18,17,16,.48) 100%);
-}
-.camp-hero-content {
-  position: relative;
-  z-index: 1;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 28px 24px 32px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.camp-hero-eyebrow {
-  font-family: var(--f-mono);
-  font-size: .72rem;
-  font-weight: 700;
-  letter-spacing: .16em;
+  letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
-.camp-hero h1 {
+.tg-badge::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+}
+.tg-title {
   font-family: var(--f-display);
-  font-size: clamp(1.7rem, 3.2vw, 2.7rem);
+  font-size: clamp(2rem, 3.8vw, 2.9rem);
   font-weight: 800;
   color: var(--cream);
   line-height: 1.05;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
-.camp-hero h1 em { font-style: normal; color: var(--gold); }
-.camp-hero-sub {
+.tg-title em {
+  font-style: normal;
+  color: var(--gold);
+}
+.tg-script-tag {
+  font-family: var(--f-script);
+  font-size: clamp(1.4rem, 4.5vw, 2rem);
+  color: var(--gold);
+  display: block;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  word-break: break-word;
+}
+.tg-intro-box {
+  background: rgba(245,241,227,.07);
+  border: 1px solid rgba(245,241,227,.12);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
   font-size: .92rem;
   color: rgba(245,241,227,.82);
-  max-width: 58ch;
-}
-.village-hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  line-height: 1.6;
   margin-top: 18px;
 }
-.btn.on-dark {
-  color: var(--cream);
-  border-color: rgba(245,241,227,.45);
+.tg-intro-box p {
+  color: rgba(245,241,227,.85);
+  margin-bottom: 10px;
 }
-.btn.on-dark:hover {
-  background: var(--cream);
-  color: var(--ink);
-  border-color: var(--cream);
-}
-
-/* ---- Progress bar ---- */
-.progress-wrap {
-  background: var(--paper);
-  border-bottom: 1px solid var(--line);
-  position: sticky;
-  top: 63px;
-  z-index: 90;
-}
-.progress-bar {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 24px;
-  display: flex;
-}
-.prog-step {
-  flex: 1;
-  padding: 12px 8px;
-  text-align: center;
-  font-family: var(--f-mono);
-  font-size: .72rem;
-  font-weight: 600;
-  letter-spacing: .04em;
-  color: rgba(18,17,16,.45);
-  background: var(--paper);
-  border-right: 1px solid var(--line-soft);
-  position: relative;
-  cursor: pointer;
-  transition: all .15s;
-}
-.prog-step:last-child { border-right: none; }
-.prog-step.active {
-  color: var(--ink);
-  background: var(--gold-tint);
+.tg-intro-box p:last-child { margin-bottom: 0; }
+.tg-intro-highlight {
+  color: var(--gold);
   font-weight: 700;
 }
-.prog-step.active::after {
-  content: "";
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 3px;
-  background: var(--gold);
-  border-radius: 3px 3px 0 0;
-}
-.prog-step.completed {
-  color: var(--sage-dark);
-  background: var(--sage-tint);
-}
 
-/* ---- Layout Grid ---- */
-.page-wrap {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 32px 24px 64px;
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 28px;
-  align-items: start;
-}
-@media (max-width: 860px) { .page-wrap { grid-template-columns: 1fr; } }
-
-.step-main { grid-column: 1; min-width: 0; }
-.step-side { grid-column: 2; }
-@media (max-width: 860px) { .step-main, .step-side { grid-column: 1; } }
-
-/* Step page transitions */
-.step-page { display: none; }
-.step-page.active { display: block; animation: stepFadeIn .25s ease; }
-@keyframes stepFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-/* ---- Panel ---- */
-.panel {
+/* Individual Form Question Cards */
+.tg-card {
   background: var(--paper);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--radius-lg);
-  padding: 24px 28px;
+  border: 1.5px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  padding: 28px 30px;
   margin-bottom: 22px;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-card);
+  transition: border-color .2s, box-shadow .2s;
 }
-.panel-header {
-  margin-bottom: 16px;
+.tg-card:hover {
+  border-color: rgba(18,17,16,.2);
 }
-.panel-title {
+.tg-card-head {
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.tg-card-title {
   font-family: var(--f-display);
-  font-size: 1.18rem;
+  font-size: 1.22rem;
   font-weight: 700;
   color: var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.tg-card-price {
+  font-family: var(--f-mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--gold-dark);
+}
+.tg-card-desc {
+  font-size: .88rem;
+  color: var(--ink-soft);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+/* Question Option Rows */
+.tg-option-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.tg-option-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 13px 16px;
+  background: #FFFFFF;
+  border: 1.5px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all .15s ease;
+  user-select: none;
+}
+.tg-option-row:hover {
+  border-color: var(--gold-dark);
+  background: #FFFDF9;
+}
+.tg-option-row.is-selected {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--cream);
+}
+.tg-option-row.is-selected .tg-option-title {
+  color: var(--gold);
+}
+.tg-option-row.is-selected .tg-option-sub {
+  color: rgba(245,241,227,.75);
+}
+.tg-option-row input[type="radio"],
+.tg-option-row input[type="checkbox"] {
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--gold-dark);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.tg-option-content {
+  flex: 1;
+}
+.tg-option-title {
+  font-weight: 700;
+  font-size: .94rem;
+  color: var(--ink);
+  line-height: 1.35;
+}
+.tg-option-sub {
+  font-size: .82rem;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+/* Sub-choices Box */
+.tg-sub-box {
+  background: var(--cream-deep);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+  margin-top: 14px;
+}
+.tg-sub-title {
+  font-family: var(--f-mono);
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.tg-sub-badge {
+  color: var(--gold-dark);
+  font-weight: 800;
+}
+
+/* Stepper (Plus / Minus) for quantities */
+.tg-item-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.panel-sub {
-  font-size: .84rem;
-  color: var(--ink-soft);
-  margin-top: 3px;
-}
-.notice {
-  background: var(--gold-tint);
-  border: 1px solid rgba(200,148,31,.35);
-  border-radius: var(--radius-md);
-  padding: 13px 16px;
-  font-size: .86rem;
-  color: #6B4A0A;
-  margin-bottom: 16px;
-  line-height: 1.5;
-}
-.notice.sage-notice {
-  background: var(--sage-tint);
-  border-color: rgba(79,107,61,.3);
-  color: var(--sage-dark);
-}
-.notice strong { font-weight: 700; }
-
-/* ---- Meal Option Cards ---- */
-.meal-card {
-  border: 1.5px solid var(--line-soft);
-  border-radius: var(--radius-md);
+  gap: 16px;
+  padding: 12px 16px;
   background: #FFFFFF;
-  margin-bottom: 14px;
-  overflow: hidden;
-  transition: border-color .15s, box-shadow .15s;
-}
-.meal-card.selected {
-  border-color: var(--gold-dark);
-  box-shadow: 0 4px 16px -4px rgba(200,148,31,.25);
-}
-.meal-card-top {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 18px;
-  cursor: pointer;
-  user-select: none;
-}
-.meal-card-check {
-  width: 24px; height: 24px;
-  border: 1.5px solid var(--line);
-  border-radius: 6px;
-  background: #FFF;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: .8rem;
-  font-weight: 800;
-  color: transparent;
-  flex-shrink: 0;
-  transition: all .15s;
-}
-.meal-card.selected .meal-card-check {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--gold);
-}
-.meal-card-img {
-  width: 72px; height: 72px;
+  border: 1px solid var(--line-soft);
   border-radius: var(--radius-sm);
-  overflow: hidden;
-  flex-shrink: 0;
-  background: var(--cream-deep);
+  margin-bottom: 8px;
 }
-.meal-card-img img { width: 100%; height: 100%; object-fit: cover; }
-.meal-card-body { flex: 1; min-width: 0; }
-.meal-card-name {
-  font-family: var(--f-display);
+.tg-item-info {
+  flex: 1;
+}
+.tg-item-name {
   font-weight: 700;
-  font-size: .98rem;
+  font-size: .92rem;
   color: var(--ink);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
 }
-.meal-badge {
-  font-family: var(--f-mono);
-  font-size: .65rem;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--gold-tint);
-  color: #7A5300;
-}
-.meal-card-desc {
-  font-size: .82rem;
+.tg-item-desc {
+  font-size: .78rem;
   color: var(--ink-soft);
-  margin-top: 4px;
-  line-height: 1.45;
+  margin-top: 2px;
 }
-.meal-card-price {
+.tg-item-price {
   font-family: var(--f-mono);
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: .95rem;
   color: var(--gold-dark);
-  text-align: right;
-  flex-shrink: 0;
+  margin-right: 6px;
+  white-space: nowrap;
 }
-
-/* Stepper (plus / minus) */
-.qty-stepper {
+.tg-stepper {
   display: inline-flex;
   align-items: center;
-  border: 1px solid var(--line);
+  border: 1.5px solid var(--line);
   border-radius: 999px;
   background: var(--paper);
   overflow: hidden;
   flex-shrink: 0;
 }
-.qty-btn {
-  width: 32px; height: 32px;
+.tg-stepper-btn {
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: none;
   border: none;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--ink);
   cursor: pointer;
   transition: background .12s;
 }
-.qty-btn:hover { background: rgba(18,17,16,.08); }
-.qty-val {
-  min-width: 28px;
+.tg-stepper-btn:hover {
+  background: rgba(18,17,16,.08);
+}
+.tg-stepper-val {
+  min-width: 30px;
   text-align: center;
   font-family: var(--f-mono);
   font-weight: 700;
-  font-size: .88rem;
+  font-size: .9rem;
   color: var(--ink);
 }
 
-/* Package options expander */
-.package-options-box {
-  display: none;
-  padding: 16px 20px;
-  background: var(--cream);
-  border-top: 1px solid var(--line-soft);
-}
-.meal-card.selected .package-options-box { display: block; }
-.pkg-subhead {
-  font-family: var(--f-mono);
-  font-size: .72rem;
-  font-weight: 700;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--ink);
-  margin: 12px 0 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.pkg-subhead:first-child { margin-top: 0; }
-.pkg-counter-badge {
-  color: var(--gold-dark);
-  font-weight: 700;
-}
-
-/* Radio / Check pills */
-.choice-pill-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-.choice-pill {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 14px;
-  background: #FFF;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: .85rem;
-  transition: all .15s;
-  user-select: none;
-}
-.choice-pill:hover { border-color: var(--gold-dark); }
-.choice-pill.selected {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--cream);
-}
-.choice-pill-indicator {
-  width: 16px; height: 16px;
-  border: 1.5px solid var(--line);
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.choice-pill.selected .choice-pill-indicator {
-  border-color: var(--gold);
-  background: var(--gold);
-}
-.choice-pill.checkbox-style .choice-pill-indicator { border-radius: 4px; }
-.choice-pill.disabled {
-  opacity: .45;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-/* Additional sides row */
-.side-item-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--line-soft);
-  background: #FFF;
-  border-radius: var(--radius-sm);
-  margin-bottom: 8px;
-  border: 1px solid var(--line-soft);
-}
-.side-item-info { flex: 1; min-width: 0; }
-.side-item-name { font-weight: 700; font-size: .9rem; color: var(--ink); }
-.side-item-meta { font-size: .78rem; color: var(--ink-soft); margin-top: 2px; }
-.side-item-price { font-family: var(--f-mono); font-weight: 700; color: var(--gold-dark); font-size: .92rem; margin-right: 8px; }
-
-/* ---- Form Fields ---- */
-.form-grid {
+/* Form Input Fields */
+.tg-form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
 }
-@media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
-.field {
+@media (max-width: 640px) {
+  .tg-form-grid { grid-template-columns: 1fr; }
+}
+.tg-field {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
-.field.full { grid-column: 1 / -1; }
-.field label {
-  font-size: .84rem;
+.tg-field.full { grid-column: 1 / -1; }
+.tg-field label {
+  font-size: .86rem;
   font-weight: 700;
   color: var(--ink);
 }
-.field label .req { color: var(--red-alert); }
-.field input, .field select, .field textarea {
+.tg-field label .req { color: var(--red-alert, #B91C1C); }
+.tg-field input,
+.tg-field select,
+.tg-field textarea {
   width: 100%;
-  padding: 11px 14px;
+  padding: 12px 14px;
   border: 1.5px solid var(--line);
   border-radius: var(--radius-sm);
-  background: #FFF;
-  font-size: .92rem;
+  background: #FFFFFF;
+  font-family: var(--f-body);
+  font-size: .95rem;
   color: var(--ink);
   outline: none;
   transition: border-color .15s, box-shadow .15s;
 }
-.field input:focus, .field select:focus, .field textarea:focus {
+.tg-field input:focus,
+.tg-field select:focus,
+.tg-field textarea:focus {
   border-color: var(--gold-dark);
   box-shadow: 0 0 0 3px rgba(200,148,31,.2);
 }
-.field.invalid input, .field.invalid select, .field.invalid textarea {
-  border-color: var(--red-alert);
+.tg-field.is-invalid input {
+  border-color: var(--red-alert, #B91C1C);
   box-shadow: 0 0 0 3px rgba(185,28,28,.15);
 }
-.field-error-msg {
-  color: var(--red-alert);
+.tg-error-text {
+  color: var(--red-alert, #B91C1C);
   font-size: .78rem;
   font-weight: 600;
   display: none;
 }
-.field.invalid .field-error-msg { display: block; }
+.tg-field.is-invalid .tg-error-text { display: block; }
 
-/* Pickup day cards */
-.pickup-card-list {
+/* Sticky Submit & Total Bar */
+.tg-bottom-bar {
+  position: sticky;
+  bottom: 20px;
+  z-index: 95;
+  background: var(--ink);
+  color: var(--cream);
+  border-radius: var(--radius-lg);
+  padding: 18px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: var(--shadow-lift);
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+.tg-total-group {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 18px;
 }
-.pickup-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 18px;
-  background: #FFF;
-  border: 1.5px solid var(--line);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: all .15s;
-  user-select: none;
-}
-.pickup-card:hover { border-color: var(--gold-dark); }
-.pickup-card.selected {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--cream);
-}
-.pickup-card-left { display: flex; align-items: center; gap: 12px; }
-.pickup-radio {
-  width: 20px; height: 20px;
-  border: 2px solid var(--line);
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.pickup-card.selected .pickup-radio {
-  border-color: var(--gold);
-  background: var(--gold);
-}
-.pickup-card-title { font-family: var(--f-display); font-weight: 700; font-size: .95rem; }
-.pickup-card.selected .pickup-card-title { color: var(--gold); }
-.pickup-card-sub { font-size: .78rem; color: var(--ink-soft); }
-.pickup-card.selected .pickup-card-sub { color: rgba(245,241,227,.7); }
-
-/* ---- Buttons ---- */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: .85em 1.8em;
-  border-radius: 999px;
-  border: 1.5px solid transparent;
-  font-weight: 700;
-  font-size: .92rem;
-  cursor: pointer;
-  transition: transform .18s, box-shadow .18s, background .18s, color .18s;
-  white-space: nowrap;
-  text-decoration: none;
-}
-.btn:hover { transform: translateY(-2px); }
-.btn:active { transform: translateY(0); }
-.btn:disabled { opacity: .5; cursor: not-allowed; transform: none !important; }
-.btn-primary { width: 100%; background: var(--ink); color: var(--gold); box-shadow: 0 4px 16px -6px rgba(18,17,16,.45); }
-.btn-primary:hover { background: #2A2826; box-shadow: 0 8px 24px -6px rgba(18,17,16,.5); }
-.btn-gold    { background: var(--gold); color: var(--ink); }
-.btn-gold:hover { background: var(--gold-dark); color: var(--cream); }
-.btn-outline { background: transparent; border-color: var(--line); color: var(--ink-soft); }
-.btn-outline:hover { border-color: var(--ink); color: var(--ink); }
-.btn-nav-row {
-  display: flex;
-  gap: 12px;
-  margin-top: 24px;
-}
-.btn-nav-row .btn { flex: 1; }
-
-/* ---- Order summary sidebar ---- */
-.summary-card {
-  background: var(--ink);
-  color: var(--cream);
-  border-radius: var(--radius-xl);
-  padding: 24px;
-  box-shadow: var(--shadow-lg);
-  position: sticky;
-  top: 124px;
-}
-.summary-title {
+.tg-total-label {
   font-family: var(--f-mono);
   font-size: .72rem;
-  font-weight: 700;
-  letter-spacing: .1em;
+  letter-spacing: .08em;
   text-transform: uppercase;
-  color: rgba(245,241,227,.45);
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  color: rgba(245,241,227,.5);
 }
-.summary-title::before {
-  content: "";
-  width: 8px; height: 8px;
-  background: var(--gold);
-  border-radius: 50%;
-}
-.summary-empty {
-  text-align: center;
-  padding: 24px 0;
-  color: rgba(245,241,227,.35);
-  font-size: .88rem;
-}
-.summary-items-list {
-  max-height: 380px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-.summary-items-list::-webkit-scrollbar { width: 4px; }
-.summary-items-list::-webkit-scrollbar-thumb { background: rgba(245,241,227,.15); border-radius: 4px; }
-.summary-item {
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(245,241,227,.1);
-}
-.summary-item:last-child { border-bottom: none; }
-.summary-item-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 10px;
-  font-size: .88rem;
-  font-weight: 700;
-  color: var(--cream);
-}
-.summary-item-price {
-  font-family: var(--f-mono);
-  color: var(--gold);
-  font-size: .86rem;
-  flex-shrink: 0;
-}
-.summary-item-sub {
-  font-size: .75rem;
-  color: rgba(245,241,227,.6);
-  margin-top: 3px;
-  line-height: 1.4;
-}
-.summary-divider {
-  border: none;
-  border-top: 1px solid rgba(245,241,227,.15);
-  margin: 16px 0;
-}
-.summary-total-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-}
-.summary-total-label { font-size: .9rem; color: rgba(245,241,227,.55); }
-.summary-total-amt {
+.tg-total-amt {
   font-family: var(--f-display);
-  font-size: 2.1rem;
+  font-size: 1.9rem;
   font-weight: 800;
   color: var(--gold);
-  line-height: 1;
+  line-height: 1.1;
 }
-.summary-pickup-note {
-  font-size: .76rem;
-  color: rgba(245,241,227,.65);
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(245,241,227,.08);
+.tg-submit-btn {
+  background: var(--gold);
+  color: var(--ink);
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 14px 32px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  transition: transform .18s, background .18s, box-shadow .18s;
+  box-shadow: 0 4px 16px rgba(243,196,87,.35);
 }
-.summary-pickup-note strong { color: var(--gold); }
+.tg-submit-btn:hover {
+  background: var(--gold-dark);
+  color: var(--cream);
+  transform: translateY(-2px);
+}
+.tg-submit-btn:active { transform: translateY(0); }
+.tg-submit-btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  transform: none;
+}
 
-/* ---- SUCCESS / USER ORDER DASHBOARD ---- */
-.success-wrap {
-  animation: stepFadeIn .3s ease;
+@media (max-width: 640px) {
+  .tg-page-wrap {
+    margin: 20px auto 60px;
+    padding: 0 14px;
+  }
+  .tg-header-card {
+    padding: 26px 18px 22px;
+  }
+  .tg-card {
+    padding: 20px 16px;
+  }
+  .tg-bottom-bar {
+    padding: 14px 18px;
+    bottom: 12px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .tg-total-group {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .tg-total-amt {
+    font-size: 1.6rem;
+  }
+  .tg-submit-btn {
+    width: 100%;
+    text-align: center;
+    padding: 13px 20px;
+    font-size: 1rem;
+  }
 }
-.success-hero-box {
+
+/* ============================================================
+   USER ORDER DASHBOARD (POST-SUBMISSION VIEW)
+   ============================================================ */
+.tg-dashboard-wrap {
+  display: none;
+  animation: fadeIn .3s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.tg-dash-hero {
   background: var(--ink);
+  color: var(--cream);
   border-radius: var(--radius-xl);
   padding: 44px 32px;
   text-align: center;
   margin-bottom: 24px;
   box-shadow: var(--shadow-lg);
 }
-.success-status-pill {
+.tg-status-pill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-family: var(--f-mono);
-  font-size: .72rem;
+  font-size: .74rem;
   font-weight: 700;
   letter-spacing: .08em;
   text-transform: uppercase;
-  background: rgba(134,239,172,.15);
-  border: 1px solid rgba(134,239,172,.3);
+  background: rgba(134,239,172,.16);
+  border: 1px solid rgba(134,239,172,.35);
   color: #86EFAC;
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: 999px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
-.success-status-pill::before {
+.tg-status-pill::before {
   content: "";
-  width: 7px; height: 7px;
+  width: 8px;
+  height: 8px;
   background: #86EFAC;
   border-radius: 50%;
-  animation: pulseDot 1.5s infinite;
+  animation: pulseDot 1.4s infinite;
 }
 @keyframes pulseDot { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
-.success-check {
-  width: 64px; height: 64px;
+.tg-check-icon {
+  width: 64px;
+  height: 64px;
   background: var(--gold);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.8rem;
-  margin: 0 auto 16px;
-  color: var(--ink);
+  font-size: 2rem;
   font-weight: 900;
+  color: var(--ink);
+  margin: 0 auto 16px;
 }
-.success-title {
+.tg-dash-title {
   font-family: var(--f-display);
-  font-size: clamp(1.6rem, 2.8vw, 2.3rem);
+  font-size: clamp(1.8rem, 3.2vw, 2.5rem);
   font-weight: 800;
   color: var(--cream);
   margin-bottom: 8px;
 }
-.success-title em { font-style: normal; color: var(--gold); }
-.success-sub {
-  font-size: .95rem;
+.tg-dash-title em { font-style: normal; color: var(--gold); }
+.tg-dash-sub {
+  font-size: .96rem;
   color: rgba(245,241,227,.75);
-  line-height: 1.55;
   max-width: 52ch;
   margin: 0 auto;
+  line-height: 1.55;
 }
 
-/* Dashboard Order Card */
-.dashboard-order-card {
+/* Dashboard Receipt Panel */
+.tg-receipt-card {
   background: var(--paper);
-  border: 1px solid var(--line-soft);
+  border: 1.5px solid var(--line-soft);
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow);
-  margin-bottom: 22px;
+  margin-bottom: 24px;
 }
-.dash-card-header {
+.tg-receipt-header {
   background: var(--cream-deep);
-  padding: 14px 20px;
+  padding: 16px 24px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line-soft);
   flex-wrap: wrap;
   gap: 10px;
-  border-bottom: 1px solid var(--line-soft);
 }
-.dash-order-id {
+.tg-receipt-id {
   font-family: var(--f-mono);
+  font-size: 1rem;
   font-weight: 700;
-  font-size: .95rem;
   color: var(--ink);
 }
-.dash-order-date {
+.tg-receipt-date {
   font-family: var(--f-mono);
-  font-size: .75rem;
+  font-size: .78rem;
   color: var(--ink-soft);
 }
-.dash-row {
+.tg-receipt-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 12px 20px;
+  padding: 13px 24px;
   border-bottom: 1px solid var(--line-soft);
-  font-size: .9rem;
-  gap: 16px;
+  font-size: .92rem;
+  gap: 18px;
 }
-.dash-row:last-child { border-bottom: none; }
-.dash-label { color: var(--ink-soft); flex-shrink: 0; }
-.dash-val { font-weight: 700; text-align: right; color: var(--ink); }
-.dash-val.highlight { color: var(--gold-dark); }
-.dash-items-box {
-  padding: 14px 20px;
-  background: #FFF;
+.tg-receipt-row:last-child { border-bottom: none; }
+.tg-receipt-label { color: var(--ink-soft); flex-shrink: 0; }
+.tg-receipt-val { font-weight: 700; text-align: right; color: var(--ink); }
+.tg-receipt-val.highlight { color: var(--gold-dark); }
+.tg-receipt-items {
+  padding: 16px 24px;
+  background: #FFFFFF;
   border-bottom: 1px solid var(--line-soft);
 }
-.dash-items-title {
+.tg-receipt-items-title {
   font-family: var(--f-mono);
   font-size: .72rem;
   font-weight: 700;
   letter-spacing: .08em;
   text-transform: uppercase;
   color: var(--ink-soft);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
-.dash-item-line {
+.tg-receipt-item-line {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  padding: 6px 0;
+  padding: 8px 0;
   border-bottom: 1px dashed var(--line-soft);
-  font-size: .88rem;
+  font-size: .9rem;
 }
-.dash-item-line:last-child { border-bottom: none; }
-.dash-total-bar {
+.tg-receipt-item-line:last-child { border-bottom: none; }
+.tg-receipt-total {
   background: var(--ink);
-  padding: 16px 20px;
+  color: var(--cream);
+  padding: 18px 24px;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
 }
-.dash-total-bar .label { color: rgba(245,241,227,.7); font-size: .95rem; }
-.dash-total-bar .val {
+.tg-receipt-total .label { font-size: .95rem; color: rgba(245,241,227,.7); }
+.tg-receipt-total .val {
   font-family: var(--f-display);
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   font-weight: 800;
   color: var(--gold);
 }
 
-/* Dashboard Action Buttons */
-.dash-actions-row {
+.tg-dash-actions {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
-  margin-top: 20px;
+  margin-top: 24px;
 }
-.dash-actions-row .btn { flex: 1; min-width: 170px; }
+.tg-dash-actions .btn { flex: 1; min-width: 170px; }
 
-/* ---- FAQ Panel ---- */
-.faq-panel {
-  max-width: 1100px;
-  margin: 16px auto 0;
-  padding: 0 24px 64px;
-}
-.faq-panel-title {
-  font-family: var(--f-display);
-  font-weight: 800;
-  font-size: 1.25rem;
-  color: var(--ink);
-  margin-bottom: 6px;
-}
-.faq-panel-sub {
-  font-size: .88rem;
-  color: var(--ink-soft);
-  margin-bottom: 24px;
-}
-.faq-item {
-  background: var(--paper);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--radius-md);
-  margin-bottom: 10px;
-  overflow: hidden;
-}
-.faq-trigger {
-  width: 100%;
-  background: none;
-  border: none;
-  padding: 16px 20px;
-  text-align: left;
-  font-weight: 700;
-  font-size: .93rem;
-  color: var(--ink);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-}
-.faq-trigger:hover { background: rgba(18,17,16,.025); }
-.faq-chevron {
-  width: 24px; height: 24px;
-  border-radius: 50%;
-  background: var(--cream);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: transform .2s ease, background .2s ease;
-}
-.faq-item.open .faq-chevron {
-  transform: rotate(180deg);
-  background: var(--gold);
-}
-.faq-body {
+/* Active Order Bar */
+.tg-active-banner {
   display: none;
-  padding: 0 20px 16px;
-  font-size: .88rem;
-  color: var(--ink-soft);
-  line-height: 1.6;
+  background: var(--gold-tint);
+  border-bottom: 1px solid rgba(200,148,31,.35);
+  padding: 9px 16px;
+  font-size: .86rem;
+  color: #6B4A0A;
+  text-align: center;
+  font-weight: 600;
 }
-.faq-item.open .faq-body { display: block; }
-
-/* ---- Footer ---- */
-.site-footer {
-  background: var(--ink);
-  color: rgba(245,241,227,.55);
-  font-size: .85rem;
-}
-.footer-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 32px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-.footer-brand-row { display: flex; align-items: center; gap: 10px; }
-.footer-brand-name { color: var(--gold); font-family: var(--f-display); font-weight: 700; font-size: .95rem; }
-.footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
-.footer-links a { transition: color .15s; }
-.footer-links a:hover { color: var(--gold); }
-
-/* ---- Responsive ---- */
-@media (max-width: 640px) {
-  .topbar-inner { justify-content: center; text-align: center; padding: 6px 12px; font-size: .7rem; }
-  .topbar-right { display: none; }
-  .nav { padding: 8px 14px; gap: 8px 8px; }
-  .logo-word { font-size: 1.02rem; }
-  .logo-word small { display: none; }
-  .logo-img { height: 32px; }
-  .nav-back { font-size: .72rem; margin-left: auto; padding: 4px 10px; background: rgba(255,255,255,0.08); border-radius: 999px; white-space: nowrap; }
-  .nav-actions { width: 100%; gap: 6px; }
-  .nav-order-link { font-size: .61rem; padding: 5px 9px; letter-spacing: 0; }
-  .camp-hero { min-height: 170px; }
-  .camp-hero-content { padding: 20px 16px 24px; }
-  .camp-hero h1 { font-size: 1.55rem; }
-  .village-hero-actions { margin-top: 14px; }
-  .page-wrap { padding: 16px 12px 48px; }
-  .panel { padding: 16px 14px; }
-  .prog-step { font-size: .58rem; letter-spacing: 0; padding: 10px 4px; }
-  .summary-card { position: static; margin-top: 20px; }
-  .btn-nav-row { flex-direction: column; }
+.tg-active-banner a {
+  color: var(--ink);
+  text-decoration: underline;
+  margin-left: 8px;
+  font-weight: 700;
 }
 
-/* Print view for receipt */
 @media print {
-  .topbar, .site-header, .camp-hero, .progress-wrap, .step-main > .step-page:not(#step-success), .step-side, .dash-actions-row, .faq-panel, .site-footer {
+  .topbar, .site-header, .tg-bottom-bar, .tg-dash-actions, footer, .tg-active-banner {
     display: none !important;
   }
-  .page-wrap { display: block; padding: 0; }
-  #step-success { display: block !important; }
-  .dashboard-order-card { border: 1px solid #000; box-shadow: none; }
-  .dash-total-bar { background: #000 !important; color: #FFF !important; }
+  .tg-dashboard-wrap { display: block !important; }
+  .tg-receipt-card { border: 1px solid #000; box-shadow: none; }
 }
 </style>
 </head>
 <body>
 
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
 <!-- Top bar -->
 <div class="topbar">
-  <div class="topbar-inner">
+  <div class="container">
     <div class="topbar-left">
       <span class="topbar-tag">Certified Kosher · OK Kosher</span>
       <a href="tel:+14244553195">(424) 455-3195</a>
       <span>Sun–Thu 9AM–8PM · Fri 9AM–2PM</span>
     </div>
     <div class="topbar-right">
-      <a href="index.html">← Back to Hatch Kitchen</a>
+      <a href="catering.html">Catering &amp; Events</a>
       <a href="https://www.instagram.com/thehatchkitchen/" target="_blank" rel="noopener">Instagram</a>
     </div>
   </div>
 </div>
 
-<!-- Active Order Notification Bar (Visible if user already placed an order) -->
-<div class="existing-order-bar" id="existing-order-bar">
-  <span>You have an active Thanksgiving pre-order request on file (<span id="existing-order-id-label"></span>).</span>
-  <a href="#order-dashboard" onclick="showDashboardView(); return false;">View Order Dashboard ↗</a>
+<!-- Active Order Notification (if customer already has an active order) -->
+<div class="tg-active-banner" id="active-order-banner">
+  <span>You have an active Thanksgiving pre-order request on file (<strong id="active-banner-order-id"></strong>).</span>
+  <a href="#dashboard" onclick="switchToDashboard(); return false;">View Order Dashboard ↗</a>
 </div>
 
-<!-- Header -->
+<!-- Standard Hatch Kitchen Site Header -->
 <header class="site-header">
-  <nav class="nav">
-    <a class="logo" href="index.html">
+  <nav class="nav container">
+    <a class="logo" href="index.html" aria-label="Hatch Kitchen home">
       <img class="logo-img" src="images/logo-lockup.png" alt="Hatch Kitchen — Feel-Good Fuel">
       <span class="logo-word">Hatch Kitchen<small>Feel-Good Fuel</small></span>
     </a>
-    <a class="nav-back" href="index.html">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-      Back to site
-    </a>
-    <div class="nav-actions">
-      <a class="nav-order-link" href="menu.html">Menu</a>
-      <a class="nav-order-link is-active" href="thanksgiving-orders.html">Thanksgiving Dinner Pre-Orders</a>
-      <a class="nav-order-link" href="village-orders.html">Village Meals</a>
+    <button class="nav-toggle" aria-expanded="false" aria-label="Toggle menu"><span></span></button>
+    <ul class="nav-links" data-open="false">
+      <li class="mobile-drawer-pills" style="display:none;">
+        <a class="nav-pill nav-pill-village" href="thanksgiving-orders.html" aria-current="page">Thanksgiving Dinner Pre-Orders</a>
+        <a class="nav-pill nav-pill-village" href="village-orders.html">Village Meals</a>
+      </li>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="catering.html">Catering</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Visit</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a class="nav-pill nav-pill-village" href="thanksgiving-orders.html" aria-current="page">Thanksgiving Dinner Pre-Orders</a>
+      <a class="nav-pill nav-pill-village" href="village-orders.html">Village Meals</a>
+      <a class="btn btn-primary" href="https://hatchkitchen.toast.site/order" target="_blank" rel="noopener">Order Online</a>
     </div>
   </nav>
 </header>
 
-<!-- Hero -->
-<div class="camp-hero" id="camp-hero">
-  <img class="camp-hero-img" src="images/ai-hero.jpg" alt="Hatch Kitchen Thanksgiving dinner pre-orders">
-  <div class="camp-hero-overlay"></div>
-  <div class="camp-hero-content">
-    <div class="camp-hero-eyebrow">Holiday Catering &amp; Family Meals · Hatch Kitchen</div>
-    <h1>Thanksgiving Dinner <em>Pre-Orders.</em></h1>
-    <p class="camp-hero-sub">Celebrate Thanksgiving with OK Kosher whole rotisserie turkey, wine-braised brisket, and scratch-made holiday sides. Pre-order closes 11/24.</p>
-    <div class="village-hero-actions">
-      <a class="btn btn-gold" href="#order-form-start" onclick="goToStep(1)">Start Pre-Order Request</a>
-      <button class="btn btn-outline on-dark" onclick="showDashboardView()" id="hero-dash-btn" style="display:none;">View My Order Dashboard</button>
-    </div>
-  </div>
-</div>
+<main id="main-content" class="tg-page-wrap">
 
-<!-- Progress bar -->
-<div class="progress-wrap" id="progress-wrap">
-  <div class="progress-bar">
-    <div class="prog-step active" id="prog-1" onclick="goToStep(1)">1. Holiday Packages &amp; Proteins</div>
-    <div class="prog-step" id="prog-2" onclick="goToStep(2)">2. Additional Sides &amp; Pickup</div>
-    <div class="prog-step" id="prog-3" onclick="goToStep(3)">3. Contact &amp; Review</div>
-  </div>
-</div>
+  <!-- ============================================================
+       VIEW 1: CLEAN CUSTOM THANKSGIVING PRE-ORDER FORM
+       ============================================================ -->
+  <div id="preorder-form-view">
 
-<!-- Main page area -->
-<div class="page-wrap" id="order-form-start">
+    <!-- Header Card -->
+    <div class="tg-header-card">
+      <div class="tg-badge">OK Kosher Certified · Holiday Catering</div>
+      <h1 class="tg-title">Thanksgiving Meal <em>Pre-Order.</em></h1>
+      <span class="tg-script-tag">Feel-Good Fuel for the Holidays</span>
 
-  <div class="step-main">
-
-    <!-- STEP 1: HOLIDAY PACKAGES & PROTEINS -->
-    <div class="step-page active" id="step-1">
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <span>1. Choose Holiday Packages &amp; Entrees</span>
-            <span style="font-size:.8rem; font-family:var(--f-mono); color:var(--gold-dark); font-weight:700;">OK Kosher Certified</span>
-          </div>
-          <p class="panel-sub">Select a holiday package or individual meals below. You can customize your included sides and add extra 9x13 pans in the next step.</p>
-        </div>
-
-        <div class="notice">
-          <strong>Pre-Order Deadlines &amp; Pickup:</strong> Pre-order closes <strong>11/24</strong>. Pickup at Hatch Kitchen storefront at <strong>8947 W. Pico Blvd</strong> on <strong>Wednesday 11/26, Thursday 11/27, or Friday 11/28 between 9:00 AM and 3:00 PM</strong>.
-        </div>
-
-        <!-- 1. FAMILY PACKAGE -->
-        <div class="meal-card" id="card-family-pkg">
-          <div class="meal-card-top" onclick="toggleFamilyPackage()">
-            <div class="meal-card-check" id="check-family-pkg">✓</div>
-            <div class="meal-card-img">
-              <img src="images/menu/chicken-family-meal.jpg" alt="Thanksgiving Family Package" loading="lazy">
-            </div>
-            <div class="meal-card-body">
-              <div class="meal-card-name">
-                Family Package (Feeds 10–12)
-                <span class="meal-badge">Best Value · Feeds 10–12</span>
-              </div>
-              <p class="meal-card-desc">Includes choice of 1 whole rotisserie turkey or 4 lb braised brisket, choice of 3 sides, 2 fresh-baked sourdough loaves, turkey gravy, and house cranberry sauce.</p>
-            </div>
-            <div class="meal-card-price" id="family-pkg-price-display">$475</div>
-          </div>
-
-          <!-- Expandable Package Customizer -->
-          <div class="package-options-box" id="family-pkg-options">
-            <div class="notice sage-notice" style="margin-bottom:12px;">
-              <strong>Includes:</strong> 2 fresh-baked sourdough loaves, turkey gravy (1 pt), and house cranberry sauce (1 pt).
-            </div>
-
-            <div class="pkg-subhead">
-              <span>Choose Entree (Required)</span>
-              <span class="pkg-counter-badge">1 Entree</span>
-            </div>
-            <div class="choice-pill-list">
-              <label class="choice-pill selected" onclick="setFamilyEntree('Whole un-carved rotisserie turkey (12-15 lb)', 0, this)">
-                <span class="choice-pill-indicator"></span>
-                <span>Whole un-carved rotisserie turkey (12–15 lb) — <strong>Included ($475 total)</strong></span>
-              </label>
-              <label class="choice-pill" onclick="setFamilyEntree('Whole carved rotisserie turkey (yields approx 8-10 lb meat)', 30, this)">
-                <span class="choice-pill-indicator"></span>
-                <span>Whole carved rotisserie turkey (yields 8–10 lb meat) — <strong>+$30 ($505 total)</strong></span>
-              </label>
-              <label class="choice-pill" onclick="setFamilyEntree('4 lb wine braised brisket sliced with caramelized onions and carrots', 0, this)">
-                <span class="choice-pill-indicator"></span>
-                <span>4 lb wine braised brisket with caramelized onions &amp; carrots — <strong>Included ($475 total)</strong></span>
-              </label>
-            </div>
-
-            <div class="pkg-subhead">
-              <span>Choose Sides (Select up to 3 Included)</span>
-              <span class="pkg-counter-badge" id="family-sides-counter">0 / 3 selected</span>
-            </div>
-            <div class="choice-pill-list" id="family-sides-list">
-              <!-- Rendered via JS -->
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. INDIVIDUAL THANKSGIVING MEAL -->
-        <div class="meal-card" id="card-indiv-meal">
-          <div class="meal-card-top" style="cursor:default;">
-            <div class="meal-card-img">
-              <img src="images/menu/1-2-chicken-white-dark-meal-cbd79be2a2ce.jpg" alt="Individual Thanksgiving Meal" loading="lazy">
-            </div>
-            <div class="meal-card-body">
-              <div class="meal-card-name">
-                Individual Thanksgiving Meal (Feeds 1–2)
-                <span class="meal-badge" style="background:var(--sage-tint); color:var(--sage-dark);">$50 / meal</span>
-              </div>
-              <p class="meal-card-desc">Includes choice of white or dark meat turkey or braised brisket, choice of 2 sides, 4 oz house gravy, and 4 oz house cranberry sauce.</p>
-            </div>
-            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
-              <div class="meal-card-price">$50</div>
-              <div class="qty-stepper">
-                <button type="button" class="qty-btn" onclick="updateIndivQty(-1)">&minus;</button>
-                <span class="qty-val" id="indiv-qty-val">0</span>
-                <button type="button" class="qty-btn" onclick="updateIndivQty(1)">&plus;</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Expandable Individual Options (Active if qty > 0) -->
-          <div class="package-options-box" id="indiv-options-box" style="display:none;">
-            <div class="pkg-subhead">
-              <span>Choose Entree For Individual Meal</span>
-              <span class="pkg-counter-badge">1 choice</span>
-            </div>
-            <div class="choice-pill-list">
-              <label class="choice-pill selected" onclick="setIndivEntree('Turkey - dark meat (8 oz)', this)">
-                <span class="choice-pill-indicator"></span>
-                <span>Turkey — dark meat (8 oz)</span>
-              </label>
-              <label class="choice-pill" onclick="setIndivEntree('Turkey - white meat (8 oz)', this)">
-                <span class="choice-pill-indicator"></span>
-                <span>Turkey — white meat (8 oz)</span>
-              </label>
-              <label class="choice-pill" onclick="setIndivEntree('Braised brisket (6 oz)', this)">
-                <span class="choice-pill-indicator"></span>
-                <span>Braised brisket (6 oz)</span>
-              </label>
-            </div>
-
-            <div class="pkg-subhead">
-              <span>Choose Included Sides (Select up to 2)</span>
-              <span class="pkg-counter-badge" id="indiv-sides-counter">0 / 2 selected</span>
-            </div>
-            <div class="choice-pill-list" id="indiv-sides-list">
-              <!-- Rendered via JS -->
-            </div>
-          </div>
-        </div>
-
-        <!-- 3. JUST THE PROTEIN (A LA CARTE) -->
-        <div style="margin-top:22px; margin-bottom:12px;">
-          <h3 style="font-family:var(--f-display); font-size:1.05rem; font-weight:700; color:var(--ink); margin-bottom:4px;">Just the Protein (A La Carte)</h3>
-          <p style="font-size:.82rem; color:var(--ink-soft); margin-bottom:12px;">Whole rotisserie turkey or braised brisket without package sides.</p>
-
-          <div class="side-item-row">
-            <div class="side-item-info">
-              <div class="side-item-name">Whole un-carved rotisserie turkey (12–15 lb)</div>
-              <div class="side-item-meta">Slow rotisserie roasted, feeds 10–12</div>
-            </div>
-            <div class="side-item-price">$225</div>
-            <div class="qty-stepper">
-              <button type="button" class="qty-btn" onclick="updateProteinQty('turkey-uncarved', -1)">&minus;</button>
-              <span class="qty-val" id="qty-protein-turkey-uncarved">0</span>
-              <button type="button" class="qty-btn" onclick="updateProteinQty('turkey-uncarved', 1)">&plus;</button>
-            </div>
-          </div>
-
-          <div class="side-item-row">
-            <div class="side-item-info">
-              <div class="side-item-name">Whole carved rotisserie turkey (8–10 lb meat)</div>
-              <div class="side-item-meta">Professionally carved and sliced for easy serving</div>
-            </div>
-            <div class="side-item-price">$250</div>
-            <div class="qty-stepper">
-              <button type="button" class="qty-btn" onclick="updateProteinQty('turkey-carved', -1)">&minus;</button>
-              <span class="qty-val" id="qty-protein-turkey-carved">0</span>
-              <button type="button" class="qty-btn" onclick="updateProteinQty('turkey-carved', 1)">&plus;</button>
-            </div>
-          </div>
-
-          <div class="side-item-row">
-            <div class="side-item-info">
-              <div class="side-item-name">4 lb wine braised brisket</div>
-              <div class="side-item-meta">Sliced with caramelized onions and carrots</div>
-            </div>
-            <div class="side-item-price">$200</div>
-            <div class="qty-stepper">
-              <button type="button" class="qty-btn" onclick="updateProteinQty('brisket-4lb', -1)">&minus;</button>
-              <span class="qty-val" id="qty-protein-brisket-4lb">0</span>
-              <button type="button" class="qty-btn" onclick="updateProteinQty('brisket-4lb', 1)">&plus;</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="btn-nav-row">
-          <button type="button" class="btn btn-primary" onclick="goToStep(2)">Next: Choose Sides &amp; Pickup →</button>
-        </div>
+      <div class="tg-intro-box">
+        <p>After you fill out this order request, we will contact you to go over details and availability before the order is completed. If you would like faster service and direct information on current stock and pricing please contact us at <a href="tel:+14244553195" class="tg-intro-highlight">(424) 455-3195</a> or <a href="mailto:info@thehatchkitchen.com" class="tg-intro-highlight">info@thehatchkitchen.com</a>.</p>
+        <p><strong>Pre-order closes 11/24.</strong> Pick up at Hatch Kitchen storefront at <strong>8947 W. Pico Blvd</strong> on <strong>Wednesday 11/26 or Thursday 11/27 between 9:00 AM and 3:00 PM</strong>.</p>
       </div>
     </div>
 
+    <form id="thanksgiving-custom-form" onsubmit="handleFormSubmit(event); return false;">
 
-    <!-- STEP 2: ADDITIONAL SIDES & PICKUP DAY -->
-    <div class="step-page" id="step-2">
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <span>2. Additional Holiday Sides &amp; Pickup Day</span>
+      <!-- QUESTION 1: FAMILY PACKAGE -->
+      <div class="tg-card">
+        <div class="tg-card-head">
+          <div class="tg-card-title">
+            <span>FAMILY PACKAGE (FEEDS 10-12)</span>
+            <span class="tg-card-price">$475</span>
           </div>
-          <p class="panel-sub">Add extra 9x13 pans or specialty sides for your gathering and select your pickup window.</p>
+          <p class="tg-card-desc">Includes choice of 1 whole rotisserie turkey or 4 lb braised brisket. Includes choice of 3 sides, 2 fresh-baked sourdough loaves, turkey gravy and cranberry sauce. Please choose 1 entree.</p>
         </div>
 
-        <!-- ADDITIONAL SIDES LIST -->
-        <h3 style="font-family:var(--f-display); font-size:1.02rem; font-weight:700; color:var(--ink); margin-bottom:6px;">Additional Sides (Feeds approx. 10–12 each)</h3>
-        <p style="font-size:.82rem; color:var(--ink-soft); margin-bottom:14px;">If you would like multiple pans of any side, adjust the quantity below.</p>
+        <div class="tg-option-group" id="family-entree-group">
+          <label class="tg-option-row">
+            <input type="radio" name="family_entree" value="Whole un-carved rotisserie turkey (12-15 lb)" data-addon="0" onchange="updateFormCalculations()">
+            <div class="tg-option-content">
+              <div class="tg-option-title">Whole un-carved rotisserie turkey (12-15 lb)</div>
+              <div class="tg-option-sub">Included with package ($475)</div>
+            </div>
+          </label>
 
-        <div id="additional-sides-container">
-          <!-- Populated by JS -->
+          <label class="tg-option-row">
+            <input type="radio" name="family_entree" value="Whole carved rotisserie turkey (yields approx 8-10 lb meat)" data-addon="30" onchange="updateFormCalculations()">
+            <div class="tg-option-content">
+              <div class="tg-option-title">Whole carved rotisserie turkey (yields approx 8-10 lb meat) <span style="color:var(--gold-dark); font-weight:700;">+$30</span></div>
+              <div class="tg-option-sub">Sliced and carved for easy serving ($505)</div>
+            </div>
+          </label>
+
+          <label class="tg-option-row">
+            <input type="radio" name="family_entree" value="4 lb wine braised brisket sliced with caramelized onions and carrots" data-addon="0" onchange="updateFormCalculations()">
+            <div class="tg-option-content">
+              <div class="tg-option-title">4 lb wine braised brisket sliced with caramelized onions and carrots</div>
+              <div class="tg-option-sub">Included with package ($475)</div>
+            </div>
+          </label>
+
+          <label class="tg-option-row is-selected">
+            <input type="radio" name="family_entree" value="none" data-addon="0" checked onchange="updateFormCalculations()">
+            <div class="tg-option-content">
+              <div class="tg-option-title">Not ordering Family Package</div>
+              <div class="tg-option-sub">Skip this package and order individual meals or a la carte below</div>
+            </div>
+          </label>
         </div>
 
-        <!-- PICKUP DAY SELECTOR -->
-        <div style="margin-top:28px;">
-          <h3 style="font-family:var(--f-display); font-size:1.02rem; font-weight:700; color:var(--ink); margin-bottom:4px;">Select Storefront Pickup Day <span style="color:var(--red-alert);">*</span></h3>
-          <p style="font-size:.82rem; color:var(--ink-soft); margin-bottom:14px;">Pickup at Hatch Kitchen storefront: <strong>8947 W. Pico Blvd, Los Angeles</strong> between 9:00 AM and 3:00 PM.</p>
-
-          <div class="pickup-card-list">
-            <div class="pickup-card selected" onclick="setPickupDay('Wednesday 11/26 between 9:00 AM and 3:00 PM', this)">
-              <div class="pickup-card-left">
-                <span class="pickup-radio"></span>
-                <div>
-                  <div class="pickup-card-title">Wednesday, November 26</div>
-                  <div class="pickup-card-sub">Storefront pickup between 9:00 AM and 3:00 PM</div>
-                </div>
-              </div>
-              <span class="topbar-tag">Recommended</span>
-            </div>
-
-            <div class="pickup-card" onclick="setPickupDay('Thursday 11/27 between 9:00 AM and 3:00 PM', this)">
-              <div class="pickup-card-left">
-                <span class="pickup-radio"></span>
-                <div>
-                  <div class="pickup-card-title">Thursday, November 27 (Thanksgiving Day)</div>
-                  <div class="pickup-card-sub">Storefront pickup between 9:00 AM and 3:00 PM</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="pickup-card" onclick="setPickupDay('Friday 11/28 between 9:00 AM and 3:00 PM', this)">
-              <div class="pickup-card-left">
-                <span class="pickup-radio"></span>
-                <div>
-                  <div class="pickup-card-title">Friday, November 28</div>
-                  <div class="pickup-card-sub">Storefront pickup between 9:00 AM and 3:00 PM</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="btn-nav-row">
-          <button type="button" class="btn btn-outline" onclick="goToStep(1)">← Back to Packages</button>
-          <button type="button" class="btn btn-primary" onclick="goToStep(3)">Next: Contact &amp; Review →</button>
-        </div>
-      </div>
-    </div>
-
-
-    <!-- STEP 3: CONTACT INFORMATION & SUBMIT -->
-    <div class="step-page" id="step-3">
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <span>3. Contact Details &amp; Submit Request</span>
-          </div>
-          <p class="panel-sub">Enter your details so Hatch Kitchen can contact you to confirm final availability and payment.</p>
-        </div>
-
-        <form id="thanksgiving-contact-form" onsubmit="handlePreOrderSubmit(event); return false;">
-          <div class="form-grid">
-            <div class="field">
-              <label for="cust-name">First and Last Name <span class="req">*</span></label>
-              <input type="text" id="cust-name" placeholder="e.g. Sarah Cohen" required autocomplete="name">
-              <span class="field-error-msg">Please enter your full name.</span>
-            </div>
-
-            <div class="field">
-              <label for="cust-phone">Phone Number <span class="req">*</span></label>
-              <input type="tel" id="cust-phone" placeholder="e.g. (310) 555-0199" required autocomplete="tel">
-              <span class="field-error-msg">Please enter a valid phone number.</span>
-            </div>
-
-            <div class="field full">
-              <label for="cust-email">E-mail Address <span class="req">*</span></label>
-              <input type="email" id="cust-email" placeholder="e.g. sarah@example.com" required autocomplete="email">
-              <span class="field-error-msg">Please enter a valid email address.</span>
-            </div>
-
-            <div class="field full">
-              <label>Preferred Contact Method <span class="req">*</span></label>
-              <div style="display:flex; gap:12px; margin-top:4px;">
-                <label class="choice-pill selected" style="flex:1;" onclick="setPreferredContact('Phone', this)">
-                  <span class="choice-pill-indicator"></span>
-                  <span>📞 Phone Call / SMS</span>
-                </label>
-                <label class="choice-pill" style="flex:1;" onclick="setPreferredContact('Email', this)">
-                  <span class="choice-pill-indicator"></span>
-                  <span>✉️ Email</span>
-                </label>
-              </div>
-            </div>
-
-            <div class="field full">
-              <label for="cust-promo">Promo Code (Optional)</label>
-              <input type="text" id="cust-promo" placeholder="Enter promo code if applicable">
-            </div>
-
-            <div class="field full">
-              <label for="cust-comments">Questions, Dietary Notes, or Special Requests</label>
-              <textarea id="cust-comments" rows="3" placeholder="Let us know any food allergies, additional quantity notes, or heating preferences..."></textarea>
-            </div>
+        <!-- Sub-choices: Family Sides (Choose up to 3) -->
+        <div class="tg-sub-box" id="family-sides-box" style="display:none;">
+          <div class="tg-sub-title">
+            <span>Choose Sides (Up to 3 included)</span>
+            <span class="tg-sub-badge" id="family-sides-count-badge">0 of 3 selected</span>
           </div>
 
-          <div class="notice sage-notice" style="margin-top:10px;">
-            <strong>How It Works:</strong> After you submit this pre-order request, our kitchen manager will contact you directly via your preferred method to review availability, answer any questions, and confirm your order before pickup.
+          <div class="tg-option-group">
+            <label class="tg-option-row"><input type="checkbox" name="family_side" value="Sourdough stuffing 9x13 pan" onchange="handleFamilySideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Sourdough stuffing 9x13 pan</div></div></label>
+            <label class="tg-option-row"><input type="checkbox" name="family_side" value="Creamy mashed potato 9x13 pan" onchange="handleFamilySideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Creamy mashed potato 9x13 pan</div></div></label>
+            <label class="tg-option-row"><input type="checkbox" name="family_side" value="Green bean and mushroom casserole 9x13 pan" onchange="handleFamilySideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Green bean and mushroom casserole 9x13 pan</div></div></label>
+            <label class="tg-option-row"><input type="checkbox" name="family_side" value="Classic cornbread 9x13 pan" onchange="handleFamilySideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Classic cornbread 9x13 pan</div></div></label>
+            <label class="tg-option-row"><input type="checkbox" name="family_side" value="&quot;Cheesy&quot; jalapeno cornbread 9x13" onchange="handleFamilySideChange(this)"><div class="tg-option-content"><div class="tg-option-title">"Cheesy" jalapeno cornbread 9x13</div></div></label>
+            <label class="tg-option-row"><input type="checkbox" name="family_side" value="Winter kale salad - large bowl" onchange="handleFamilySideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Winter kale salad - large bowl</div></div></label>
+            <label class="tg-option-row"><input type="checkbox" name="family_side" value="Sweet potato with marshmallows - 9x13 pan" onchange="handleFamilySideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Sweet potato with marshmallows - 9x13 pan</div></div></label>
+            <label class="tg-option-row"><input type="checkbox" name="family_side" value="Steam roasted butternut squash - 9x13 pan" onchange="handleFamilySideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Steam roasted butternut squash - 9x13 pan</div></div></label>
           </div>
-
-          <div class="btn-nav-row">
-            <button type="button" class="btn btn-outline" onclick="goToStep(2)">← Back to Pickup &amp; Sides</button>
-            <button type="submit" class="btn btn-primary" id="submit-preorder-btn">
-              <span>Submit Thanksgiving Pre-Order Request →</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-
-    <!-- STEP 4 / USER DASHBOARD: ORDER CONFIRMATION -->
-    <div class="step-page" id="step-success">
-      <div class="success-wrap">
-        <div class="success-hero-box">
-          <div class="success-status-pill">● PRE-ORDER RECEIVED · AWAITING KITCHEN CONFIRMATION</div>
-          <div class="success-check">✓</div>
-          <h2 class="success-title">You're All <em>Set!</em></h2>
-          <p class="success-sub">Thank you, <strong id="success-cust-name-header"></strong>! Your Thanksgiving dinner pre-order request has been recorded. Our team will contact you to confirm final details before pickup.</p>
-        </div>
-
-        <div class="dashboard-order-card">
-          <div class="dash-card-header">
-            <div>
-              <span style="font-size:.72rem; font-family:var(--f-mono); text-transform:uppercase; color:var(--ink-soft); display:block;">Order Reference</span>
-              <span class="dash-order-id" id="dash-order-id">—</span>
-            </div>
-            <span class="dash-order-date" id="dash-order-date">—</span>
-          </div>
-
-          <div class="dash-row">
-            <span class="dash-label">Customer</span>
-            <span class="dash-val" id="dash-customer-val">—</span>
-          </div>
-          <div class="dash-row">
-            <span class="dash-label">Contact</span>
-            <span class="dash-val" id="dash-contact-val">—</span>
-          </div>
-          <div class="dash-row">
-            <span class="dash-label">Storefront Pickup</span>
-            <span class="dash-val highlight" id="dash-pickup-val">—</span>
-          </div>
-          <div class="dash-row">
-            <span class="dash-label">Pickup Address</span>
-            <span class="dash-val">8947 W. Pico Blvd, Los Angeles, CA 90035</span>
-          </div>
-
-          <div class="dash-items-box">
-            <div class="dash-items-title">Pre-Ordered Items &amp; Packages</div>
-            <div id="dash-items-list-container">
-              <!-- Rendered via JS -->
-            </div>
-          </div>
-
-          <div class="dash-row" id="dash-notes-row" style="display:none;">
-            <span class="dash-label">Special Requests</span>
-            <span class="dash-val" id="dash-notes-val" style="font-weight:500; font-style:italic;">—</span>
-          </div>
-
-          <div class="dash-total-bar">
-            <span class="label">Estimated Order Total</span>
-            <span class="val" id="dash-total-val">$0.00</span>
-          </div>
-        </div>
-
-        <div class="notice">
-          📍 <strong>What Happens Next:</strong> We have received your order request in our kitchen dashboard. You will receive a confirmation call or email to finalize payment and answer any questions before pickup on your selected day. Need immediate help? Call <a href="tel:+14244553195" style="font-weight:700; color:var(--gold-dark);">(424) 455-3195</a>.
-        </div>
-
-        <div class="dash-actions-row">
-          <button type="button" class="btn btn-outline" onclick="window.print()">🖨️ Print / Save Receipt</button>
-          <button type="button" class="btn btn-gold" onclick="resetToNewOrder()">Place Another Pre-Order</button>
-          <a href="index.html" class="btn btn-primary">← Back to Hatch Kitchen</a>
         </div>
       </div>
-    </div>
 
-  </div><!-- end step-main -->
+      <!-- QUESTION 2: INDIVIDUAL THANKSGIVING MEAL -->
+      <div class="tg-card">
+        <div class="tg-card-head">
+          <div class="tg-card-title">
+            <span>Individual Thanksgiving Meal (feeds 1-2)</span>
+            <span class="tg-card-price">$50 each</span>
+          </div>
+          <p class="tg-card-desc">Includes choice of white or dark meat turkey or braised brisket, choice of 2 sides, 4 oz house gravy + 4 oz house cranberry sauce.</p>
+        </div>
 
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; background:#FFF; padding:12px 16px; border:1px solid var(--line-soft); border-radius:var(--radius-sm);">
+          <div>
+            <span style="font-weight:700; font-size:.95rem; color:var(--ink);">Quantity of Individual Meals</span>
+            <div style="font-size:.78rem; color:var(--ink-soft);">$50.00 each</div>
+          </div>
+          <div class="tg-stepper">
+            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('indiv-qty', -1)">&minus;</button>
+            <span class="tg-stepper-val" id="indiv-qty-display">0</span>
+            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('indiv-qty', 1)">&plus;</button>
+          </div>
+        </div>
 
-  <!-- STEP SIDEBAR: STICKY ORDER SUMMARY -->
-  <div class="step-side" id="step-sidebar">
-    <div class="summary-card">
-      <div class="summary-title">Order Summary</div>
+        <!-- Sub-choices for Individual Meals -->
+        <div class="tg-sub-box" id="indiv-details-box" style="display:none;">
+          <div class="tg-sub-title">
+            <span>Choose Entree for Individual Meal</span>
+          </div>
+          <div class="tg-option-group" style="margin-bottom:14px;">
+            <label class="tg-option-row is-selected"><input type="radio" name="indiv_entree" value="Turkey - dark meat 8 oz" checked onchange="updateFormCalculations()"><div class="tg-option-content"><div class="tg-option-title">Turkey — dark meat 8 oz</div></div></label>
+            <label class="tg-option-row"><input type="radio" name="indiv_entree" value="Turkey - white meat 8 oz" onchange="updateFormCalculations()"><div class="tg-option-content"><div class="tg-option-title">Turkey — white meat 8 oz</div></div></label>
+            <label class="tg-option-row"><input type="radio" name="indiv_entree" value="Braised brisket 6 oz" onchange="updateFormCalculations()"><div class="tg-option-content"><div class="tg-option-title">Braised brisket 6 oz</div></div></label>
+          </div>
 
-      <div class="summary-empty" id="summary-empty-view">
-        No items selected yet.<br>
-        <span style="font-size:.78rem; opacity:.7;">Choose a holiday package or sides on the left to begin.</span>
+          <div class="tg-sub-title">
+            <span>Individual Meal - Sides (Choose up to 2)</span>
+            <span class="tg-sub-badge" id="indiv-sides-count-badge">0 of 2 selected</span>
+          </div>
+          <div class="tg-option-group">
+            <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Sourdough stuffing" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Sourdough stuffing</div></div></label>
+            <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Creamy mashed potato" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Creamy mashed potato</div></div></label>
+            <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Green bean and mushroom casserole" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Green bean and mushroom casserole</div></div></label>
+            <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Classic cornbread" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Classic cornbread</div></div></label>
+            <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="&quot;Cheesy&quot; jalapeno cornbread" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">"Cheesy" jalapeno cornbread</div></div></label>
+            <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Winter kale salad" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Winter kale salad</div></div></label>
+            <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Sweet potato with marshmallows" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Sweet potato with marshmallows</div></div></label>
+            <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Steam roasted butternut squash" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Steam roasted butternut squash</div></div></label>
+          </div>
+        </div>
       </div>
 
-      <div class="summary-items-list" id="summary-items-container" style="display:none;">
-        <!-- Dynamic Lines -->
+      <!-- QUESTION 3: JUST THE PROTEIN -->
+      <div class="tg-card">
+        <div class="tg-card-head">
+          <div class="tg-card-title">
+            <span>Just the Protein</span>
+          </div>
+          <p class="tg-card-desc">Whole rotisserie turkey and wine braised brisket without sides.</p>
+        </div>
+
+        <div class="tg-item-row">
+          <div class="tg-item-info">
+            <div class="tg-item-name">Whole un-carved rotisserie turkey (12-15 lb)</div>
+            <div class="tg-item-desc">Feeds 10–12 · Slow roasted OK Kosher turkey</div>
+          </div>
+          <div class="tg-item-price">$225</div>
+          <div class="tg-stepper">
+            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-uncarved', -1)">&minus;</button>
+            <span class="tg-stepper-val" id="protein-uncarved-display">0</span>
+            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-uncarved', 1)">&plus;</button>
+          </div>
+        </div>
+
+        <div class="tg-item-row">
+          <div class="tg-item-info">
+            <div class="tg-item-name">Whole carved rotisserie turkey (yields approx 8-10 lb meat)</div>
+            <div class="tg-item-desc">Feeds 10–12 · Carved &amp; sliced ready to serve</div>
+          </div>
+          <div class="tg-item-price">$250</div>
+          <div class="tg-stepper">
+            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-carved', -1)">&minus;</button>
+            <span class="tg-stepper-val" id="protein-carved-display">0</span>
+            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-carved', 1)">&plus;</button>
+          </div>
+        </div>
+
+        <div class="tg-item-row">
+          <div class="tg-item-info">
+            <div class="tg-item-name">4 lb wine braised brisket sliced with caramelized onions and carrots</div>
+            <div class="tg-item-desc">Feeds 10–12 · Tender brisket slow-braised in red wine</div>
+          </div>
+          <div class="tg-item-price">$200</div>
+          <div class="tg-stepper">
+            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-brisket', -1)">&minus;</button>
+            <span class="tg-stepper-val" id="protein-brisket-display">0</span>
+            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-brisket', 1)">&plus;</button>
+          </div>
+        </div>
       </div>
 
-      <hr class="summary-divider" id="summary-hr" style="display:none;">
+      <!-- QUESTION 4: ADDITIONAL SIDES -->
+      <div class="tg-card">
+        <div class="tg-card-head">
+          <div class="tg-card-title">
+            <span>Additional Sides (Each side feeds approx. 10-12 people)</span>
+          </div>
+          <p class="tg-card-desc">If you would like more than one of a particular item, please specify the quantity below or in the comments section.</p>
+        </div>
 
-      <div class="summary-total-row" id="summary-total-container" style="display:none;">
-        <span class="summary-total-label">Estimated Total</span>
-        <span class="summary-total-amt" id="summary-total-amt">$0.00</span>
+        <div id="additional-sides-list">
+          <!-- Populated via JS -->
+        </div>
       </div>
 
-      <div class="summary-pickup-note" id="summary-pickup-indicator">
-        Storefront Pickup: <strong id="summary-pickup-date-label">Wed 11/26 (9am–3pm)</strong>
+      <!-- QUESTION 5: PICK UP DAY -->
+      <div class="tg-card">
+        <div class="tg-card-head">
+          <div class="tg-card-title">
+            <span>Pick up Day <span style="color:var(--red-alert, #B91C1C);">*</span></span>
+          </div>
+          <p class="tg-card-desc">Storefront pickup at Hatch Kitchen, 8947 W. Pico Blvd, Los Angeles, CA 90035.</p>
+        </div>
+
+        <div class="tg-option-group" id="pickup-day-group">
+          <label class="tg-option-row is-selected">
+            <input type="radio" name="pickup_day" value="Wednesday 11/26 between 9 am and 3 pm" checked onchange="updateFormCalculations()">
+            <div class="tg-option-content">
+              <div class="tg-option-title">Wednesday 11/26 between 9 am and 3 pm</div>
+              <div class="tg-option-sub">Hatch Kitchen storefront pickup</div>
+            </div>
+          </label>
+
+          <label class="tg-option-row">
+            <input type="radio" name="pickup_day" value="Thursday 11/27 between 9 am and 3 pm" onchange="updateFormCalculations()">
+            <div class="tg-option-content">
+              <div class="tg-option-title">Thursday 11/27 between 9 am and 3 pm (Thanksgiving Day)</div>
+              <div class="tg-option-sub">Hatch Kitchen storefront pickup</div>
+            </div>
+          </label>
+
+          <label class="tg-option-row">
+            <input type="radio" name="pickup_day" value="Friday 11/28 between 9 am and 3 pm" onchange="updateFormCalculations()">
+            <div class="tg-option-content">
+              <div class="tg-option-title">Friday 11/28 between 9 am and 3 pm</div>
+              <div class="tg-option-sub">Hatch Kitchen storefront pickup</div>
+            </div>
+          </label>
+        </div>
       </div>
 
-      <div style="margin-top:18px;">
-        <button type="button" class="btn btn-gold btn-primary" id="summary-cta-btn" onclick="handleSummaryCtaClick()">
-          Continue to Pickup →
+      <!-- QUESTION 6: CONTACT INFORMATION -->
+      <div class="tg-card">
+        <div class="tg-card-head">
+          <div class="tg-card-title">
+            <span>Contact Information</span>
+          </div>
+          <p class="tg-card-desc">We will reach out to you via your preferred contact method to confirm details before finalizing your pre-order.</p>
+        </div>
+
+        <div class="tg-form-grid">
+          <div class="tg-field" id="field-cust-name">
+            <label for="cust-name">First and last name <span class="req">*</span></label>
+            <input type="text" id="cust-name" placeholder="Your full name" required autocomplete="name">
+            <span class="tg-error-text">Please enter your name.</span>
+          </div>
+
+          <div class="tg-field" id="field-cust-phone">
+            <label for="cust-phone">Phone number <span class="req">*</span></label>
+            <input type="tel" id="cust-phone" placeholder="(424) 555-0123" required autocomplete="tel">
+            <span class="tg-error-text">Please enter your phone number.</span>
+          </div>
+
+          <div class="tg-field full" id="field-cust-email">
+            <label for="cust-email">E-mail <span class="req">*</span></label>
+            <input type="email" id="cust-email" placeholder="email@example.com" required autocomplete="email">
+            <span class="tg-error-text">Please enter a valid email address.</span>
+          </div>
+
+          <div class="tg-field full">
+            <label>Preferred contact method <span class="req">*</span></label>
+            <div style="display:flex; gap:12px; margin-top:4px;">
+              <label class="tg-option-row is-selected" style="flex:1;">
+                <input type="radio" name="preferred_contact" value="Phone" checked onchange="handleContactMethodChange(this)">
+                <div class="tg-option-content"><div class="tg-option-title">📞 Phone</div></div>
+              </label>
+              <label class="tg-option-row" style="flex:1;">
+                <input type="radio" name="preferred_contact" value="Email" onchange="handleContactMethodChange(this)">
+                <div class="tg-option-content"><div class="tg-option-title">✉️ Email</div></div>
+              </label>
+            </div>
+          </div>
+
+          <div class="tg-field full">
+            <label for="cust-promo">ADD PROMO CODE HERE</label>
+            <input type="text" id="cust-promo" placeholder="Enter promo code if available">
+          </div>
+
+          <div class="tg-field full">
+            <label for="cust-comments">Questions and comments</label>
+            <textarea id="cust-comments" rows="3" placeholder="Any special instructions, allergies, or questions for our kitchen..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sticky Bottom Live Total & Submit Bar -->
+      <div class="tg-bottom-bar">
+        <div class="tg-total-group">
+          <span class="tg-total-label">Estimated Pre-Order Total</span>
+          <span class="tg-total-amt" id="live-total-amt">$0.00</span>
+        </div>
+
+        <button type="submit" class="tg-submit-btn" id="submit-btn">
+          <span>Submit Pre-Order Request →</span>
         </button>
       </div>
-    </div>
+
+    </form>
   </div>
 
-</div><!-- end page-wrap -->
 
+  <!-- ============================================================
+       VIEW 2: USER ORDER DASHBOARD (POST-SUBMISSION)
+       ============================================================ -->
+  <div class="tg-dashboard-wrap" id="dashboard-view">
 
-<!-- FAQ Accordion -->
-<section class="faq-panel">
-  <div class="faq-panel-title">Frequently Asked Questions</div>
-  <p class="faq-panel-sub">Everything you need to know about our Thanksgiving kosher pre-order program.</p>
-
-  <div class="faq-item">
-    <button class="faq-trigger" type="button" onclick="toggleFaq(this)">
-      When does Thanksgiving pre-ordering close?
-      <span class="faq-chevron">▼</span>
-    </button>
-    <div class="faq-body">
-      Pre-ordering closes on <strong>Monday, November 24th</strong>. We recommend placing your order as early as possible as holiday turkeys, briskets, and specialty sides sell out quickly every season.
+    <div class="tg-dash-hero">
+      <div class="tg-status-pill">● PRE-ORDER RECEIVED · AWAITING KITCHEN CONFIRMATION</div>
+      <div class="tg-check-icon">✓</div>
+      <h2 class="tg-dash-title">You're All <em>Set!</em></h2>
+      <p class="tg-dash-sub">Thank you, <strong id="dash-cust-header-name"></strong>! Your Thanksgiving pre-order request has been received by Hatch Kitchen. We will reach out to you shortly to confirm your order.</p>
     </div>
+
+    <div class="tg-receipt-card">
+      <div class="tg-receipt-header">
+        <div>
+          <span style="font-size:.72rem; font-family:var(--f-mono); text-transform:uppercase; color:var(--ink-soft); display:block;">Order Reference</span>
+          <span class="tg-receipt-id" id="dash-receipt-id">—</span>
+        </div>
+        <span class="tg-receipt-date" id="dash-receipt-date">—</span>
+      </div>
+
+      <div class="tg-receipt-row">
+        <span class="tg-receipt-label">Customer Name</span>
+        <span class="tg-receipt-val" id="dash-receipt-name">—</span>
+      </div>
+      <div class="tg-receipt-row">
+        <span class="tg-receipt-label">Contact</span>
+        <span class="tg-receipt-val" id="dash-receipt-contact">—</span>
+      </div>
+      <div class="tg-receipt-row">
+        <span class="tg-receipt-label">Storefront Pickup</span>
+        <span class="tg-receipt-val highlight" id="dash-receipt-pickup">—</span>
+      </div>
+      <div class="tg-receipt-row">
+        <span class="tg-receipt-label">Pickup Location</span>
+        <span class="tg-receipt-val">8947 W. Pico Blvd, Los Angeles, CA 90035</span>
+      </div>
+
+      <div class="tg-receipt-items">
+        <div class="tg-receipt-items-title">Pre-Ordered Items</div>
+        <div id="dash-receipt-items-list">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <div class="tg-receipt-row" id="dash-promo-row" style="display:none;">
+        <span class="tg-receipt-label">Promo Code</span>
+        <span class="tg-receipt-val" id="dash-receipt-promo">—</span>
+      </div>
+
+      <div class="tg-receipt-row" id="dash-comments-row" style="display:none;">
+        <span class="tg-receipt-label">Questions / Notes</span>
+        <span class="tg-receipt-val" id="dash-receipt-comments" style="font-weight:500; font-style:italic;">—</span>
+      </div>
+
+      <div class="tg-receipt-total">
+        <span class="label">Estimated Total</span>
+        <span class="val" id="dash-receipt-total">$0.00</span>
+      </div>
+    </div>
+
+    <div class="tg-intro-box" style="background:#FFF; border:1px solid var(--line-soft); color:var(--ink); margin-bottom:24px;">
+      <p style="color:var(--ink);"><strong>What Happens Next:</strong> Our kitchen manager will contact you directly via your preferred contact method to confirm item availability, answer questions, and finalize payment before pickup.</p>
+      <p style="color:var(--ink-soft); margin-top:6px;">Need to make changes or have questions? Contact us directly at <a href="tel:+14244553195" style="font-weight:700; color:var(--gold-dark);">(424) 455-3195</a> or <a href="mailto:info@thehatchkitchen.com" style="font-weight:700; color:var(--gold-dark);">info@thehatchkitchen.com</a>.</p>
+    </div>
+
+    <div class="tg-dash-actions">
+      <button type="button" class="btn btn-outline" onclick="window.print()">🖨️ Print / Save Receipt</button>
+      <button type="button" class="btn btn-gold" onclick="resetNewOrder()">Place Another Pre-Order</button>
+      <a href="index.html" class="btn btn-primary">← Back to Hatch Kitchen Home</a>
+    </div>
+
   </div>
 
-  <div class="faq-item">
-    <button class="faq-trigger" type="button" onclick="toggleFaq(this)">
-      Where and when do I pick up my order?
-      <span class="faq-chevron">▼</span>
-    </button>
-    <div class="faq-body">
-      Pickup takes place at the Hatch Kitchen storefront at <strong>8947 W. Pico Blvd, Los Angeles, CA 90035</strong> on <strong>Wednesday 11/26, Thursday 11/27, or Friday 11/28 between 9:00 AM and 3:00 PM</strong>.
-    </div>
-  </div>
+</main>
 
-  <div class="faq-item">
-    <button class="faq-trigger" type="button" onclick="toggleFaq(this)">
-      Is all the Thanksgiving food certified kosher?
-      <span class="faq-chevron">▼</span>
-    </button>
-    <div class="faq-body">
-      Yes! The entire Hatch Kitchen facility is <strong>100% OK Kosher certified</strong>. All turkeys, briskets, gravies, and holiday sides are prepared under strict kosher rabbinical supervision.
-    </div>
-  </div>
-
-  <div class="faq-item">
-    <button class="faq-trigger" type="button" onclick="toggleFaq(this)">
-      How do payment and order confirmation work?
-      <span class="faq-chevron">▼</span>
-    </button>
-    <div class="faq-body">
-      After you submit this order request, our kitchen manager will contact you directly via your preferred method (Phone or Email) to go over final details, confirm availability, and process payment before pickup.
-    </div>
-  </div>
-
-  <div class="faq-item">
-    <button class="faq-trigger" type="button" onclick="toggleFaq(this)">
-      Can I make changes or cancel my order?
-      <span class="faq-chevron">▼</span>
-    </button>
-    <div class="faq-body">
-      Changes or cancellations may be requested up until the cutoff date (Monday 11/24) by calling us directly at <a href="tel:+14244553195" style="color:var(--gold-dark); font-weight:700;">(424) 455-3195</a> or emailing <a href="mailto:info@thehatchkitchen.com" style="color:var(--gold-dark); font-weight:700;">info@thehatchkitchen.com</a>.
-    </div>
-  </div>
-</section>
-
-<!-- Footer -->
+<!-- Standard Hatch Kitchen Site Footer -->
 <footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-brand-row">
-      <img src="favicon.png" alt="Hatch Kitchen" style="width:28px;height:28px;border-radius:50%;">
-      <span class="footer-brand-name">Hatch Kitchen</span>
-      <span style="color:rgba(245,241,227,.35); font-size:.78rem;">— Thanksgiving Pre-Orders</span>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo-word" style="color:var(--gold); font-size:1.4rem;">Hatch Kitchen</span>
+        <p>Feel-good fuel for the grab-and-go, grab-and-stay crowd of West LA. Certified kosher, family-run, neighborhood-rooted.</p>
+        <div class="footer-social">
+          <a href="https://www.instagram.com/thehatchkitchen/" target="_blank" rel="noopener" aria-label="Hatch Kitchen on Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+          </a>
+          <a href="tel:+14244553195" aria-label="Call Hatch Kitchen">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.68 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.32 1.85.55 2.81.68A2 2 0 0 1 22 16.92Z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="menu.html">Full Menu</a></li>
+          <li><a href="catering.html">Catering</a></li>
+          <li><a href="about.html">Our Story</a></li>
+          <li><a href="contact.html">Visit Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Order</h4>
+        <ul>
+          <li><a href="https://hatchkitchen.toast.site/order" target="_blank" rel="noopener">Pickup &amp; Delivery</a></li>
+          <li><a href="thanksgiving-orders.html">Thanksgiving Pre-Orders</a></li>
+          <li><a href="village-orders.html">Village Meals</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <ul>
+          <li>8947 W Pico Blvd</li>
+          <li>Los Angeles, CA 90035, United States</li>
+          <li><a href="tel:+14244553195">(424) 455-3195</a></li>
+          <li>Sun–Thu 9AM–8PM · Fri 9AM–2PM</li>
+          <li class="footer-hours-note">Friday we close at 2pm until further notice</li>
+        </ul>
+      </div>
     </div>
-    <div class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="menu.html">Menu</a>
-      <a href="catering.html">Catering</a>
-      <a href="village-orders.html">Village Meals</a>
-      <a href="tel:+14244553195">(424) 455-3195</a>
+    <div class="footer-bottom">
+      <span>© <span data-year>2026</span> Hatch Kitchen. Proudly certified kosher by OK Kosher.</span>
+      <span>Pico-Robertson, Los Angeles · <a href="sitemap.xml">Sitemap</a></span>
     </div>
-    <span style="font-size:.78rem; color:rgba(245,241,227,.3);">© <span id="footer-year">2026</span> Hatch Kitchen. OK Kosher Certified.</span>
   </div>
 </footer>
 
+<script src="js/main.js" defer></script>
 
 <!-- ============================================================
-     APPLICATION LOGIC (JS)
+     APPLICATION LOGIC
      ============================================================ -->
 <script>
 'use strict';
 
-const STORAGE_KEY = 'hatch_thanksgiving_order_v1';
-const AVAILABLE_SIDES = [
-  { id: 'side-stuffing', name: 'Sourdough stuffing 9x13 pan', desc: 'Scratch-made with organic herbs' },
-  { id: 'side-mashed', name: 'Creamy mashed potato 9x13 pan (vegan)', desc: 'Velvety smooth Yukon gold potatoes' },
-  { id: 'side-greenbean', name: 'Green bean and mushroom casserole 9x13 pan (vegan)', desc: 'Tender green beans with savory mushroom gravy' },
-  { id: 'side-cornbread', name: 'Classic cornbread 9x13 pan (vegan)', desc: 'Golden sweet cornbread baked fresh' },
-  { id: 'side-jalapeno', name: '"Cheesy" jalapeno cornbread 9x13 (vegan)', desc: 'Spiced with fresh jalapenos & plant-based cheddar' },
-  { id: 'side-kale', name: 'Winter kale salad - large bowl', desc: 'Shallot dijon vinaigrette, butternut squash, cranberries' },
-  { id: 'side-sweetpotato', name: 'Sweet potato with marshmallows - 9x13 pan (vegan)', desc: 'Candied sweet potatoes with toasted marshmallows' },
-  { id: 'side-butternut', name: 'Steam roasted butternut squash - 9x13 pan (vegan)', desc: 'Roasted with fresh rosemary and sea salt' },
+const STORAGE_KEY = 'hatch_thanksgiving_order_live';
+
+const SIDES_DATA = [
+  { id: 'side-stuffing', name: 'Sourdough stuffing 9x13 - $60', price: 60, desc: 'Feeds 10–12 · Scratch-made sourdough stuffing' },
+  { id: 'side-mashed', name: 'Creamy mashed potato 9x13 pan (vegan) - $60', price: 60, desc: 'Feeds 10–12 · Velvety Yukon gold potatoes' },
+  { id: 'side-greenbean', name: 'Green bean and mushroom casserole 9x13 pan (vegan) - $70', price: 70, desc: 'Feeds 10–12 · Savory mushroom gravy' },
+  { id: 'side-cornbread', name: 'Classic cornbread 9x13 pan (vegan) - $45', price: 45, desc: 'Feeds 10–12 · Fresh-baked golden cornbread' },
+  { id: 'side-jalapeno', name: '"Cheesy" jalapeno cornbread 9x13 (vegan) - $60', price: 60, desc: 'Feeds 10–12 · Plant-based cheddar & jalapeno' },
+  { id: 'side-kale', name: 'Tuscan kale salad with roasted butternut squash, pumpkin seeds, cranberries and shallot dijon vinagrette - large bowl - $70', price: 70, desc: 'Feeds 10–12 · Large bowl with shallot dijon vinaigrette' },
+  { id: 'side-sweetpotato', name: 'Sweet potato casserol with marshmallows - 9x13 pan (vegan) - $70', price: 70, desc: 'Feeds 10–12 · Candied sweet potatoes & marshmallows' },
+  { id: 'side-butternut', name: 'Steam roasted rosemary butternut squash - 9x13 pan (vegan) - $60', price: 60, desc: 'Feeds 10–12 · Fresh rosemary and sea salt' },
+  { id: 'side-gravy', name: 'Turkey Gravy (1 pint) - $20', price: 20, desc: '16 oz pint · Scratch-simmered rich turkey gravy' },
+  { id: 'side-cranberry', name: 'Cranberry sauce - 1 pint (vegan) - $20', price: 20, desc: '16 oz pint · House tart & sweet cranberry sauce' },
 ];
 
-const ADDITIONAL_SIDES_DATA = [
-  { id: 'add-stuffing', name: 'Sourdough stuffing 9x13', price: 60, desc: 'Feeds 10–12 · Scratch-made sourdough' },
-  { id: 'add-mashed', name: 'Creamy mashed potato 9x13 pan (vegan)', price: 60, desc: 'Feeds 10–12 · Velvety Yukon gold' },
-  { id: 'add-greenbean', name: 'Green bean & mushroom casserole 9x13 (vegan)', price: 70, desc: 'Feeds 10–12 · Rich savory mushroom gravy' },
-  { id: 'add-cornbread', name: 'Classic cornbread 9x13 pan (vegan)', price: 45, desc: 'Feeds 10–12 · Fresh-baked golden cornbread' },
-  { id: 'add-jalapeno', name: '"Cheesy" jalapeno cornbread 9x13 (vegan)', price: 60, desc: 'Feeds 10–12 · Plant-based cheddar & jalapeno' },
-  { id: 'add-kale', name: 'Tuscan kale salad with roasted squash & cranberries', price: 70, desc: 'Large bowl · Pumpkin seeds, shallot vinaigrette' },
-  { id: 'add-sweetpotato', name: 'Sweet potato casserole with marshmallows (vegan)', price: 70, desc: '9x13 pan · Candied sweet potatoes' },
-  { id: 'add-butternut', name: 'Steam roasted rosemary butternut squash (vegan)', price: 60, desc: '9x13 pan · Fresh herbs & sea salt' },
-  { id: 'add-gravy', name: 'Turkey Gravy (1 pint)', price: 20, desc: '16 oz · Scratch-simmered rich gravy' },
-  { id: 'add-cranberry', name: 'Cranberry sauce (1 pint, vegan)', price: 20, desc: '16 oz · House-made tart & sweet cranberry relish' },
-];
-
-// Order State
-let currentStep = 1;
-let orderState = {
-  familyPkg: {
-    selected: false,
-    entree: 'Whole un-carved rotisserie turkey (12-15 lb)',
-    entreeAddon: 0,
-    basePrice: 475,
-    sides: [],
-  },
-  indivMeal: {
-    qty: 0,
-    unitPrice: 50,
-    entree: 'Turkey - dark meat (8 oz)',
-    sides: [],
-  },
-  proteins: {
-    'turkey-uncarved': { qty: 0, price: 225, name: 'Whole un-carved rotisserie turkey (12–15 lb)' },
-    'turkey-carved':   { qty: 0, price: 250, name: 'Whole carved rotisserie turkey (8–10 lb meat)' },
-    'brisket-4lb':     { qty: 0, price: 200, name: '4 lb wine braised brisket' },
-  },
+let formState = {
+  indivQty: 0,
+  proteinUncarvedQty: 0,
+  proteinCarvedQty: 0,
+  proteinBrisketQty: 0,
   additionalSides: {}, // id -> qty
-  pickupDay: 'Wednesday 11/26 between 9:00 AM and 3:00 PM',
-  contact: {
-    name: '',
-    phone: '',
-    email: '',
-    preferredContact: 'Phone',
-    promoCode: '',
-    comments: '',
-  },
 };
 
-// Initialize
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('footer-year').textContent = new Date().getFullYear();
-  initSideCheckboxes();
-  initAdditionalSidesList();
-  checkExistingOrder();
-
-  // If user requested dashboard directly via hash
-  if (window.location.hash === '#order-dashboard') {
-    showDashboardView();
-  }
+  renderAdditionalSides();
+  setupRowSelectionHighlighting();
+  checkUrlOrStoredDashboard();
 });
 
-// Render side choices for Family and Individual meals
-function initSideCheckboxes() {
-  const famContainer = document.getElementById('family-sides-list');
-  const indContainer = document.getElementById('indiv-sides-list');
-
-  famContainer.innerHTML = AVAILABLE_SIDES.map(s => `
-    <label class="choice-pill checkbox-style" data-side-id="${s.id}" onclick="toggleFamilySide('${s.name}', this)">
-      <span class="choice-pill-indicator"></span>
-      <span>${s.name}</span>
-    </label>
-  `).join('');
-
-  indContainer.innerHTML = AVAILABLE_SIDES.map(s => `
-    <label class="choice-pill checkbox-style" data-ind-side-id="${s.id}" onclick="toggleIndivSide('${s.name}', this)">
-      <span class="choice-pill-indicator"></span>
-      <span>${s.name}</span>
-    </label>
-  `).join('');
-}
-
-// Render additional sides
-function initAdditionalSidesList() {
-  const container = document.getElementById('additional-sides-container');
-  container.innerHTML = ADDITIONAL_SIDES_DATA.map(side => `
-    <div class="side-item-row">
-      <div class="side-item-info">
-        <div class="side-item-name">${side.name}</div>
-        <div class="side-item-meta">${side.desc}</div>
+function renderAdditionalSides() {
+  const container = document.getElementById('additional-sides-list');
+  container.innerHTML = SIDES_DATA.map(side => `
+    <div class="tg-item-row">
+      <div class="tg-item-info">
+        <div class="tg-item-name">${side.name}</div>
+        <div class="tg-item-desc">${side.desc}</div>
       </div>
-      <div class="side-item-price">$${side.price}</div>
-      <div class="qty-stepper">
-        <button type="button" class="qty-btn" onclick="updateAddSideQty('${side.id}', -1)">&minus;</button>
-        <span class="qty-val" id="qty-${side.id}">0</span>
-        <button type="button" class="qty-btn" onclick="updateAddSideQty('${side.id}', 1)">&plus;</button>
+      <div class="tg-item-price">$${side.price}</div>
+      <div class="tg-stepper">
+        <button type="button" class="tg-stepper-btn" onclick="adjustSideQty('${side.id}', -1)">&minus;</button>
+        <span class="tg-stepper-val" id="qty-disp-${side.id}">0</span>
+        <button type="button" class="tg-stepper-btn" onclick="adjustSideQty('${side.id}', 1)">&plus;</button>
       </div>
     </div>
   `).join('');
 }
 
-// Check existing order in localStorage
-function checkExistingOrder() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-    const data = JSON.parse(raw);
-    if (data && data.orderId) {
-      document.getElementById('existing-order-bar').style.display = 'block';
-      document.getElementById('existing-order-id-label').textContent = data.orderId;
-      document.getElementById('hero-dash-btn').style.display = 'inline-flex';
-    }
-  } catch (_) {}
-}
-
-// Step Navigation
-function goToStep(step) {
-  if (step === 2 && !hasAnyItemsSelected()) {
-    alert('Please select at least one holiday package, protein, or side to continue.');
-    return;
-  }
-  if (step === 3 && !orderState.pickupDay) {
-    alert('Please select a pickup day to continue.');
-    return;
-  }
-
-  currentStep = step;
-  document.querySelectorAll('.step-page').forEach(p => p.classList.remove('active'));
-  const target = document.getElementById(`step-${step}`);
-  if (target) target.classList.add('active');
-
-  // Update progress bar
-  document.querySelectorAll('.prog-step').forEach((el, idx) => {
-    el.classList.remove('active', 'completed');
-    if (idx + 1 === step) el.classList.add('active');
-    else if (idx + 1 < step) el.classList.add('completed');
+function setupRowSelectionHighlighting() {
+  document.querySelectorAll('.tg-option-row input').forEach(input => {
+    input.addEventListener('change', () => {
+      if (input.type === 'radio') {
+        const groupName = input.name;
+        document.querySelectorAll(`input[name="${groupName}"]`).forEach(r => {
+          r.closest('.tg-option-row').classList.toggle('is-selected', r.checked);
+        });
+      } else if (input.type === 'checkbox') {
+        input.closest('.tg-option-row').classList.toggle('is-selected', input.checked);
+      }
+    });
   });
-
-  // Update summary CTA button text
-  const cta = document.getElementById('summary-cta-btn');
-  if (step === 1) cta.textContent = 'Continue to Pickup & Sides →';
-  else if (step === 2) cta.textContent = 'Continue to Contact Details →';
-  else if (step === 3) cta.textContent = 'Submit Pre-Order Request →';
-
-  // Smooth scroll
-  const anchor = document.getElementById('order-form-start');
-  if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function handleSummaryCtaClick() {
-  if (currentStep === 1) goToStep(2);
-  else if (currentStep === 2) goToStep(3);
-  else if (currentStep === 3) {
-    document.getElementById('submit-preorder-btn').click();
+function adjustStepper(type, delta) {
+  if (type === 'indiv-qty') {
+    formState.indivQty = Math.max(0, formState.indivQty + delta);
+    document.getElementById('indiv-qty-display').textContent = formState.indivQty;
+    document.getElementById('indiv-details-box').style.display = formState.indivQty > 0 ? 'block' : 'none';
+  } else if (type === 'protein-uncarved') {
+    formState.proteinUncarvedQty = Math.max(0, formState.proteinUncarvedQty + delta);
+    document.getElementById('protein-uncarved-display').textContent = formState.proteinUncarvedQty;
+  } else if (type === 'protein-carved') {
+    formState.proteinCarvedQty = Math.max(0, formState.proteinCarvedQty + delta);
+    document.getElementById('protein-carved-display').textContent = formState.proteinCarvedQty;
+  } else if (type === 'protein-brisket') {
+    formState.proteinBrisketQty = Math.max(0, formState.proteinBrisketQty + delta);
+    document.getElementById('protein-brisket-display').textContent = formState.proteinBrisketQty;
   }
+  updateFormCalculations();
 }
 
-// Family Package Handlers
-function toggleFamilyPackage() {
-  orderState.familyPkg.selected = !orderState.familyPkg.selected;
-  const card = document.getElementById('card-family-pkg');
-  card.classList.toggle('selected', orderState.familyPkg.selected);
-  renderSummary();
-}
-
-function setFamilyEntree(name, addon, el) {
-  orderState.familyPkg.entree = name;
-  orderState.familyPkg.entreeAddon = addon;
-  const parent = el.closest('.choice-pill-list');
-  parent.querySelectorAll('.choice-pill').forEach(p => p.classList.remove('selected'));
-  el.classList.add('selected');
-  const totalPkgPrice = orderState.familyPkg.basePrice + addon;
-  document.getElementById('family-pkg-price-display').textContent = `$${totalPkgPrice}`;
-  renderSummary();
-}
-
-function toggleFamilySide(sideName, el) {
-  const sides = orderState.familyPkg.sides;
-  const idx = sides.indexOf(sideName);
-  if (idx > -1) {
-    sides.splice(idx, 1);
-    el.classList.remove('selected');
-  } else {
-    if (sides.length >= 3) {
-      alert('You have already selected 3 sides for this package. Uncheck one first to choose another.');
-      return;
-    }
-    sides.push(sideName);
-    el.classList.add('selected');
-  }
-  document.getElementById('family-sides-counter').textContent = `${sides.length} / 3 selected`;
-  renderSummary();
-}
-
-// Individual Meal Handlers
-function updateIndivQty(delta) {
-  orderState.indivMeal.qty = Math.max(0, orderState.indivMeal.qty + delta);
-  document.getElementById('indiv-qty-val').textContent = orderState.indivMeal.qty;
-  const box = document.getElementById('indiv-options-box');
-  const card = document.getElementById('card-indiv-meal');
-  if (orderState.indivMeal.qty > 0) {
-    box.style.display = 'block';
-    card.classList.add('selected');
-  } else {
-    box.style.display = 'none';
-    card.classList.remove('selected');
-  }
-  renderSummary();
-}
-
-function setIndivEntree(name, el) {
-  orderState.indivMeal.entree = name;
-  const parent = el.closest('.choice-pill-list');
-  parent.querySelectorAll('.choice-pill').forEach(p => p.classList.remove('selected'));
-  el.classList.add('selected');
-  renderSummary();
-}
-
-function toggleIndivSide(sideName, el) {
-  const sides = orderState.indivMeal.sides;
-  const idx = sides.indexOf(sideName);
-  if (idx > -1) {
-    sides.splice(idx, 1);
-    el.classList.remove('selected');
-  } else {
-    if (sides.length >= 2) {
-      alert('You have already selected 2 sides. Uncheck one first to choose another.');
-      return;
-    }
-    sides.push(sideName);
-    el.classList.add('selected');
-  }
-  document.getElementById('indiv-sides-counter').textContent = `${sides.length} / 2 selected`;
-  renderSummary();
-}
-
-// Protein Handlers
-function updateProteinQty(id, delta) {
-  const item = orderState.proteins[id];
-  item.qty = Math.max(0, item.qty + delta);
-  document.getElementById(`qty-protein-${id}`).textContent = item.qty;
-  renderSummary();
-}
-
-// Additional Sides Handlers
-function updateAddSideQty(id, delta) {
-  const current = orderState.additionalSides[id] || 0;
+function adjustSideQty(sideId, delta) {
+  const current = formState.additionalSides[sideId] || 0;
   const updated = Math.max(0, current + delta);
-  if (updated === 0) delete orderState.additionalSides[id];
-  else orderState.additionalSides[id] = updated;
-  document.getElementById(`qty-${id}`).textContent = updated;
-  renderSummary();
+  if (updated === 0) delete formState.additionalSides[sideId];
+  else formState.additionalSides[sideId] = updated;
+  document.getElementById(`qty-disp-${sideId}`).textContent = updated;
+  updateFormCalculations();
 }
 
-// Pickup Day Handlers
-function setPickupDay(dayLabel, el) {
-  orderState.pickupDay = dayLabel;
-  document.querySelectorAll('.pickup-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  document.getElementById('summary-pickup-date-label').textContent = dayLabel.split('between')[0].trim();
-  renderSummary();
-}
-
-// Contact Method
-function setPreferredContact(method, el) {
-  orderState.contact.preferredContact = method;
-  el.closest('div').querySelectorAll('.choice-pill').forEach(p => p.classList.remove('selected'));
-  el.classList.add('selected');
-}
-
-// Check if any items selected
-function hasAnyItemsSelected() {
-  if (orderState.familyPkg.selected) return true;
-  if (orderState.indivMeal.qty > 0) return true;
-  for (const k in orderState.proteins) {
-    if (orderState.proteins[k].qty > 0) return true;
-  }
-  for (const k in orderState.additionalSides) {
-    if (orderState.additionalSides[k] > 0) return true;
-  }
-  return false;
-}
-
-// Live Summary Calculator
-function computeOrderDetails() {
-  const lines = [];
-  let total = 0;
-  let count = 0;
-
-  if (orderState.familyPkg.selected) {
-    const pkgPrice = orderState.familyPkg.basePrice + orderState.familyPkg.entreeAddon;
-    total += pkgPrice;
-    count += 1;
-    lines.push({
-      title: 'Family Package (Feeds 10–12)',
-      price: pkgPrice,
-      sub: `Entree: ${orderState.familyPkg.entree}<br>Sides: ${orderState.familyPkg.sides.length ? orderState.familyPkg.sides.join(', ') : 'None selected yet'}`,
-    });
-  }
-
-  if (orderState.indivMeal.qty > 0) {
-    const indivTotal = orderState.indivMeal.qty * orderState.indivMeal.unitPrice;
-    total += indivTotal;
-    count += orderState.indivMeal.qty;
-    lines.push({
-      title: `${orderState.indivMeal.qty}x Individual Thanksgiving Meal`,
-      price: indivTotal,
-      sub: `Entree: ${orderState.indivMeal.entree}<br>Sides: ${orderState.indivMeal.sides.length ? orderState.indivMeal.sides.join(', ') : 'None selected yet'}`,
-    });
-  }
-
-  for (const k in orderState.proteins) {
-    const p = orderState.proteins[k];
-    if (p.qty > 0) {
-      const pTotal = p.qty * p.price;
-      total += pTotal;
-      count += p.qty;
-      lines.push({
-        title: `${p.qty}x ${p.name}`,
-        price: pTotal,
-        sub: 'A La Carte Protein',
-      });
-    }
-  }
-
-  for (const sideId in orderState.additionalSides) {
-    const qty = orderState.additionalSides[sideId];
-    const data = ADDITIONAL_SIDES_DATA.find(s => s.id === sideId);
-    if (data && qty > 0) {
-      const sideTotal = qty * data.price;
-      total += sideTotal;
-      count += qty;
-      lines.push({
-        title: `${qty}x ${data.name}`,
-        price: sideTotal,
-        sub: data.desc,
-      });
-    }
-  }
-
-  return { lines, total, count };
-}
-
-function renderSummary() {
-  const { lines, total } = computeOrderDetails();
-  const emptyView = document.getElementById('summary-empty-view');
-  const itemsContainer = document.getElementById('summary-items-container');
-  const hr = document.getElementById('summary-hr');
-  const totalContainer = document.getElementById('summary-total-container');
-  const totalAmt = document.getElementById('summary-total-amt');
-
-  if (lines.length === 0) {
-    emptyView.style.display = 'block';
-    itemsContainer.style.display = 'none';
-    hr.style.display = 'none';
-    totalContainer.style.display = 'none';
-    totalAmt.textContent = '$0.00';
+function handleFamilySideChange(checkbox) {
+  const checked = document.querySelectorAll('input[name="family_side"]:checked');
+  if (checked.length > 3) {
+    checkbox.checked = false;
+    checkbox.closest('.tg-option-row').classList.remove('is-selected');
+    alert('You may select up to 3 included sides for the Family Package.');
     return;
   }
-
-  emptyView.style.display = 'none';
-  itemsContainer.style.display = 'block';
-  hr.style.display = 'block';
-  totalContainer.style.display = 'flex';
-  totalAmt.textContent = `$${total.toFixed(2)}`;
-
-  itemsContainer.innerHTML = lines.map(item => `
-    <div class="summary-item">
-      <div class="summary-item-head">
-        <span>${item.title}</span>
-        <span class="summary-item-price">$${item.price.toFixed(2)}</span>
-      </div>
-      <div class="summary-item-sub">${item.sub}</div>
-    </div>
-  `).join('');
+  document.getElementById('family-sides-count-badge').textContent = `${checked.length} of 3 selected`;
+  checkbox.closest('.tg-option-row').classList.toggle('is-selected', checkbox.checked);
 }
 
-// Handle Form Submission
-async function handlePreOrderSubmit(e) {
+function handleIndivSideChange(checkbox) {
+  const checked = document.querySelectorAll('input[name="indiv_side"]:checked');
+  if (checked.length > 2) {
+    checkbox.checked = false;
+    checkbox.closest('.tg-option-row').classList.remove('is-selected');
+    alert('You may select up to 2 included sides for the Individual Meal.');
+    return;
+  }
+  document.getElementById('indiv-sides-count-badge').textContent = `${checked.length} of 2 selected`;
+  checkbox.closest('.tg-option-row').classList.toggle('is-selected', checkbox.checked);
+}
+
+function handleContactMethodChange(radio) {
+  document.querySelectorAll('input[name="preferred_contact"]').forEach(r => {
+    r.closest('.tg-option-row').classList.toggle('is-selected', r.checked);
+  });
+}
+
+function updateFormCalculations() {
+  const selectedFamilyEntree = document.querySelector('input[name="family_entree"]:checked');
+  const familyBox = document.getElementById('family-sides-box');
+  let familyPrice = 0;
+
+  if (selectedFamilyEntree && selectedFamilyEntree.value !== 'none') {
+    familyPrice = 475 + Number(selectedFamilyEntree.dataset.addon || 0);
+    familyBox.style.display = 'block';
+  } else {
+    familyBox.style.display = 'none';
+  }
+
+  const indivTotal = formState.indivQty * 50;
+  const proteinTotal = (formState.proteinUncarvedQty * 225) +
+                       (formState.proteinCarvedQty * 250) +
+                       (formState.proteinBrisketQty * 200);
+
+  let sidesTotal = 0;
+  for (const sId in formState.additionalSides) {
+    const qty = formState.additionalSides[sId];
+    const sData = SIDES_DATA.find(s => s.id === sId);
+    if (sData && qty > 0) {
+      sidesTotal += (qty * sData.price);
+    }
+  }
+
+  const grandTotal = familyPrice + indivTotal + proteinTotal + sidesTotal;
+  document.getElementById('live-total-amt').textContent = `$${grandTotal.toFixed(2)}`;
+}
+
+// Compute items list for submission payload
+function getOrderPayloadItems() {
+  const items = [];
+  const selectedFamilyEntree = document.querySelector('input[name="family_entree"]:checked');
+
+  if (selectedFamilyEntree && selectedFamilyEntree.value !== 'none') {
+    const addon = Number(selectedFamilyEntree.dataset.addon || 0);
+    const familySides = Array.from(document.querySelectorAll('input[name="family_side"]:checked')).map(c => c.value);
+    items.push({
+      title: 'Family Package (Feeds 10–12)',
+      price: 475 + addon,
+      entree: selectedFamilyEntree.value,
+      sides: familySides,
+    });
+  }
+
+  if (formState.indivQty > 0) {
+    const indivEntree = document.querySelector('input[name="indiv_entree"]:checked')?.value || 'Turkey - dark meat 8 oz';
+    const indivSides = Array.from(document.querySelectorAll('input[name="indiv_side"]:checked')).map(c => c.value);
+    items.push({
+      title: `${formState.indivQty}x Individual Thanksgiving Meal (Feeds 1–2)`,
+      price: formState.indivQty * 50,
+      entree: indivEntree,
+      sides: indivSides,
+    });
+  }
+
+  if (formState.proteinUncarvedQty > 0) {
+    items.push({
+      title: `${formState.proteinUncarvedQty}x Whole un-carved rotisserie turkey (12–15 lb)`,
+      price: formState.proteinUncarvedQty * 225,
+    });
+  }
+  if (formState.proteinCarvedQty > 0) {
+    items.push({
+      title: `${formState.proteinCarvedQty}x Whole carved rotisserie turkey (8–10 lb meat)`,
+      price: formState.proteinCarvedQty * 250,
+    });
+  }
+  if (formState.proteinBrisketQty > 0) {
+    items.push({
+      title: `${formState.proteinBrisketQty}x 4 lb wine braised brisket with caramelized onions`,
+      price: formState.proteinBrisketQty * 200,
+    });
+  }
+
+  for (const sId in formState.additionalSides) {
+    const qty = formState.additionalSides[sId];
+    const sData = SIDES_DATA.find(s => s.id === sId);
+    if (sData && qty > 0) {
+      items.push({
+        title: `${qty}x ${sData.name.split('-')[0].trim()}`,
+        price: qty * sData.price,
+      });
+    }
+  }
+
+  return items;
+}
+
+// Form Submission & Redirect
+async function handleFormSubmit(e) {
   if (e) e.preventDefault();
 
-  const name = document.getElementById('cust-name').value.trim();
-  const phone = document.getElementById('cust-phone').value.trim();
-  const email = document.getElementById('cust-email').value.trim();
+  const nameInput = document.getElementById('cust-name');
+  const phoneInput = document.getElementById('cust-phone');
+  const emailInput = document.getElementById('cust-email');
+
+  let hasError = false;
+  [
+    { el: nameInput, fieldId: 'field-cust-name' },
+    { el: phoneInput, fieldId: 'field-cust-phone' },
+    { el: emailInput, fieldId: 'field-cust-email' },
+  ].forEach(item => {
+    const parent = document.getElementById(item.fieldId);
+    if (!item.el.value.trim()) {
+      parent.classList.add('is-invalid');
+      hasError = true;
+    } else {
+      parent.classList.remove('is-invalid');
+    }
+  });
+
+  if (hasError) {
+    nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const items = getOrderPayloadItems();
+  if (items.length === 0) {
+    alert('Please choose at least one item (Family Package, Individual Meal, Protein, or Sides) to pre-order.');
+    window.scrollTo({ top: 350, behavior: 'smooth' });
+    return;
+  }
+
+  const pickupDay = document.querySelector('input[name="pickup_day"]:checked')?.value || 'Wednesday 11/26 between 9 am and 3 pm';
+  const preferredContact = document.querySelector('input[name="preferred_contact"]:checked')?.value || 'Phone';
   const promo = document.getElementById('cust-promo').value.trim();
   const comments = document.getElementById('cust-comments').value.trim();
 
-  let hasError = false;
-  ['cust-name', 'cust-phone', 'cust-email'].forEach(id => {
-    const fieldEl = document.getElementById(id).closest('.field');
-    if (!document.getElementById(id).value.trim()) {
-      fieldEl.classList.add('invalid');
-      hasError = true;
-    } else {
-      fieldEl.classList.remove('invalid');
-    }
-  });
+  let total = 0;
+  items.forEach(i => total += i.price);
 
-  if (hasError) return;
-
-  if (!hasAnyItemsSelected()) {
-    alert('Please select at least one package or dish before submitting.');
-    goToStep(1);
-    return;
-  }
-
-  const { lines, total, count } = computeOrderDetails();
   const orderId = 'ORD-TG-' + Math.random().toString(36).substr(2, 6).toUpperCase();
   const dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-  const payload = {
+  const orderData = {
     orderId,
     dateStr,
     customer: {
-      name,
-      phone,
-      email,
-      preferredContact: orderState.contact.preferredContact,
+      name: nameInput.value.trim(),
+      phone: phoneInput.value.trim(),
+      email: emailInput.value.trim(),
+      preferredContact,
     },
-    pickupDay: orderState.pickupDay,
-    items: lines,
+    pickupDay,
+    items,
     total,
-    itemCount: count,
     promoCode: promo,
     comments,
   };
 
-  // Button loading state
-  const btn = document.getElementById('submit-preorder-btn');
-  btn.disabled = true;
-  btn.innerHTML = 'Recording your order...';
+  const submitBtn = document.getElementById('submit-btn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting Pre-Order...';
 
-  // 1. Save in localStorage for persistent customer dashboard
+  // 1. Store locally
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(orderData));
   } catch (_) {}
 
-  // 2. Best-effort serverless notification
+  // 2. Dispatch to serverless endpoint
   try {
     await fetch('/api/save-thanksgiving-order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(orderData),
     });
   } catch (err) {
-    console.warn('[thanksgiving] Local fallback active:', err);
+    console.warn('[thanksgiving] Offline / server error:', err);
   }
 
-  // 3. Render Dashboard View & Redirect smoothly
-  renderDashboard(payload);
-  window.location.hash = 'order-dashboard';
+  // 3. Immediately REDIRECT user to Dashboard
+  const redirectUrl = `thanksgiving-orders.html?view=dashboard&order_id=${encodeURIComponent(orderId)}#dashboard`;
+  window.history.pushState(null, '', redirectUrl);
+  renderDashboard(orderData);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Render Dashboard View
 function renderDashboard(data) {
-  // Hide progress wrap and sidebar, show success page
-  document.getElementById('progress-wrap').style.display = 'none';
-  document.getElementById('step-sidebar').style.display = 'none';
-  document.querySelectorAll('.step-page').forEach(p => p.classList.remove('active'));
-  document.getElementById('step-success').classList.add('active');
+  document.getElementById('preorder-form-view').style.display = 'none';
+  const dash = document.getElementById('dashboard-view');
+  dash.style.display = 'block';
 
-  // Fill details
-  document.getElementById('success-cust-name-header').textContent = data.customer.name;
-  document.getElementById('dash-order-id').textContent = data.orderId;
-  document.getElementById('dash-order-date').textContent = data.dateStr || 'Today';
-  document.getElementById('dash-customer-val').textContent = data.customer.name;
-  document.getElementById('dash-contact-val').textContent = `${data.customer.phone} · ${data.customer.email} (Prefers ${data.customer.preferredContact})`;
-  document.getElementById('dash-pickup-val').textContent = data.pickupDay;
-  document.getElementById('dash-total-val').textContent = `$${Number(data.total).toFixed(2)}`;
+  document.getElementById('dash-cust-header-name').textContent = data.customer.name;
+  document.getElementById('dash-receipt-id').textContent = data.orderId;
+  document.getElementById('dash-receipt-date').textContent = data.dateStr || 'Today';
+  document.getElementById('dash-receipt-name').textContent = data.customer.name;
+  document.getElementById('dash-receipt-contact').textContent = `${data.customer.phone} · ${data.customer.email} (${data.customer.preferredContact})`;
+  document.getElementById('dash-receipt-pickup').textContent = data.pickupDay;
+  document.getElementById('dash-receipt-total').textContent = `$${Number(data.total).toFixed(2)}`;
 
-  if (data.comments) {
-    document.getElementById('dash-notes-row').style.display = 'flex';
-    document.getElementById('dash-notes-val').textContent = `"${data.comments}"`;
+  if (data.promoCode) {
+    document.getElementById('dash-promo-row').style.display = 'flex';
+    document.getElementById('dash-receipt-promo').textContent = data.promoCode;
   } else {
-    document.getElementById('dash-notes-row').style.display = 'none';
+    document.getElementById('dash-promo-row').style.display = 'none';
   }
 
-  const itemsContainer = document.getElementById('dash-items-list-container');
+  if (data.comments) {
+    document.getElementById('dash-comments-row').style.display = 'flex';
+    document.getElementById('dash-receipt-comments').textContent = `"${data.comments}"`;
+  } else {
+    document.getElementById('dash-comments-row').style.display = 'none';
+  }
+
+  const itemsContainer = document.getElementById('dash-receipt-items-list');
   itemsContainer.innerHTML = (data.items || []).map(item => `
-    <div class="dash-item-line">
+    <div class="tg-receipt-item-line">
       <div>
         <strong>${item.title}</strong>
-        <div style="font-size:.76rem; color:var(--ink-soft); margin-top:2px;">${item.sub}</div>
+        ${item.entree ? `<div style="font-size:.78rem; color:var(--ink-soft); margin-top:2px;">Entree: ${item.entree}</div>` : ''}
+        ${item.sides && item.sides.length ? `<div style="font-size:.78rem; color:var(--ink-soft);">Sides: ${item.sides.join(', ')}</div>` : ''}
       </div>
       <strong style="color:var(--gold-dark); font-family:var(--f-mono);">$${Number(item.price).toFixed(2)}</strong>
     </div>
   `).join('');
 
-  // Topbar announcement
-  document.getElementById('existing-order-bar').style.display = 'block';
-  document.getElementById('existing-order-id-label').textContent = data.orderId;
+  // Update top banner
+  document.getElementById('active-order-banner').style.display = 'block';
+  document.getElementById('active-banner-order-id').textContent = data.orderId;
 }
 
-// Show existing dashboard if customer returns
-function showDashboardView() {
+function checkUrlOrStoredDashboard() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const isDashboardView = urlParams.get('view') === 'dashboard' || window.location.hash === '#dashboard';
+
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const data = JSON.parse(raw);
-      renderDashboard(data);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      goToStep(1);
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const data = JSON.parse(stored);
+      document.getElementById('active-order-banner').style.display = 'block';
+      document.getElementById('active-banner-order-id').textContent = data.orderId;
+
+      if (isDashboardView) {
+        renderDashboard(data);
+        return;
+      }
     }
-  } catch (_) {
-    goToStep(1);
+  } catch (_) {}
+
+  if (isDashboardView) {
+    // If user arrived with hash but no storage
+    switchToDashboard();
   }
 }
 
-// Reset form to place another order
-function resetToNewOrder() {
-  localStorage.removeItem(STORAGE_KEY);
-  window.location.hash = '';
-  window.location.reload();
+function switchToDashboard() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      renderDashboard(JSON.parse(stored));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      alert('No active pre-order found. Please complete the pre-order form below.');
+      window.location.hash = '';
+    }
+  } catch (_) {}
 }
 
-// FAQ toggle
-function toggleFaq(btn) {
-  const item = btn.closest('.faq-item');
-  item.classList.toggle('open');
+function resetNewOrder() {
+  localStorage.removeItem(STORAGE_KEY);
+  window.location.href = 'thanksgiving-orders.html';
 }
 </script>
+
 </body>
 </html>
