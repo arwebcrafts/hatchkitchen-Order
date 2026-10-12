@@ -60,7 +60,7 @@
    RESET
    ================================================================ */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -70,7 +70,7 @@ html { scroll-behavior: smooth; }
     scroll-behavior: auto !important;
   }
 }
-body  { margin: 0; }
+body  { margin: 0; overflow-x: clip; }
 img   { max-width: 100%; display: block; }
 ul    { margin: 0; padding: 0; list-style: none; }
 a     { color: inherit; text-decoration: none; }
@@ -409,10 +409,16 @@ p  { color: var(--ink-soft); }
   .nav {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 6px 0;
-    gap: 8px 12px;
+    gap: 8px 8px;
     flex-wrap: wrap;
+  }
+  .nav::after {
+    content: "";
+    flex-basis: 100%;
+    height: 0;
+    order: 2;
   }
 
   /* Logo positioning & sizing: FULL size logo & tagline */
@@ -424,17 +430,17 @@ p  { color: var(--ink-soft); }
     flex-shrink: 0;
   }
   .logo-img {
-    height: 40px;
+    height: 36px;
     width: auto;
   }
   .logo-word {
-    font-size: 1.18rem;
+    font-size: 1.08rem;
     line-height: 1;
   }
   .logo-word small {
     display: block !important;
-    font-size: 0.58rem;
-    letter-spacing: 0.2em;
+    font-size: 0.52rem;
+    letter-spacing: 0.16em;
     margin-top: 2px;
     white-space: nowrap;
     opacity: 0.8;
@@ -442,20 +448,15 @@ p  { color: var(--ink-soft); }
 
   /* Nav CTA container: Order Online button (BIG) + Hamburger toggle on Row 1, Pills on Row 2 */
   .nav-cta {
-    order: 2;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-left: auto;
-    flex-wrap: wrap;
-    justify-content: flex-end;
+    display: contents;
   }
 
   /* BIG, bold Order Online primary button on mobile */
   .nav-cta .btn-primary {
     order: 1;
-    padding: 0.65em 1.25em !important;
-    font-size: 0.88rem !important;
+    margin-left: auto;
+    padding: 0.58em 1.1em !important;
+    font-size: 0.82rem !important;
     font-weight: 700 !important;
     background: var(--red) !important;
     color: var(--cream) !important;
@@ -469,9 +470,9 @@ p  { color: var(--ink-soft); }
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    margin-left: 4px;
+    width: 38px;
+    height: 38px;
+    margin-left: 2px;
     z-index: 1000;
     flex-shrink: 0;
   }
@@ -480,13 +481,13 @@ p  { color: var(--ink-soft); }
   .nav-cta .nav-pill {
     order: 3;
     display: inline-flex !important;
-    padding: 6px 12px !important;
-    font-size: 0.76rem !important;
+    padding: 6px 11px !important;
+    font-size: 0.72rem !important;
     font-weight: 700 !important;
     letter-spacing: 0.01em !important;
     line-height: 1 !important;
     white-space: nowrap !important;
-    margin-top: 4px;
+    margin-top: 2px;
   }
 
   /* -------------------------------------------------------------
@@ -535,6 +536,7 @@ p  { color: var(--ink-soft); }
 
   /* Hide background pills & logo while mobile drawer overlay is open */
   .site-header:has(.nav-links[data-open="true"]) .nav-cta,
+  .site-header:has(.nav-links[data-open="true"]) .nav-cta > *,
   .site-header:has(.nav-links[data-open="true"]) .logo {
     opacity: 0;
     pointer-events: none;
@@ -547,15 +549,15 @@ p  { color: var(--ink-soft); }
 
 @media (max-width: 480px) {
   .logo-word {
-    font-size: 0.96rem;
+    font-size: 1rem;
   }
   .nav-cta .nav-pill {
-    padding: 4px 7px;
-    font-size: 0.64rem;
+    padding: 5px 10px !important;
+    font-size: 0.68rem !important;
   }
   .nav-cta .btn {
-    padding: 0.42em 0.72em;
-    font-size: 0.72rem;
+    padding: 0.52em 0.95em !important;
+    font-size: 0.78rem !important;
   }
 }
 

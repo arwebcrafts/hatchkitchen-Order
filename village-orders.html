@@ -1413,6 +1413,7 @@ input, select, textarea { font: inherit; }
 .terms-scroll-box::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
 /* ---- Media ---- */
+html, body { overflow-x: clip; }
 @media (max-width: 768px) {
   .topbar-inner {
     padding: 6px 14px;
@@ -1430,23 +1431,30 @@ input, select, textarea { font: inherit; }
     padding: 4px 0 8px;
   }
   .nav {
-    padding: 8px 16px;
+    padding: 8px 14px;
     flex-wrap: wrap;
-    gap: 8px 12px;
+    gap: 8px 6px;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+  }
+  .nav::after {
+    content: "";
+    flex-basis: 100%;
+    height: 0;
+    order: 2;
   }
 
   /* Logo positioning */
   .logo {
     gap: 8px;
     flex-shrink: 0;
+    order: 1;
   }
   .logo-img {
     height: 32px;
   }
   .logo-word {
-    font-size: 1.05rem;
+    font-size: 1.02rem;
   }
   .logo-word small {
     display: none;
@@ -1454,7 +1462,8 @@ input, select, textarea { font: inherit; }
 
   /* Back button sits neatly top right on Row 1 */
   .nav-back {
-    font-size: 0.74rem;
+    order: 1;
+    font-size: 0.72rem;
     margin-left: auto;
     white-space: nowrap;
     padding: 4px 10px;
@@ -1464,8 +1473,9 @@ input, select, textarea { font: inherit; }
 
   /* Program links sit cleanly on Row 2 across header bar */
   .nav-order-link {
-    font-size: 0.66rem;
-    padding: 5px 10px;
+    order: 3;
+    font-size: 0.61rem;
+    padding: 5px 9px;
     letter-spacing: 0;
     white-space: nowrap;
     flex-shrink: 0;
@@ -1708,6 +1718,7 @@ input, select, textarea { font: inherit; }
       Back to site
     </a>
     <a class="nav-order-link" href="menu.html">Menu</a>
+    <a class="nav-order-link" href="thanksgiving-orders.html">Thanksgiving Dinner Pre-Orders</a>
     <a class="nav-order-link is-active" href="village-orders.html">Village Meals</a>
   </nav>
 </header>
