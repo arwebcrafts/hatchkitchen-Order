@@ -39,12 +39,24 @@ module.exports = async function handler(req, res) {
     }
 
     try {
-      const result = await stripe.customers.search({
-        query: 'metadata["type"]:"thanksgiving-preorder"',
-        limit: Math.min(Number(req.query.limit) || 100, 100),
-      });
+      let customerList = [];
+      try {
+        const result = await stripe.customers.search({
+          query: 'metadata["type"]:"thanksgiving-preorder"',
+          limit: Math.min(Number(req.query.limit) || 100, 100),
+        });
+        customerList = result.data || [];
+      } catch (_) {}
 
-      const orders = (result.data || []).map((c) => ({
+      // Real-time fallback for instant retrieval before search index syncs
+      if (customerList.length === 0) {
+        const listResult = await stripe.customers.list({ limit: 100 });
+        customerList = (listResult.data || []).filter(
+          (c) => c.metadata && (c.metadata.type === 'thanksgiving-preorder' || c.metadata.source === 'hatch-thanksgiving-orders')
+        );
+      }
+
+      const orders = customerList.map((c) => ({
         id: c.id,
         orderId: c.metadata.order_id || c.id,
         customerName: c.name || c.metadata.customer_name || 'Unknown',
