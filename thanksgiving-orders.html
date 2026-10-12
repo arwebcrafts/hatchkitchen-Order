@@ -2,7 +2,8 @@
 <!--
   ╔══════════════════════════════════════════════════════════╗
   ║  HATCH KITCHEN — Thanksgiving Meal Pre-Order             ║
-  ║  Clean Custom Ordering Form & Customer Order Dashboard   ║
+  ║  100% Complete Form Matching Client's Google Form 1:1    ║
+  ║  Clean Custom Theme, Fully Mobile Responsive & Dashboard ║
   ╚══════════════════════════════════════════════════════════╝
 -->
 <html lang="en">
@@ -34,7 +35,7 @@
 <style>
 /* ============================================================
    HATCH KITCHEN — CUSTOM THANKSGIVING PRE-ORDER FORM STYLES
-   (Uses Website Theme, Palette & Typography 100%)
+   100% Theme Matched & Mobile Responsive
    ============================================================ */
 .tg-page-wrap {
   max-width: 860px;
@@ -42,7 +43,7 @@
   padding: 0 20px;
 }
 
-/* Form Hero Header Card */
+/* Header Banner Card */
 .tg-header-card {
   background: var(--ink);
   color: var(--cream);
@@ -84,10 +85,10 @@
 }
 .tg-title {
   font-family: var(--f-display);
-  font-size: clamp(2rem, 3.8vw, 2.9rem);
+  font-size: clamp(1.85rem, 3.8vw, 2.9rem);
   font-weight: 800;
   color: var(--cream);
-  line-height: 1.05;
+  line-height: 1.08;
   margin-bottom: 8px;
 }
 .tg-title em {
@@ -132,6 +133,7 @@
   margin-bottom: 22px;
   box-shadow: var(--shadow-card);
   transition: border-color .2s, box-shadow .2s;
+  position: relative;
 }
 .tg-card:hover {
   border-color: rgba(18,17,16,.2);
@@ -140,6 +142,19 @@
   margin-bottom: 18px;
   padding-bottom: 14px;
   border-bottom: 1px solid var(--line-soft);
+}
+.tg-q-pill {
+  display: inline-block;
+  font-family: var(--f-mono);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: var(--cream-deep);
+  color: var(--ink-soft);
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
 }
 .tg-card-title {
   font-family: var(--f-display);
@@ -222,31 +237,6 @@
   margin-top: 2px;
 }
 
-/* Sub-choices Box */
-.tg-sub-box {
-  background: var(--cream-deep);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--radius-sm);
-  padding: 18px;
-  margin-top: 14px;
-}
-.tg-sub-title {
-  font-family: var(--f-mono);
-  font-size: .76rem;
-  font-weight: 700;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--ink);
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.tg-sub-badge {
-  color: var(--gold-dark);
-  font-weight: 800;
-}
-
 /* Stepper (Plus / Minus) for quantities */
 .tg-item-row {
   display: flex;
@@ -290,28 +280,32 @@
   flex-shrink: 0;
 }
 .tg-stepper-btn {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: none;
   border: none;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--ink);
   cursor: pointer;
   transition: background .12s;
+  user-select: none;
 }
 .tg-stepper-btn:hover {
   background: rgba(18,17,16,.08);
 }
+.tg-stepper-btn:active {
+  background: rgba(18,17,16,.18);
+}
 .tg-stepper-val {
-  min-width: 30px;
+  min-width: 32px;
   text-align: center;
   font-family: var(--f-mono);
   font-weight: 700;
-  font-size: .9rem;
+  font-size: .92rem;
   color: var(--ink);
 }
 
@@ -429,6 +423,7 @@
   transform: none;
 }
 
+/* Mobile Responsive Adjustments */
 @media (max-width: 640px) {
   .tg-page-wrap {
     margin: 20px auto 60px;
@@ -708,6 +703,7 @@
 
   <!-- ============================================================
        VIEW 1: CLEAN CUSTOM THANKSGIVING PRE-ORDER FORM
+       100% Matches Client's Google Form Fields 1:1
        ============================================================ -->
   <div id="preorder-form-view">
 
@@ -725,14 +721,17 @@
 
     <form id="thanksgiving-custom-form" onsubmit="handleFormSubmit(event); return false;">
 
-      <!-- QUESTION 1: FAMILY PACKAGE -->
-      <div class="tg-card">
+      <!-- ========================================================
+           FIELD 1: FAMILY PACKAGE (FEEDS 10-12) - $475
+           ======================================================== -->
+      <div class="tg-card" id="q-family-package">
         <div class="tg-card-head">
+          <span class="tg-q-pill">Field 1 of 14</span>
           <div class="tg-card-title">
-            <span>FAMILY PACKAGE (FEEDS 10-12)</span>
+            <span>FAMILY PACKAGE (FEEDS 10-12) - $475</span>
             <span class="tg-card-price">$475</span>
           </div>
-          <p class="tg-card-desc">Includes choice of 1 whole rotisserie turkey or 4 lb braised brisket. Includes choice of 3 sides, 2 fresh-baked sourdough loaves, turkey gravy and cranberry sauce. Please choose 1 entree.</p>
+          <p class="tg-card-desc">Includes choice of 1 whole rotisserie turkey or 4 lb braised brisket. Includes choice of 3 sides, 2 fresh-baked sourdough loaves, turkey gravy and cranberry sauce. Please choose 1 entree below:</p>
         </div>
 
         <div class="tg-option-group" id="family-entree-group">
@@ -740,15 +739,15 @@
             <input type="radio" name="family_entree" value="Whole un-carved rotisserie turkey (12-15 lb)" data-addon="0" onchange="updateFormCalculations()">
             <div class="tg-option-content">
               <div class="tg-option-title">Whole un-carved rotisserie turkey (12-15 lb)</div>
-              <div class="tg-option-sub">Included with package ($475)</div>
+              <div class="tg-option-sub">Included with package ($475.00)</div>
             </div>
           </label>
 
           <label class="tg-option-row">
-            <input type="radio" name="family_entree" value="Whole carved rotisserie turkey (yields approx 8-10 lb meat)" data-addon="30" onchange="updateFormCalculations()">
+            <input type="radio" name="family_entree" value="Whole carved rotisserie turkey (yields approx 8-10 lb meat) +$30" data-addon="30" onchange="updateFormCalculations()">
             <div class="tg-option-content">
               <div class="tg-option-title">Whole carved rotisserie turkey (yields approx 8-10 lb meat) <span style="color:var(--gold-dark); font-weight:700;">+$30</span></div>
-              <div class="tg-option-sub">Sliced and carved for easy serving ($505)</div>
+              <div class="tg-option-sub">Carved and sliced ready to serve ($505.00)</div>
             </div>
           </label>
 
@@ -756,7 +755,7 @@
             <input type="radio" name="family_entree" value="4 lb wine braised brisket sliced with caramelized onions and carrots" data-addon="0" onchange="updateFormCalculations()">
             <div class="tg-option-content">
               <div class="tg-option-title">4 lb wine braised brisket sliced with caramelized onions and carrots</div>
-              <div class="tg-option-sub">Included with package ($475)</div>
+              <div class="tg-option-sub">Included with package ($475.00)</div>
             </div>
           </label>
 
@@ -768,35 +767,141 @@
             </div>
           </label>
         </div>
+      </div>
 
-        <!-- Sub-choices: Family Sides (Choose up to 3) -->
-        <div class="tg-sub-box" id="family-sides-box" style="display:none;">
-          <div class="tg-sub-title">
-            <span>Choose Sides (Up to 3 included)</span>
-            <span class="tg-sub-badge" id="family-sides-count-badge">0 of 3 selected</span>
+
+      <!-- ========================================================
+           FIELD 2: Choose Sides (Up to 3)
+           ======================================================== -->
+      <div class="tg-card" id="q-family-sides">
+        <div class="tg-card-head">
+          <span class="tg-q-pill">Field 2 of 14</span>
+          <div class="tg-card-title">
+            <span>Choose Sides (Up to 3)</span>
+            <span class="tg-card-price" id="family-sides-count-badge" style="font-size:.92rem; color:var(--ink-soft);">0 of 3 selected</span>
           </div>
+          <p class="tg-card-desc">Included with Family Package (Feeds 10–12). If you ordered the Family Package above, please select up to 3 included sides:</p>
+        </div>
 
-          <div class="tg-option-group">
-            <label class="tg-option-row"><input type="checkbox" name="family_side" value="Sourdough stuffing 9x13 pan" onchange="handleFamilySideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Sourdough stuffing 9x13 pan</div></div></label>
-            <label class="tg-option-row"><input type="checkbox" name="family_side" value="Creamy mashed potato 9x13 pan" onchange="handleFamilySideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Creamy mashed potato 9x13 pan</div></div></label>
-            <label class="tg-option-row"><input type="checkbox" name="family_side" value="Green bean and mushroom casserole 9x13 pan" onchange="handleFamilySideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Green bean and mushroom casserole 9x13 pan</div></div></label>
-            <label class="tg-option-row"><input type="checkbox" name="family_side" value="Classic cornbread 9x13 pan" onchange="handleFamilySideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Classic cornbread 9x13 pan</div></div></label>
-            <label class="tg-option-row"><input type="checkbox" name="family_side" value="&quot;Cheesy&quot; jalapeno cornbread 9x13" onchange="handleFamilySideChange(this)"><div class="tg-option-content"><div class="tg-option-title">"Cheesy" jalapeno cornbread 9x13</div></div></label>
-            <label class="tg-option-row"><input type="checkbox" name="family_side" value="Winter kale salad - large bowl" onchange="handleFamilySideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Winter kale salad - large bowl</div></div></label>
-            <label class="tg-option-row"><input type="checkbox" name="family_side" value="Sweet potato with marshmallows - 9x13 pan" onchange="handleFamilySideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Sweet potato with marshmallows - 9x13 pan</div></div></label>
-            <label class="tg-option-row"><input type="checkbox" name="family_side" value="Steam roasted butternut squash - 9x13 pan" onchange="handleFamilySideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Steam roasted butternut squash - 9x13 pan</div></div></label>
+        <div class="tg-option-group" id="family-sides-list">
+          <label class="tg-option-row">
+            <input type="checkbox" name="family_side" value="Sourdough stuffing 9x13 pan" onchange="handleFamilySideChange(this)">
+            <div class="tg-option-content"><div class="tg-option-title">Sourdough stuffing 9x13 pan</div></div>
+          </label>
+          <label class="tg-option-row">
+            <input type="checkbox" name="family_side" value="Creamy mashed potato 9x13 pan" onchange="handleFamilySideChange(this)">
+            <div class="tg-option-content"><div class="tg-option-title">Creamy mashed potato 9x13 pan</div></div>
+          </label>
+          <label class="tg-option-row">
+            <input type="checkbox" name="family_side" value="Green bean and mushroom casserole 9x13 pan" onchange="handleFamilySideChange(this)">
+            <div class="tg-option-content"><div class="tg-option-title">Green bean and mushroom casserole 9x13 pan</div></div>
+          </label>
+          <label class="tg-option-row">
+            <input type="checkbox" name="family_side" value="Classic cornbread 9x13 pan" onchange="handleFamilySideChange(this)">
+            <div class="tg-option-content"><div class="tg-option-title">Classic cornbread 9x13 pan</div></div>
+          </label>
+          <label class="tg-option-row">
+            <input type="checkbox" name="family_side" value="&quot;Cheesy&quot; jalapeno cornbread 9x13" onchange="handleFamilySideChange(this)">
+            <div class="tg-option-content"><div class="tg-option-title">"Cheesy" jalapeno cornbread 9x13</div></div>
+          </label>
+          <label class="tg-option-row">
+            <input type="checkbox" name="family_side" value="Winter kale salad - large bowl" onchange="handleFamilySideChange(this)">
+            <div class="tg-option-content"><div class="tg-option-title">Winter kale salad - large bowl</div></div>
+          </label>
+          <label class="tg-option-row">
+            <input type="checkbox" name="family_side" value="Sweet potato with marshmallows - 9x13 pan" onchange="handleFamilySideChange(this)">
+            <div class="tg-option-content"><div class="tg-option-title">Sweet potato with marshmallows - 9x13 pan</div></div>
+          </label>
+          <label class="tg-option-row">
+            <input type="checkbox" name="family_side" value="Steam roasted butternut squash - 9x13 pan" onchange="handleFamilySideChange(this)">
+            <div class="tg-option-content"><div class="tg-option-title">Steam roasted butternut squash - 9x13 pan</div></div>
+          </label>
+        </div>
+      </div>
+
+
+      <!-- ========================================================
+           FIELD 3: Additional Sides (Each side feeds approx. 10-12 people)
+           ======================================================== -->
+      <div class="tg-card" id="q-additional-sides">
+        <div class="tg-card-head">
+          <span class="tg-q-pill">Field 3 of 14</span>
+          <div class="tg-card-title">
+            <span>Additional Sides (Each side feeds approx. 10-12 people)</span>
+          </div>
+          <p class="tg-card-desc">If you would like more than one of a particular item, please specify the quantity below or in the comment section at the bottom of the form.</p>
+        </div>
+
+        <div id="additional-sides-list">
+          <!-- Populated dynamically via JS with all 10 items from Google Form -->
+        </div>
+      </div>
+
+
+      <!-- ========================================================
+           FIELD 4: Just the Protein
+           ======================================================== -->
+      <div class="tg-card" id="q-just-protein">
+        <div class="tg-card-head">
+          <span class="tg-q-pill">Field 4 of 14</span>
+          <div class="tg-card-title">
+            <span>Just the Protein</span>
+          </div>
+          <p class="tg-card-desc">Whole rotisserie turkey and wine braised brisket a la carte without sides.</p>
+        </div>
+
+        <div class="tg-item-row">
+          <div class="tg-item-info">
+            <div class="tg-item-name">Whole un-carved rotisserie turkey (12-15 lb) - $225</div>
+            <div class="tg-item-desc">Feeds 10–12 · Slow roasted OK Kosher turkey</div>
+          </div>
+          <div class="tg-item-price">$225</div>
+          <div class="tg-stepper">
+            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-uncarved', -1)">&minus;</button>
+            <span class="tg-stepper-val" id="protein-uncarved-display">0</span>
+            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-uncarved', 1)">&plus;</button>
+          </div>
+        </div>
+
+        <div class="tg-item-row">
+          <div class="tg-item-info">
+            <div class="tg-item-name">Whole carved rotisserie turkey (yields approx 8-10 lb meat) +$250</div>
+            <div class="tg-item-desc">Feeds 10–12 · Carved &amp; sliced ready to serve</div>
+          </div>
+          <div class="tg-item-price">$250</div>
+          <div class="tg-stepper">
+            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-carved', -1)">&minus;</button>
+            <span class="tg-stepper-val" id="protein-carved-display">0</span>
+            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-carved', 1)">&plus;</button>
+          </div>
+        </div>
+
+        <div class="tg-item-row">
+          <div class="tg-item-info">
+            <div class="tg-item-name">4 lb wine braised brisket sliced with caramelized onions and carrots - $200</div>
+            <div class="tg-item-desc">Feeds 10–12 · Tender brisket slow-braised in red wine</div>
+          </div>
+          <div class="tg-item-price">$200</div>
+          <div class="tg-stepper">
+            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-brisket', -1)">&minus;</button>
+            <span class="tg-stepper-val" id="protein-brisket-display">0</span>
+            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-brisket', 1)">&plus;</button>
           </div>
         </div>
       </div>
 
-      <!-- QUESTION 2: INDIVIDUAL THANKSGIVING MEAL -->
-      <div class="tg-card">
+
+      <!-- ========================================================
+           FIELD 5: Individual Thanksgiving Meal (feeds 1-2) - $50
+           ======================================================== -->
+      <div class="tg-card" id="q-indiv-meal">
         <div class="tg-card-head">
+          <span class="tg-q-pill">Field 5 of 14</span>
           <div class="tg-card-title">
-            <span>Individual Thanksgiving Meal (feeds 1-2)</span>
+            <span>Individual Thanksgiving Meal (feeds 1-2) - $50</span>
             <span class="tg-card-price">$50 each</span>
           </div>
-          <p class="tg-card-desc">Includes choice of white or dark meat turkey or braised brisket, choice of 2 sides, 4 oz house gravy + 4 oz house cranberry sauce.</p>
+          <p class="tg-card-desc">Includes choice of white or dark meat turkey or braised brisket, choice of 2 sides, 4 oz house gravy + 4 oz house cranberry sauce. Please choose your entree choice and quantity below:</p>
         </div>
 
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; background:#FFF; padding:12px 16px; border:1px solid var(--line-soft); border-radius:var(--radius-sm);">
@@ -811,100 +916,70 @@
           </div>
         </div>
 
-        <!-- Sub-choices for Individual Meals -->
-        <div class="tg-sub-box" id="indiv-details-box" style="display:none;">
-          <div class="tg-sub-title">
-            <span>Choose Entree for Individual Meal</span>
-          </div>
-          <div class="tg-option-group" style="margin-bottom:14px;">
-            <label class="tg-option-row is-selected"><input type="radio" name="indiv_entree" value="Turkey - dark meat 8 oz" checked onchange="updateFormCalculations()"><div class="tg-option-content"><div class="tg-option-title">Turkey — dark meat 8 oz</div></div></label>
-            <label class="tg-option-row"><input type="radio" name="indiv_entree" value="Turkey - white meat 8 oz" onchange="updateFormCalculations()"><div class="tg-option-content"><div class="tg-option-title">Turkey — white meat 8 oz</div></div></label>
-            <label class="tg-option-row"><input type="radio" name="indiv_entree" value="Braised brisket 6 oz" onchange="updateFormCalculations()"><div class="tg-option-content"><div class="tg-option-title">Braised brisket 6 oz</div></div></label>
-          </div>
+        <div class="tg-option-group" id="indiv-entree-group">
+          <label class="tg-option-row">
+            <input type="radio" name="indiv_entree" value="Turkey - dark meat 8 oz" onchange="handleIndivEntreeChange(this)">
+            <div class="tg-option-content">
+              <div class="tg-option-title">Turkey — dark meat 8 oz</div>
+            </div>
+          </label>
 
-          <div class="tg-sub-title">
-            <span>Individual Meal - Sides (Choose up to 2)</span>
-            <span class="tg-sub-badge" id="indiv-sides-count-badge">0 of 2 selected</span>
-          </div>
-          <div class="tg-option-group">
-            <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Sourdough stuffing" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Sourdough stuffing</div></div></label>
-            <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Creamy mashed potato" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Creamy mashed potato</div></div></label>
-            <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Green bean and mushroom casserole" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Green bean and mushroom casserole</div></div></label>
-            <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Classic cornbread" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Classic cornbread</div></div></label>
-            <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="&quot;Cheesy&quot; jalapeno cornbread" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">"Cheesy" jalapeno cornbread</div></div></label>
-            <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Winter kale salad" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Winter kale salad</div></div></label>
-            <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Sweet potato with marshmallows" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Sweet potato with marshmallows</div></div></label>
-            <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Steam roasted butternut squash" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Steam roasted butternut squash</div></div></label>
-          </div>
+          <label class="tg-option-row">
+            <input type="radio" name="indiv_entree" value="Turkey - white meat 8 oz" onchange="handleIndivEntreeChange(this)">
+            <div class="tg-option-content">
+              <div class="tg-option-title">Turkey — white meat 8 oz</div>
+            </div>
+          </label>
+
+          <label class="tg-option-row">
+            <input type="radio" name="indiv_entree" value="Braised brisket 6 oz" onchange="handleIndivEntreeChange(this)">
+            <div class="tg-option-content">
+              <div class="tg-option-title">Braised brisket 6 oz</div>
+            </div>
+          </label>
+
+          <label class="tg-option-row is-selected">
+            <input type="radio" name="indiv_entree" value="none" checked onchange="handleIndivEntreeChange(this)">
+            <div class="tg-option-content">
+              <div class="tg-option-title">Not ordering Individual Meal</div>
+            </div>
+          </label>
         </div>
       </div>
 
-      <!-- QUESTION 3: JUST THE PROTEIN -->
-      <div class="tg-card">
+
+      <!-- ========================================================
+           FIELD 6: Individual meal - sides (choose up to 2)
+           ======================================================== -->
+      <div class="tg-card" id="q-indiv-sides">
         <div class="tg-card-head">
+          <span class="tg-q-pill">Field 6 of 14</span>
           <div class="tg-card-title">
-            <span>Just the Protein</span>
+            <span>Individual meal - sides (choose up to 2)</span>
+            <span class="tg-card-price" id="indiv-sides-count-badge" style="font-size:.92rem; color:var(--ink-soft);">0 of 2 selected</span>
           </div>
-          <p class="tg-card-desc">Whole rotisserie turkey and wine braised brisket without sides.</p>
+          <p class="tg-card-desc">Included with Individual Thanksgiving Meal. If you ordered an Individual Meal above, please choose up to 2 sides:</p>
         </div>
 
-        <div class="tg-item-row">
-          <div class="tg-item-info">
-            <div class="tg-item-name">Whole un-carved rotisserie turkey (12-15 lb)</div>
-            <div class="tg-item-desc">Feeds 10–12 · Slow roasted OK Kosher turkey</div>
-          </div>
-          <div class="tg-item-price">$225</div>
-          <div class="tg-stepper">
-            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-uncarved', -1)">&minus;</button>
-            <span class="tg-stepper-val" id="protein-uncarved-display">0</span>
-            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-uncarved', 1)">&plus;</button>
-          </div>
-        </div>
-
-        <div class="tg-item-row">
-          <div class="tg-item-info">
-            <div class="tg-item-name">Whole carved rotisserie turkey (yields approx 8-10 lb meat)</div>
-            <div class="tg-item-desc">Feeds 10–12 · Carved &amp; sliced ready to serve</div>
-          </div>
-          <div class="tg-item-price">$250</div>
-          <div class="tg-stepper">
-            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-carved', -1)">&minus;</button>
-            <span class="tg-stepper-val" id="protein-carved-display">0</span>
-            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-carved', 1)">&plus;</button>
-          </div>
-        </div>
-
-        <div class="tg-item-row">
-          <div class="tg-item-info">
-            <div class="tg-item-name">4 lb wine braised brisket sliced with caramelized onions and carrots</div>
-            <div class="tg-item-desc">Feeds 10–12 · Tender brisket slow-braised in red wine</div>
-          </div>
-          <div class="tg-item-price">$200</div>
-          <div class="tg-stepper">
-            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-brisket', -1)">&minus;</button>
-            <span class="tg-stepper-val" id="protein-brisket-display">0</span>
-            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-brisket', 1)">&plus;</button>
-          </div>
+        <div class="tg-option-group" id="indiv-sides-list">
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Sourdough stuffing" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Sourdough stuffing</div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Creamy mashed potato" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Creamy mashed potato</div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Green bean and mushroom casserole" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Green bean and mushroom casserole</div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Classic cornbread" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Classic cornbread</div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="&quot;Cheesy&quot; jalapeno cornbread" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">"Cheesy" jalapeno cornbread</div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Winter kale salad" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Winter kale salad</div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Sweet potato with marshmallows" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Sweet potato with marshmallows</div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Steam roasted butternut squash" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Steam roasted butternut squash</div></div></label>
         </div>
       </div>
 
-      <!-- QUESTION 4: ADDITIONAL SIDES -->
-      <div class="tg-card">
-        <div class="tg-card-head">
-          <div class="tg-card-title">
-            <span>Additional Sides (Each side feeds approx. 10-12 people)</span>
-          </div>
-          <p class="tg-card-desc">If you would like more than one of a particular item, please specify the quantity below or in the comments section.</p>
-        </div>
 
-        <div id="additional-sides-list">
-          <!-- Populated via JS -->
-        </div>
-      </div>
-
-      <!-- QUESTION 5: PICK UP DAY -->
-      <div class="tg-card">
+      <!-- ========================================================
+           FIELD 7: Pick up Day
+           ======================================================== -->
+      <div class="tg-card" id="q-pickup-day">
         <div class="tg-card-head">
+          <span class="tg-q-pill">Field 7 of 14</span>
           <div class="tg-card-title">
             <span>Pick up Day <span style="color:var(--red-alert, #B91C1C);">*</span></span>
           </div>
@@ -913,59 +988,67 @@
 
         <div class="tg-option-group" id="pickup-day-group">
           <label class="tg-option-row is-selected">
-            <input type="radio" name="pickup_day" value="Wednesday 11/26 between 9 am and 3 pm" checked onchange="updateFormCalculations()">
+            <input type="radio" name="pickup_day" value="Wednesday 11/26 (11/18) between 9 am and 3 pm" checked onchange="updateFormCalculations()">
             <div class="tg-option-content">
-              <div class="tg-option-title">Wednesday 11/26 between 9 am and 3 pm</div>
+              <div class="tg-option-title">Wednesday 11/26 (11/18) between 9 am and 3 pm</div>
               <div class="tg-option-sub">Hatch Kitchen storefront pickup</div>
             </div>
           </label>
 
           <label class="tg-option-row">
-            <input type="radio" name="pickup_day" value="Thursday 11/27 between 9 am and 3 pm" onchange="updateFormCalculations()">
+            <input type="radio" name="pickup_day" value="Thursday 11/27 (11/19) between 9 am and 3 pm" onchange="updateFormCalculations()">
             <div class="tg-option-content">
-              <div class="tg-option-title">Thursday 11/27 between 9 am and 3 pm (Thanksgiving Day)</div>
+              <div class="tg-option-title">Thursday 11/27 (11/19) between 9 am and 3 pm (Thanksgiving Day)</div>
               <div class="tg-option-sub">Hatch Kitchen storefront pickup</div>
             </div>
           </label>
 
           <label class="tg-option-row">
-            <input type="radio" name="pickup_day" value="Friday 11/28 between 9 am and 3 pm" onchange="updateFormCalculations()">
+            <input type="radio" name="pickup_day" value="Friday 11/28 (11/20) between 9 am and 3 pm" onchange="updateFormCalculations()">
             <div class="tg-option-content">
-              <div class="tg-option-title">Friday 11/28 between 9 am and 3 pm</div>
+              <div class="tg-option-title">Friday 11/28 (11/20) between 9 am and 3 pm</div>
               <div class="tg-option-sub">Hatch Kitchen storefront pickup</div>
             </div>
           </label>
         </div>
       </div>
 
-      <!-- QUESTION 6: CONTACT INFORMATION -->
-      <div class="tg-card">
+
+      <!-- ========================================================
+           FIELDS 8–14: Contact Information & Comments
+           ======================================================== -->
+      <div class="tg-card" id="q-contact-info">
         <div class="tg-card-head">
+          <span class="tg-q-pill">Fields 8–14 of 14</span>
           <div class="tg-card-title">
             <span>Contact Information</span>
           </div>
-          <p class="tg-card-desc">We will reach out to you via your preferred contact method to confirm details before finalizing your pre-order.</p>
+          <p class="tg-card-desc">We will contact you to go over details and availability before the order is completed.</p>
         </div>
 
         <div class="tg-form-grid">
+          <!-- Field 9: First and last name -->
           <div class="tg-field" id="field-cust-name">
             <label for="cust-name">First and last name <span class="req">*</span></label>
             <input type="text" id="cust-name" placeholder="Your full name" required autocomplete="name">
-            <span class="tg-error-text">Please enter your name.</span>
+            <span class="tg-error-text">Please enter your first and last name.</span>
           </div>
 
+          <!-- Field 10: Phone number -->
           <div class="tg-field" id="field-cust-phone">
             <label for="cust-phone">Phone number <span class="req">*</span></label>
-            <input type="tel" id="cust-phone" placeholder="(424) 555-0123" required autocomplete="tel">
+            <input type="tel" id="cust-phone" placeholder="(424) 455-3195" required autocomplete="tel">
             <span class="tg-error-text">Please enter your phone number.</span>
           </div>
 
+          <!-- Field 11: E-mail -->
           <div class="tg-field full" id="field-cust-email">
-            <label for="cust-email">E-mail <span class="req">*</span></label>
-            <input type="email" id="cust-email" placeholder="email@example.com" required autocomplete="email">
+            <label for="cust-email">E-mail</label>
+            <input type="email" id="cust-email" placeholder="email@example.com" autocomplete="email">
             <span class="tg-error-text">Please enter a valid email address.</span>
           </div>
 
+          <!-- Field 12: Preferred contact method -->
           <div class="tg-field full">
             <label>Preferred contact method <span class="req">*</span></label>
             <div style="display:flex; gap:12px; margin-top:4px;">
@@ -980,17 +1063,20 @@
             </div>
           </div>
 
+          <!-- Field 13: ADD PROMO CODE HERE -->
           <div class="tg-field full">
             <label for="cust-promo">ADD PROMO CODE HERE</label>
             <input type="text" id="cust-promo" placeholder="Enter promo code if available">
           </div>
 
+          <!-- Field 14: Questions and comments -->
           <div class="tg-field full">
             <label for="cust-comments">Questions and comments</label>
-            <textarea id="cust-comments" rows="3" placeholder="Any special instructions, allergies, or questions for our kitchen..."></textarea>
+            <textarea id="cust-comments" rows="3" placeholder="Any special instructions, allergies, questions, or additional notes for our kitchen..."></textarea>
           </div>
         </div>
       </div>
+
 
       <!-- Sticky Bottom Live Total & Submit Bar -->
       <div class="tg-bottom-bar">
@@ -1209,7 +1295,17 @@ function adjustStepper(type, delta) {
   if (type === 'indiv-qty') {
     formState.indivQty = Math.max(0, formState.indivQty + delta);
     document.getElementById('indiv-qty-display').textContent = formState.indivQty;
-    document.getElementById('indiv-details-box').style.display = formState.indivQty > 0 ? 'block' : 'none';
+    // Auto-select first entree if none selected yet
+    if (formState.indivQty > 0) {
+      const current = document.querySelector('input[name="indiv_entree"]:checked');
+      if (!current || current.value === 'none') {
+        const first = document.querySelector('input[name="indiv_entree"][value="Turkey - dark meat 8 oz"]');
+        if (first) {
+          first.checked = true;
+          document.querySelectorAll('input[name="indiv_entree"]').forEach(r => r.closest('.tg-option-row').classList.toggle('is-selected', r.checked));
+        }
+      }
+    }
   } else if (type === 'protein-uncarved') {
     formState.proteinUncarvedQty = Math.max(0, formState.proteinUncarvedQty + delta);
     document.getElementById('protein-uncarved-display').textContent = formState.proteinUncarvedQty;
@@ -1219,6 +1315,17 @@ function adjustStepper(type, delta) {
   } else if (type === 'protein-brisket') {
     formState.proteinBrisketQty = Math.max(0, formState.proteinBrisketQty + delta);
     document.getElementById('protein-brisket-display').textContent = formState.proteinBrisketQty;
+  }
+  updateFormCalculations();
+}
+
+function handleIndivEntreeChange(radio) {
+  if (radio.value !== 'none' && formState.indivQty === 0) {
+    formState.indivQty = 1;
+    document.getElementById('indiv-qty-display').textContent = 1;
+  } else if (radio.value === 'none') {
+    formState.indivQty = 0;
+    document.getElementById('indiv-qty-display').textContent = 0;
   }
   updateFormCalculations();
 }
@@ -1264,14 +1371,10 @@ function handleContactMethodChange(radio) {
 
 function updateFormCalculations() {
   const selectedFamilyEntree = document.querySelector('input[name="family_entree"]:checked');
-  const familyBox = document.getElementById('family-sides-box');
   let familyPrice = 0;
 
   if (selectedFamilyEntree && selectedFamilyEntree.value !== 'none') {
     familyPrice = 475 + Number(selectedFamilyEntree.dataset.addon || 0);
-    familyBox.style.display = 'block';
-  } else {
-    familyBox.style.display = 'none';
   }
 
   const indivTotal = formState.indivQty * 50;
@@ -1309,7 +1412,8 @@ function getOrderPayloadItems() {
   }
 
   if (formState.indivQty > 0) {
-    const indivEntree = document.querySelector('input[name="indiv_entree"]:checked')?.value || 'Turkey - dark meat 8 oz';
+    const selectedIndivRadio = document.querySelector('input[name="indiv_entree"]:checked');
+    const indivEntree = (selectedIndivRadio && selectedIndivRadio.value !== 'none') ? selectedIndivRadio.value : 'Turkey - dark meat 8 oz';
     const indivSides = Array.from(document.querySelectorAll('input[name="indiv_side"]:checked')).map(c => c.value);
     items.push({
       title: `${formState.indivQty}x Individual Thanksgiving Meal (Feeds 1–2)`,
@@ -1364,7 +1468,6 @@ async function handleFormSubmit(e) {
   [
     { el: nameInput, fieldId: 'field-cust-name' },
     { el: phoneInput, fieldId: 'field-cust-phone' },
-    { el: emailInput, fieldId: 'field-cust-email' },
   ].forEach(item => {
     const parent = document.getElementById(item.fieldId);
     if (!item.el.value.trim()) {
@@ -1387,7 +1490,7 @@ async function handleFormSubmit(e) {
     return;
   }
 
-  const pickupDay = document.querySelector('input[name="pickup_day"]:checked')?.value || 'Wednesday 11/26 between 9 am and 3 pm';
+  const pickupDay = document.querySelector('input[name="pickup_day"]:checked')?.value || 'Wednesday 11/26 (11/18) between 9 am and 3 pm';
   const preferredContact = document.querySelector('input[name="preferred_contact"]:checked')?.value || 'Phone';
   const promo = document.getElementById('cust-promo').value.trim();
   const comments = document.getElementById('cust-comments').value.trim();
@@ -1404,7 +1507,7 @@ async function handleFormSubmit(e) {
     customer: {
       name: nameInput.value.trim(),
       phone: phoneInput.value.trim(),
-      email: emailInput.value.trim(),
+      email: emailInput.value.trim() || 'Not provided',
       preferredContact,
     },
     pickupDay,
@@ -1451,7 +1554,7 @@ function renderDashboard(data) {
   document.getElementById('dash-receipt-id').textContent = data.orderId;
   document.getElementById('dash-receipt-date').textContent = data.dateStr || 'Today';
   document.getElementById('dash-receipt-name').textContent = data.customer.name;
-  document.getElementById('dash-receipt-contact').textContent = `${data.customer.phone} · ${data.customer.email} (${data.customer.preferredContact})`;
+  document.getElementById('dash-receipt-contact').textContent = `${data.customer.phone} ${data.customer.email ? '· ' + data.customer.email : ''} (${data.customer.preferredContact})`;
   document.getElementById('dash-receipt-pickup').textContent = data.pickupDay;
   document.getElementById('dash-receipt-total').textContent = `$${Number(data.total).toFixed(2)}`;
 
