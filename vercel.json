@@ -35,6 +35,10 @@
       "dest": "/api/save-abandoned-order.js"
     },
     {
+      "src": "/api/save-thanksgiving-order",
+      "dest": "/api/save-thanksgiving-order.js"
+    },
+    {
       "src": "/api/(.*)\\.js",
       "dest": "/api/$1.js"
     },
