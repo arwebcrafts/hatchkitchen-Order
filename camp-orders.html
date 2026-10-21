@@ -1303,7 +1303,7 @@ let parentInfo = {};
 let currentStep = 1;
 let stripe, cardNumberEl, cardExpiryEl, cardCvcEl, cardMounted = false;
 
-const REQUIRED_ACCESS_CODE = 'HATCH2026';
+const REQUIRED_ACCESS_CODE = 'hatch26';
 const ACCESS_STORAGE_KEY = 'hatch_access_granted';
 
 function dismissAccessOverlay() {
@@ -1333,8 +1333,8 @@ function handleAccessSubmit(e) {
   const input = document.getElementById('access-code-input');
   const errEl = document.getElementById('access-error');
   if (!input) return false;
-  const entered = input.value.trim().toUpperCase();
-  if (entered === REQUIRED_ACCESS_CODE) {
+  const entered = input.value.trim().toLowerCase();
+  if (entered === REQUIRED_ACCESS_CODE.toLowerCase()) {
     sessionStorage.setItem(ACCESS_STORAGE_KEY, 'true');
     const overlay = document.getElementById('access-overlay');
     if (overlay) overlay.hidden = true;
