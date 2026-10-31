@@ -188,9 +188,9 @@
 }
 .tg-option-row {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 14px;
-  padding: 13px 16px;
+  padding: 12px 16px;
   background: #FFFFFF;
   border: 1.5px solid var(--line-soft);
   border-radius: var(--radius-sm);
@@ -215,12 +215,25 @@
 }
 .tg-option-row input[type="radio"],
 .tg-option-row input[type="checkbox"] {
-  margin-top: 3px;
+  margin: 0;
   width: 18px;
   height: 18px;
   accent-color: var(--gold-dark);
   cursor: pointer;
   flex-shrink: 0;
+}
+.tg-row-img {
+  width: 76px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  border: 1px solid var(--line-soft);
+  background: var(--cream-deep);
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+.tg-option-row.is-selected .tg-row-img {
+  border-color: rgba(243,196,87,.45);
 }
 .tg-option-content {
   flex: 1;
@@ -249,6 +262,16 @@
   border-radius: var(--radius-sm);
   margin-bottom: 8px;
 }
+.tg-item-img {
+  width: 76px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  border: 1px solid var(--line-soft);
+  background: var(--cream-deep);
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
 .tg-item-info {
   flex: 1;
 }
@@ -262,12 +285,17 @@
   color: var(--ink-soft);
   margin-top: 2px;
 }
+.tg-item-action {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
 .tg-item-price {
   font-family: var(--f-mono);
   font-weight: 700;
   font-size: .95rem;
   color: var(--gold-dark);
-  margin-right: 6px;
   white-space: nowrap;
 }
 .tg-stepper {
@@ -425,6 +453,35 @@
 
 /* Mobile Responsive Adjustments */
 @media (max-width: 640px) {
+  .tg-option-row {
+    gap: 10px;
+    padding: 10px 12px;
+  }
+  .tg-row-img {
+    width: 64px;
+    height: 48px;
+    border-radius: 6px;
+  }
+  .tg-item-row {
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    padding: 11px 12px;
+  }
+  .tg-item-img {
+    width: 64px;
+    height: 48px;
+    border-radius: 6px;
+  }
+  .tg-item-info {
+    min-width: 140px;
+  }
+  .tg-item-action {
+    width: 100%;
+    justify-content: space-between;
+    padding-top: 6px;
+    border-top: 1px dashed var(--line-soft);
+    margin-top: 2px;
+  }
   .tg-page-wrap {
     margin: 20px auto 60px;
     padding: 0 14px;
@@ -880,14 +937,14 @@
     <form id="thanksgiving-custom-form" onsubmit="handleFormSubmit(event); return false;">
 
       <!-- ========================================================
-           FIELD 1: FAMILY PACKAGE (FEEDS 10-12) - $475
+           FIELD 1: FAMILY PACKAGE (FEEDS 10-12) - $499
            ======================================================== -->
       <div class="tg-card" id="q-family-package">
         <div class="tg-card-head">
           <span class="tg-q-pill">Field 1 of 14</span>
           <div class="tg-card-title">
-            <span>FAMILY PACKAGE (FEEDS 10-12) - $475</span>
-            <span class="tg-card-price">$475</span>
+            <span>FAMILY PACKAGE (FEEDS 10-12) - $499</span>
+            <span class="tg-card-price">$499</span>
           </div>
           <p class="tg-card-desc">Includes choice of 1 whole rotisserie turkey or 4 lb braised brisket. Includes choice of 3 sides, 2 fresh-baked sourdough loaves, turkey gravy and cranberry sauce. Please choose 1 entree below:</p>
         </div>
@@ -895,25 +952,28 @@
         <div class="tg-option-group" id="family-entree-group">
           <label class="tg-option-row">
             <input type="radio" name="family_entree" value="Whole un-carved rotisserie turkey (12-15 lb)" data-addon="0" onchange="updateFormCalculations()">
+            <img src="images/menu/thanksgiving-family-turkey.jpg" alt="Whole un-carved rotisserie turkey family meal" class="tg-row-img" loading="lazy">
             <div class="tg-option-content">
               <div class="tg-option-title">Whole un-carved rotisserie turkey (12-15 lb)</div>
-              <div class="tg-option-sub">Included with package ($475.00)</div>
+              <div class="tg-option-sub">Included with package ($499.00)</div>
             </div>
           </label>
 
           <label class="tg-option-row">
             <input type="radio" name="family_entree" value="Whole carved rotisserie turkey (yields approx 8-10 lb meat) +$30" data-addon="30" onchange="updateFormCalculations()">
+            <img src="images/menu/thanksgiving-family-turkey.jpg" alt="Whole carved rotisserie turkey family meal" class="tg-row-img" loading="lazy">
             <div class="tg-option-content">
               <div class="tg-option-title">Whole carved rotisserie turkey (yields approx 8-10 lb meat) <span style="color:var(--gold-dark); font-weight:700;">+$30</span></div>
-              <div class="tg-option-sub">Carved and sliced ready to serve ($505.00)</div>
+              <div class="tg-option-sub">Carved and sliced ready to serve ($529.00)</div>
             </div>
           </label>
 
           <label class="tg-option-row">
             <input type="radio" name="family_entree" value="4 lb wine braised brisket sliced with caramelized onions and carrots" data-addon="0" onchange="updateFormCalculations()">
+            <img src="images/menu/thanksgiving-family-brisket.jpg" alt="Wine braised brisket family meal" class="tg-row-img" loading="lazy">
             <div class="tg-option-content">
               <div class="tg-option-title">4 lb wine braised brisket sliced with caramelized onions and carrots</div>
-              <div class="tg-option-sub">Included with package ($475.00)</div>
+              <div class="tg-option-sub">Included with package ($499.00)</div>
             </div>
           </label>
 
@@ -952,6 +1012,7 @@
           </label>
           <label class="tg-option-row">
             <input type="checkbox" name="family_side" value="Green bean and mushroom casserole 9x13 pan" onchange="handleFamilySideChange(this)">
+            <img src="images/menu/thanksgiving-green-bean-casserole.jpg" alt="Green bean and mushroom casserole" class="tg-row-img" loading="lazy">
             <div class="tg-option-content"><div class="tg-option-title">Green bean and mushroom casserole 9x13 pan</div></div>
           </label>
           <label class="tg-option-row">
@@ -960,6 +1021,7 @@
           </label>
           <label class="tg-option-row">
             <input type="checkbox" name="family_side" value="&quot;Cheesy&quot; jalapeno cornbread 9x13" onchange="handleFamilySideChange(this)">
+            <img src="images/menu/thanksgiving-cheesy-jalapeno-cornbread.jpg" alt="Cheesy jalapeno cornbread" class="tg-row-img" loading="lazy">
             <div class="tg-option-content"><div class="tg-option-title">"Cheesy" jalapeno cornbread 9x13</div></div>
           </label>
           <label class="tg-option-row">
@@ -968,6 +1030,7 @@
           </label>
           <label class="tg-option-row">
             <input type="checkbox" name="family_side" value="Sweet potato with marshmallows - 9x13 pan" onchange="handleFamilySideChange(this)">
+            <img src="images/menu/thanksgiving-sweet-potato-marshmallows.jpg" alt="Sweet potato with marshmallows" class="tg-row-img" loading="lazy">
             <div class="tg-option-content"><div class="tg-option-title">Sweet potato with marshmallows - 9x13 pan</div></div>
           </label>
           <label class="tg-option-row">
@@ -1009,41 +1072,50 @@
         </div>
 
         <div class="tg-item-row">
+          <img src="images/menu/thanksgiving-family-turkey.jpg" alt="Whole un-carved rotisserie turkey" class="tg-item-img" loading="lazy">
           <div class="tg-item-info">
             <div class="tg-item-name">Whole un-carved rotisserie turkey (12-15 lb) - $225</div>
             <div class="tg-item-desc">Feeds 10–12 · Slow roasted OK Kosher turkey</div>
           </div>
-          <div class="tg-item-price">$225</div>
-          <div class="tg-stepper">
-            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-uncarved', -1)">&minus;</button>
-            <span class="tg-stepper-val" id="protein-uncarved-display">0</span>
-            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-uncarved', 1)">&plus;</button>
+          <div class="tg-item-action">
+            <div class="tg-item-price">$225</div>
+            <div class="tg-stepper">
+              <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-uncarved', -1)">&minus;</button>
+              <span class="tg-stepper-val" id="protein-uncarved-display">0</span>
+              <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-uncarved', 1)">&plus;</button>
+            </div>
           </div>
         </div>
 
         <div class="tg-item-row">
+          <img src="images/menu/thanksgiving-family-turkey.jpg" alt="Whole carved rotisserie turkey" class="tg-item-img" loading="lazy">
           <div class="tg-item-info">
             <div class="tg-item-name">Whole carved rotisserie turkey (yields approx 8-10 lb meat) +$250</div>
             <div class="tg-item-desc">Feeds 10–12 · Carved &amp; sliced ready to serve</div>
           </div>
-          <div class="tg-item-price">$250</div>
-          <div class="tg-stepper">
-            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-carved', -1)">&minus;</button>
-            <span class="tg-stepper-val" id="protein-carved-display">0</span>
-            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-carved', 1)">&plus;</button>
+          <div class="tg-item-action">
+            <div class="tg-item-price">$250</div>
+            <div class="tg-stepper">
+              <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-carved', -1)">&minus;</button>
+              <span class="tg-stepper-val" id="protein-carved-display">0</span>
+              <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-carved', 1)">&plus;</button>
+            </div>
           </div>
         </div>
 
         <div class="tg-item-row">
+          <img src="images/menu/thanksgiving-family-brisket.jpg" alt="Wine braised brisket" class="tg-item-img" loading="lazy">
           <div class="tg-item-info">
             <div class="tg-item-name">4 lb wine braised brisket sliced with caramelized onions and carrots - $200</div>
             <div class="tg-item-desc">Feeds 10–12 · Tender brisket slow-braised in red wine</div>
           </div>
-          <div class="tg-item-price">$200</div>
-          <div class="tg-stepper">
-            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-brisket', -1)">&minus;</button>
-            <span class="tg-stepper-val" id="protein-brisket-display">0</span>
-            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-brisket', 1)">&plus;</button>
+          <div class="tg-item-action">
+            <div class="tg-item-price">$200</div>
+            <div class="tg-stepper">
+              <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-brisket', -1)">&minus;</button>
+              <span class="tg-stepper-val" id="protein-brisket-display">0</span>
+              <button type="button" class="tg-stepper-btn" onclick="adjustStepper('protein-brisket', 1)">&plus;</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1122,11 +1194,11 @@
         <div class="tg-option-group" id="indiv-sides-list">
           <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Sourdough stuffing" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Sourdough stuffing</div></div></label>
           <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Creamy mashed potato" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Creamy mashed potato</div></div></label>
-          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Green bean and mushroom casserole" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Green bean and mushroom casserole</div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Green bean and mushroom casserole" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-green-bean-casserole.jpg" alt="Green bean and mushroom casserole" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">Green bean and mushroom casserole</div></div></label>
           <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Classic cornbread" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Classic cornbread</div></div></label>
-          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="&quot;Cheesy&quot; jalapeno cornbread" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">"Cheesy" jalapeno cornbread</div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="&quot;Cheesy&quot; jalapeno cornbread" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-cheesy-jalapeno-cornbread.jpg" alt="Cheesy jalapeno cornbread" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">"Cheesy" jalapeno cornbread</div></div></label>
           <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Winter kale salad" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Winter kale salad</div></div></label>
-          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Sweet potato with marshmallows" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Sweet potato with marshmallows</div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Sweet potato with marshmallows" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-sweet-potato-marshmallows.jpg" alt="Sweet potato with marshmallows" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">Sweet potato with marshmallows</div></div></label>
           <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Steam roasted butternut squash" onchange="handleIndivSideChange(this)"><div class="tg-option-content"><div class="tg-option-title">Steam roasted butternut squash</div></div></label>
         </div>
       </div>
@@ -1392,11 +1464,11 @@ const STORAGE_KEY = 'hatch_thanksgiving_order_live';
 const SIDES_DATA = [
   { id: 'side-stuffing', name: 'Sourdough stuffing 9x13 - $60', price: 60, desc: 'Feeds 10–12 · Scratch-made sourdough stuffing' },
   { id: 'side-mashed', name: 'Creamy mashed potato 9x13 pan (vegan) - $60', price: 60, desc: 'Feeds 10–12 · Velvety Yukon gold potatoes' },
-  { id: 'side-greenbean', name: 'Green bean and mushroom casserole 9x13 pan (vegan) - $70', price: 70, desc: 'Feeds 10–12 · Savory mushroom gravy' },
+  { id: 'side-greenbean', name: 'Green bean and mushroom casserole 9x13 pan (vegan) - $70', price: 70, desc: 'Feeds 10–12 · Savory mushroom gravy', image: 'images/menu/thanksgiving-green-bean-casserole.jpg' },
   { id: 'side-cornbread', name: 'Classic cornbread 9x13 pan (vegan) - $45', price: 45, desc: 'Feeds 10–12 · Fresh-baked golden cornbread' },
-  { id: 'side-jalapeno', name: '"Cheesy" jalapeno cornbread 9x13 (vegan) - $60', price: 60, desc: 'Feeds 10–12 · Plant-based cheddar & jalapeno' },
+  { id: 'side-jalapeno', name: '"Cheesy" jalapeno cornbread 9x13 (vegan) - $60', price: 60, desc: 'Feeds 10–12 · Plant-based cheddar & jalapeno', image: 'images/menu/thanksgiving-cheesy-jalapeno-cornbread.jpg' },
   { id: 'side-kale', name: 'Tuscan kale salad with roasted butternut squash, pumpkin seeds, cranberries and shallot dijon vinagrette - large bowl - $70', price: 70, desc: 'Feeds 10–12 · Large bowl with shallot dijon vinaigrette' },
-  { id: 'side-sweetpotato', name: 'Sweet potato casserol with marshmallows - 9x13 pan (vegan) - $70', price: 70, desc: 'Feeds 10–12 · Candied sweet potatoes & marshmallows' },
+  { id: 'side-sweetpotato', name: 'Sweet potato casserol with marshmallows - 9x13 pan (vegan) - $70', price: 70, desc: 'Feeds 10–12 · Candied sweet potatoes & marshmallows', image: 'images/menu/thanksgiving-sweet-potato-marshmallows.jpg' },
   { id: 'side-butternut', name: 'Steam roasted rosemary butternut squash - 9x13 pan (vegan) - $60', price: 60, desc: 'Feeds 10–12 · Fresh rosemary and sea salt' },
   { id: 'side-gravy', name: 'Turkey Gravy (1 pint) - $20', price: 20, desc: '16 oz pint · Scratch-simmered rich turkey gravy' },
   { id: 'side-cranberry', name: 'Cranberry sauce - 1 pint (vegan) - $20', price: 20, desc: '16 oz pint · House tart & sweet cranberry sauce' },
@@ -1424,6 +1496,11 @@ function dismissAccessOverlay() {
 function checkAccessGate() {
   const overlay = document.getElementById('access-overlay');
   if (!overlay) return;
+  const urlParams = new URLSearchParams(window.location.search);
+  const qAccess = urlParams.get('access');
+  if (qAccess && qAccess.toLowerCase() === REQUIRED_ACCESS_CODE.toLowerCase()) {
+    sessionStorage.setItem(ACCESS_STORAGE_KEY, 'true');
+  }
   const isGranted = sessionStorage.getItem(ACCESS_STORAGE_KEY) === 'true';
   if (isGranted) {
     overlay.hidden = true;
@@ -1473,15 +1550,18 @@ function renderAdditionalSides() {
   const container = document.getElementById('additional-sides-list');
   container.innerHTML = SIDES_DATA.map(side => `
     <div class="tg-item-row">
+      ${side.image ? `<img src="${side.image}" alt="${side.name}" class="tg-item-img" loading="lazy">` : ''}
       <div class="tg-item-info">
         <div class="tg-item-name">${side.name}</div>
         <div class="tg-item-desc">${side.desc}</div>
       </div>
-      <div class="tg-item-price">$${side.price}</div>
-      <div class="tg-stepper">
-        <button type="button" class="tg-stepper-btn" onclick="adjustSideQty('${side.id}', -1)">&minus;</button>
-        <span class="tg-stepper-val" id="qty-disp-${side.id}">0</span>
-        <button type="button" class="tg-stepper-btn" onclick="adjustSideQty('${side.id}', 1)">&plus;</button>
+      <div class="tg-item-action">
+        <div class="tg-item-price">$${side.price}</div>
+        <div class="tg-stepper">
+          <button type="button" class="tg-stepper-btn" onclick="adjustSideQty('${side.id}', -1)">&minus;</button>
+          <span class="tg-stepper-val" id="qty-disp-${side.id}">0</span>
+          <button type="button" class="tg-stepper-btn" onclick="adjustSideQty('${side.id}', 1)">&plus;</button>
+        </div>
       </div>
     </div>
   `).join('');
@@ -1585,7 +1665,7 @@ function updateFormCalculations() {
   let familyPrice = 0;
 
   if (selectedFamilyEntree && selectedFamilyEntree.value !== 'none') {
-    familyPrice = 475 + Number(selectedFamilyEntree.dataset.addon || 0);
+    familyPrice = 499 + Number(selectedFamilyEntree.dataset.addon || 0);
   }
 
   const indivTotal = formState.indivQty * 50;
@@ -1616,7 +1696,7 @@ function getOrderPayloadItems() {
     const familySides = Array.from(document.querySelectorAll('input[name="family_side"]:checked')).map(c => c.value);
     items.push({
       title: 'Family Package (Feeds 10–12)',
-      price: 475 + addon,
+      price: 499 + addon,
       entree: selectedFamilyEntree.value,
       sides: familySides,
     });
