@@ -707,6 +707,7 @@
    ACCESS CODE MODAL OVERLAY (Private Order Access: THANKS26)
    ============================================================ */
 .access-overlay {
+  display: none !important;
   position: fixed;
   inset: 0;
   width: 100vw;
@@ -846,23 +847,6 @@
 </style>
 </head>
 <body>
-
-<!-- Access Code Modal Overlay -->
-<div class="access-overlay" id="access-overlay" hidden>
-  <div class="access-card">
-    <button class="access-close" onclick="dismissAccessOverlay()" aria-label="Close and go back" title="Go back">&times;</button>
-    <div class="access-icon-wrap">🔒</div>
-    <h2 class="access-title">Private Order Access</h2>
-    <p class="access-sub">Please enter your special access code to view the menu and place your order.</p>
-    <form class="access-form" id="access-form" onsubmit="handleAccessSubmit(event); return false;">
-      <div class="access-input-wrap">
-        <input type="text" id="access-code-input" class="access-input" placeholder="ENTER ACCESS CODE" autocomplete="off" spellcheck="false" required>
-      </div>
-      <div class="access-error" id="access-error"></div>
-      <button type="submit" class="access-btn">Unlock Menu &amp; Order →</button>
-    </form>
-  </div>
-</div>
 
 <a class="skip-link" href="#main-content">Skip to main content</a>
 
@@ -1489,22 +1473,8 @@ function dismissAccessOverlay() {
 }
 
 function checkAccessGate() {
-  const overlay = document.getElementById('access-overlay');
-  if (!overlay) return;
-  const urlParams = new URLSearchParams(window.location.search);
-  const qAccess = urlParams.get('access');
-  if (qAccess && qAccess.toLowerCase() === REQUIRED_ACCESS_CODE.toLowerCase()) {
-    sessionStorage.setItem(ACCESS_STORAGE_KEY, 'true');
-  }
-  const isGranted = sessionStorage.getItem(ACCESS_STORAGE_KEY) === 'true';
-  if (isGranted) {
-    overlay.hidden = true;
-  } else {
-    overlay.hidden = false;
-    setTimeout(() => {
-      document.getElementById('access-code-input')?.focus();
-    }, 120);
-  }
+  // Public access enabled — no password required
+  return;
 }
 
 function handleAccessSubmit(e) {
@@ -1535,7 +1505,6 @@ function handleAccessSubmit(e) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  checkAccessGate();
   renderAdditionalSides();
   setupRowSelectionHighlighting();
   checkUrlOrStoredDashboard();
