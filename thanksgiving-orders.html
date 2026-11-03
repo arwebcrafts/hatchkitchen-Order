@@ -928,7 +928,7 @@
 
       <div class="tg-intro-box">
         <p>After you fill out this order request, we will contact you to go over details and availability before the order is completed. If you would like faster service and direct information on current stock and pricing please contact us at <a href="tel:+14244553195" class="tg-intro-highlight">(424) 455-3195</a> or <a href="mailto:info@thehatchkitchen.com" class="tg-intro-highlight">info@thehatchkitchen.com</a>.</p>
-        <p><strong>Pre-order closes 11/24.</strong> Pick up at Hatch Kitchen storefront at <strong>8947 W. Pico Blvd</strong> on <strong>Wednesday 11/26 or Thursday 11/27 between 9:00 AM and 3:00 PM</strong>.</p>
+        <p><strong>Pre-order closes 11/24.</strong> Pick up at Hatch Kitchen storefront at <strong>8947 W. Pico Blvd</strong> on <strong>Wednesday 11/25 or Thursday 11/26 between 9am–4pm</strong>.</p>
       </div>
     </div>
 
@@ -1221,25 +1221,17 @@
 
         <div class="tg-option-group" id="pickup-day-group">
           <label class="tg-option-row is-selected">
-            <input type="radio" name="pickup_day" value="Wednesday 11/26 (11/18) between 9 am and 3 pm" checked onchange="updateFormCalculations()">
+            <input type="radio" name="pickup_day" value="Wednesday 11/25 between 9am–4pm" checked onchange="updateFormCalculations()">
             <div class="tg-option-content">
-              <div class="tg-option-title">Wednesday 11/26 (11/18) between 9 am and 3 pm</div>
+              <div class="tg-option-title">Wednesday 11/25 between 9am–4pm</div>
               <div class="tg-option-sub">Hatch Kitchen storefront pickup</div>
             </div>
           </label>
 
           <label class="tg-option-row">
-            <input type="radio" name="pickup_day" value="Thursday 11/27 (11/19) between 9 am and 3 pm" onchange="updateFormCalculations()">
+            <input type="radio" name="pickup_day" value="Thursday 11/26 between 9am–4pm (Thanksgiving Day)" onchange="updateFormCalculations()">
             <div class="tg-option-content">
-              <div class="tg-option-title">Thursday 11/27 (11/19) between 9 am and 3 pm (Thanksgiving Day)</div>
-              <div class="tg-option-sub">Hatch Kitchen storefront pickup</div>
-            </div>
-          </label>
-
-          <label class="tg-option-row">
-            <input type="radio" name="pickup_day" value="Friday 11/28 (11/20) between 9 am and 3 pm" onchange="updateFormCalculations()">
-            <div class="tg-option-content">
-              <div class="tg-option-title">Friday 11/28 (11/20) between 9 am and 3 pm</div>
+              <div class="tg-option-title">Thursday 11/26 between 9am–4pm (Thanksgiving Day)</div>
               <div class="tg-option-sub">Hatch Kitchen storefront pickup</div>
             </div>
           </label>
@@ -1784,7 +1776,7 @@ async function handleFormSubmit(e) {
     return;
   }
 
-  const pickupDay = document.querySelector('input[name="pickup_day"]:checked')?.value || 'Wednesday 11/26 (11/18) between 9 am and 3 pm';
+  const pickupDay = document.querySelector('input[name="pickup_day"]:checked')?.value || 'Wednesday 11/25 between 9am–4pm';
   const preferredContact = document.querySelector('input[name="preferred_contact"]:checked')?.value || 'Phone';
   const promo = document.getElementById('cust-promo').value.trim();
   const comments = document.getElementById('cust-comments').value.trim();
