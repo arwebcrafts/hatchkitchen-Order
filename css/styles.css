@@ -336,7 +336,9 @@ p  { color: var(--ink-soft); }
   transition: background .2s ease, color .2s ease, transform .15s ease;
 }
 .nav-pill:hover { transform: translateY(-1px); }
-.nav-pill-camp {
+.nav-pill-camp,
+.nav-pill-village[href*="village-orders"],
+.nav-order-link[href*="village-orders"] {
   display: none !important;
 }
 .nav-pill-village {
