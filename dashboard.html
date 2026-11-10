@@ -1116,7 +1116,10 @@ input, select, textarea { font: inherit; }
     <!-- Tab Bar -->
     <div class="dash-tabs">
       <button class="dash-tab active" data-tab="orders" onclick="switchTab('orders')">
-        📋 Orders <span class="dash-tab-badge" id="tab-orders-count">0</span>
+        📋 Village Orders <span class="dash-tab-badge" id="tab-orders-count">0</span>
+      </button>
+      <button class="dash-tab" data-tab="thanksgiving" onclick="switchTab('thanksgiving')">
+        🦃 Thanksgiving Pre-Orders <span class="dash-tab-badge" id="tab-thanksgiving-count">0</span>
       </button>
       <button class="dash-tab" data-tab="abandoned" onclick="switchTab('abandoned')">
         👻 Abandoned <span class="dash-tab-badge" id="tab-abandoned-count">0</span>
@@ -1161,9 +1164,9 @@ input, select, textarea { font: inherit; }
           <thead>
             <tr>
               <th onclick="sortBy('created')" id="th-date">Date <span class="sort-arrow">▼</span></th>
-              <th onclick="sortBy('residentName')" id="th-resident">Resident</th>
+              <th onclick="sortBy('residentName')" id="th-resident">Resident / Customer</th>
               <th onclick="sortBy('customerName')" id="th-contact" class="hide-mobile">Contact</th>
-              <th onclick="sortBy('week')" id="th-week" class="hide-mobile">Week</th>
+              <th onclick="sortBy('week')" id="th-week" class="hide-mobile">Week / Pickup</th>
               <th class="hide-mobile">Items</th>
               <th onclick="sortBy('amount')" id="th-amount">Amount</th>
               <th>Payment</th>
@@ -1529,11 +1532,17 @@ function applyFilters() {
   const dateTo = document.getElementById('date-to')?.value || '';
 
   filteredOrders = orders.filter(o => {
+    // Tab filter
+    if (currentTab === 'thanksgiving') {
+      if (o.orderType !== 'thanksgiving') return false;
+    } else if (currentTab === 'orders') {
+      if (o.orderType === 'thanksgiving') return false;
+    }
     // Search
     if (search) {
       const searchFields = [
         o.residentName, o.customerName, o.customerEmail,
-        o.customerPhone, o.id, o.week, o.items
+        o.customerPhone, o.id, o.week, o.pickupDay, o.items
       ].join(' ').toLowerCase();
       if (!searchFields.includes(search)) return false;
     }
@@ -1619,11 +1628,15 @@ function renderOrdersTable() {
     const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     const timeStr = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 
-    const payBadge = o.paymentStatus === 'succeeded'
-      ? '<span class="badge badge-paid">✓ Paid</span>'
-      : o.paymentStatus === 'canceled'
-        ? '<span class="badge badge-cancelled">Cancelled</span>'
-        : '<span class="badge badge-failed">⚠ ' + o.paymentStatus + '</span>';
+    const isTg = o.orderType === 'thanksgiving';
+
+    const payBadge = isTg
+      ? '<span class="badge badge-paid" style="background:rgba(243,196,87,.2);color:var(--gold);border:1px solid rgba(243,196,87,.4);">Pre-Order</span>'
+      : (o.paymentStatus === 'succeeded'
+        ? '<span class="badge badge-paid">✓ Paid</span>'
+        : o.paymentStatus === 'canceled'
+          ? '<span class="badge badge-cancelled">Cancelled</span>'
+          : '<span class="badge badge-failed">⚠ ' + o.paymentStatus + '</span>');
 
     let statusBadge = '';
     if (o.flagged) statusBadge += '<span class="badge badge-flagged">🚩 Flagged</span> ';
@@ -1631,14 +1644,20 @@ function renderOrdersTable() {
     else if (o.dashboardStatus === 'cancelled') statusBadge += '<span class="badge badge-cancelled">Cancelled</span>';
     else statusBadge += '<span class="badge badge-new">New</span>';
 
+    const displayName = isTg ? (o.customerName || o.residentName || '—') : (o.residentName || '—');
+    const displayContactName = isTg ? (o.customerPhone || '—') : (o.customerName || '—');
+    const weekDisplay = isTg ? `🦃 ${esc(o.pickupDay || o.week || 'Thanksgiving Pickup')}` : esc(o.week || '—');
+
     return `<tr data-order-id="${esc(o.id)}" onclick="openModal(getOrderById('${esc(o.id)}'))">
       <td><div class="order-date">${dateStr}<br>${timeStr}</div></td>
-      <td><div class="order-name">${esc(o.residentName || '—')}</div></td>
+      <td>
+        <div class="order-name">${esc(displayName)} ${isTg ? '<span style="display:inline-block;padding:2px 6px;border-radius:4px;background:rgba(243,196,87,.15);color:var(--gold);font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-left:4px;">Thanksgiving</span>' : ''}</div>
+      </td>
       <td class="hide-mobile">
-        <div class="order-name">${esc(o.customerName || '—')}</div>
+        <div class="order-name">${esc(displayContactName)}</div>
         <div class="order-name-sub">${esc(o.customerEmail || '')}</div>
       </td>
-      <td class="hide-mobile"><div class="order-week">${esc(o.week || '—')}</div></td>
+      <td class="hide-mobile"><div class="order-week" style="${isTg ? 'color:var(--gold);font-weight:600;' : ''}">${weekDisplay}</div></td>
       <td class="hide-mobile">
         <div class="order-items-preview" title="${esc(o.items)}">${o.itemCount} item${o.itemCount !== 1 ? 's' : ''}</div>
       </td>
@@ -1661,18 +1680,25 @@ function renderStats() {
   const revenue = paidOrders.reduce((sum, o) => sum + o.amount, 0);
   const pending = paidOrders.filter(o => !o.dashboardStatus || o.dashboardStatus === 'new').length;
 
+  const villageOrders = orders.filter(o => o.orderType !== 'thanksgiving');
+  const tgOrders = orders.filter(o => o.orderType === 'thanksgiving');
+
   document.getElementById('stat-total').textContent = paidOrders.length;
-  document.getElementById('stat-total-sub').textContent = `${orders.length} total (incl. failed)`;
+  document.getElementById('stat-total-sub').textContent = `${villageOrders.length} Village · ${tgOrders.length} Thanksgiving`;
   document.getElementById('stat-revenue').textContent = '$' + revenue.toFixed(2);
-  document.getElementById('stat-revenue-sub').textContent = `From ${paidOrders.length} paid orders`;
+  document.getElementById('stat-revenue-sub').textContent = `From ${paidOrders.length} orders`;
   document.getElementById('stat-pending').textContent = pending;
   document.getElementById('stat-pending-sub').textContent = 'Unfulfilled orders';
 
-  document.getElementById('tab-orders-count').textContent = orders.length;
+  updateTabCounts();
 }
 
 function updateTabCounts() {
-  document.getElementById('tab-orders-count').textContent = filteredOrders.length;
+  const villageCount = orders.filter(o => o.orderType !== 'thanksgiving').length;
+  const tgCount = orders.filter(o => o.orderType === 'thanksgiving').length;
+  document.getElementById('tab-orders-count').textContent = villageCount;
+  const tgBadge = document.getElementById('tab-thanksgiving-count');
+  if (tgBadge) tgBadge.textContent = tgCount;
   document.getElementById('tab-abandoned-count').textContent = abandonedOrders.length;
 }
 
@@ -1753,11 +1779,17 @@ function renderAbandonedOrders() {
 function switchTab(tab) {
   currentTab = tab;
   document.querySelectorAll('.dash-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
-  document.getElementById('orders-tab').style.display = tab === 'orders' ? '' : 'none';
-  document.getElementById('abandoned-tab').style.display = tab === 'abandoned' ? '' : 'none';
 
-  if (tab === 'abandoned') renderAbandonedOrders();
-  if (tab === 'orders') clearNotifBadge();
+  if (tab === 'abandoned') {
+    document.getElementById('orders-tab').style.display = 'none';
+    document.getElementById('abandoned-tab').style.display = '';
+    renderAbandonedOrders();
+  } else {
+    document.getElementById('orders-tab').style.display = '';
+    document.getElementById('abandoned-tab').style.display = 'none';
+    applyFilters();
+    clearNotifBadge();
+  }
 }
 
 /* ================================================================
@@ -1774,7 +1806,7 @@ function openModal(order) {
 
   const items = (order.items || '').split('; ').filter(Boolean);
 
-  document.getElementById('modal-title').textContent = `Order — ${order.residentName || order.customerName || order.id.slice(0, 12)}`;
+  document.getElementById('modal-title').textContent = (order.orderType === 'thanksgiving' ? '🦃 Thanksgiving Pre-Order — ' : 'Order — ') + (order.customerName || order.residentName || order.id.slice(0, 12));
 
   document.getElementById('modal-body').innerHTML = `
     <div class="modal-section">
@@ -1828,9 +1860,13 @@ function openModal(order) {
     <div class="modal-section">
       <div class="modal-section-title">Order Details</div>
       <div class="modal-field">
-        <span class="modal-field-label">Week</span>
-        <span class="modal-field-value">${esc(order.week || '—')}</span>
-      </div>
+        <span class="modal-field-label">${order.orderType === 'thanksgiving' ? 'Storefront Pickup' : 'Week'}</span>
+        <span class="modal-field-value">${esc(order.pickupDay || order.week || '—')}</span>
+      </div>${order.promoCode ? `
+      <div class="modal-field">
+        <span class="modal-field-label">Promo code</span>
+        <span class="modal-field-value" style="color:var(--gold);font-weight:700;">${esc(order.promoCode)}</span>
+      </div>` : ''}
       <div class="modal-field">
         <span class="modal-field-label">Items</span>
         <span class="modal-field-value">${order.itemCount} item${order.itemCount !== 1 ? 's' : ''}</span>
@@ -1875,20 +1911,25 @@ function openModal(order) {
   `;
 
   // Actions
+  const targetId = order.stripeCustomerId || order.id;
   const isFulfilled = order.dashboardStatus === 'fulfilled';
   const isCancelled = order.dashboardStatus === 'cancelled';
   const isFlagged = order.flagged;
 
-  document.getElementById('modal-actions').innerHTML = `
-    ${!isFulfilled ? `<button class="modal-action-btn primary" onclick="updateOrder('${order.id}', 'mark-fulfilled')">✓ Mark Fulfilled</button>` : ''}
-    ${isFulfilled ? `<button class="modal-action-btn secondary" onclick="updateOrder('${order.id}', 'mark-new')">↩ Reopen</button>` : ''}
-    ${!isCancelled ? `<button class="modal-action-btn danger" onclick="updateOrder('${order.id}', 'mark-cancelled')">✕ Cancel Order</button>` : ''}
-    ${isCancelled ? `<button class="modal-action-btn secondary" onclick="updateOrder('${order.id}', 'mark-new')">↩ Reopen</button>` : ''}
-    <button class="modal-action-btn flag" onclick="updateOrder('${order.id}', '${isFlagged ? 'unflag' : 'flag'}')">
-      ${isFlagged ? '🚩 Unflag' : '🚩 Flag'}
-    </button>
-    ${order.customerEmail ? `<a href="mailto:${esc(order.customerEmail)}?subject=${encodeURIComponent('Hatch Kitchen — Your Village Order')}" class="modal-action-btn secondary" style="text-decoration:none">📧 Email Customer</a>` : ''}
-  `;
+  let actionsHtml = '';
+  if (order.orderType === 'thanksgiving') {
+    actionsHtml += `<button class="modal-action-btn primary" onclick="resendThanksgivingEmail('${esc(order.id)}')" id="resend-email-btn" style="background:#C8941F;border-color:#C8941F;color:#FFF;">📧 Resend Confirmation Email</button>`;
+  }
+  if (!isFulfilled) actionsHtml += `<button class="modal-action-btn primary" onclick="updateOrder('${esc(targetId)}', 'mark-fulfilled')">✓ Mark Fulfilled</button>`;
+  if (isFulfilled) actionsHtml += `<button class="modal-action-btn secondary" onclick="updateOrder('${esc(targetId)}', 'mark-new')">↩ Reopen</button>`;
+  if (!isCancelled) actionsHtml += `<button class="modal-action-btn danger" onclick="updateOrder('${esc(targetId)}', 'mark-cancelled')">✕ Cancel Order</button>`;
+  if (isCancelled) actionsHtml += `<button class="modal-action-btn secondary" onclick="updateOrder('${esc(targetId)}', 'mark-new')">↩ Reopen</button>`;
+  actionsHtml += `<button class="modal-action-btn flag" onclick="updateOrder('${esc(targetId)}', '${isFlagged ? 'unflag' : 'flag'}')">${isFlagged ? '🚩 Unflag' : '🚩 Flag'}</button>`;
+  if (order.customerEmail) {
+    const subject = order.orderType === 'thanksgiving' ? 'Hatch Kitchen — Thanksgiving Pre-Order' : 'Hatch Kitchen — Your Village Order';
+    actionsHtml += `<a href="mailto:${esc(order.customerEmail)}?subject=${encodeURIComponent(subject)}" class="modal-action-btn secondary" style="text-decoration:none">📧 Email Customer</a>`;
+  }
+  document.getElementById('modal-actions').innerHTML = actionsHtml;
 
   document.getElementById('order-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -1903,12 +1944,35 @@ function closeModal() {
 /* ================================================================
    ORDER ACTIONS
    ================================================================ */
+async function resendThanksgivingEmail(orderId) {
+  const btn = document.getElementById('resend-email-btn');
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Sending Email...';
+  }
+  showToast('Sending confirmation email to customer...', 'info');
+  try {
+    const pw = 'HatchAdmin2026';
+    const res = await fetch(`/api/save-thanksgiving-order?pw=${encodeURIComponent(pw)}&action=resend&orderId=${encodeURIComponent(orderId)}`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to send confirmation email');
+    showToast(`✓ Confirmation email sent to ${data.sentTo}!`, 'success');
+  } catch (err) {
+    showToast('Error sending email: ' + err.message, 'error');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = '📧 Resend Confirmation Email';
+    }
+  }
+}
+
 async function updateOrder(intentId, action, data = {}) {
   try {
     const res = await apiFetch(`${API_BASE}/api/admin-order-action`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ intentId, action, data }),
+      body: JSON.stringify({ intentId, action, data, pw: 'HatchAdmin2026' }),
     });
 
     const result = await res.json();
@@ -2152,6 +2216,13 @@ function escapeCsvValue(val) {
 }
 
 async function exportCSV() {
+  if (currentTab === 'thanksgiving') {
+    const pw = 'HatchAdmin2026';
+    window.location.href = `/api/save-thanksgiving-order?pw=${encodeURIComponent(pw)}&format=csv`;
+    showToast('Exporting Thanksgiving orders CSV...', 'info');
+    return;
+  }
+
   const btn = document.querySelector('.filter-btn-export');
   if (btn) btn.classList.add('loading');
 

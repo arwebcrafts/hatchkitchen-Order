@@ -1,16 +1,18 @@
 // api/admin-order-action.js
 // ─────────────────────────────────────────────────────────────
-// Update order status / notes via Stripe PaymentIntent metadata
+// Update order status / notes via Stripe PaymentIntent or Customer metadata
 // POST /api/admin-order-action
 //   { intentId, action, data }
 //   actions: mark-fulfilled, mark-new, mark-cancelled, add-note, flag, unflag
 //
-// Requires: Authorization: Bearer <token>
+// Requires: Authorization: Bearer <token> or ?pw=HatchAdmin2026
 // ─────────────────────────────────────────────────────────────
 
 const crypto = require('crypto');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripeKey = process.env.STRIPE_SECRET_KEY;
+const stripe = stripeKey ? require('stripe')(stripeKey) : null;
 
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'HatchAdmin2026';
 const JWT_SECRET = process.env.JWT_SECRET ||
   crypto.createHash('sha256').update(process.env.STRIPE_SECRET_KEY || 'hatch-fallback-secret').digest('hex');
 
@@ -40,8 +42,15 @@ module.exports = async function handler(req, res) {
   // Authenticate
   const authHeader = req.headers.authorization || '';
   const token = authHeader.replace(/^Bearer\s+/i, '');
-  if (!verifyToken(token)) {
+  const pw = req.query?.pw || req.body?.pw;
+  const isPwValid = pw && (pw === 'HatchAdmin2026' || pw === ADMIN_PASSWORD);
+  const isTokenValid = token && verifyToken(token);
+  if (!isPwValid && !isTokenValid) {
     return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  if (!stripe) {
+    return res.status(500).json({ error: 'Stripe API key not configured' });
   }
 
   try {
@@ -54,9 +63,18 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Missing action' });
     }
 
-    // Fetch current intent to preserve existing metadata
-    const intent = await stripe.paymentIntents.retrieve(intentId);
-    const meta = { ...(intent.metadata || {}) };
+    const isCustomer = intentId.startsWith('cus_');
+    let existingMeta = {};
+
+    if (isCustomer) {
+      const customer = await stripe.customers.retrieve(intentId);
+      existingMeta = customer.metadata || {};
+    } else {
+      const intent = await stripe.paymentIntents.retrieve(intentId);
+      existingMeta = intent.metadata || {};
+    }
+
+    const meta = { ...existingMeta };
 
     switch (action) {
       case 'mark-fulfilled':
@@ -79,7 +97,6 @@ module.exports = async function handler(req, res) {
         const existingNotes = meta.dashboard_notes || '';
         const timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
         const newEntry = `[${timestamp}] ${note}`;
-        // Stripe metadata values max 500 chars, so truncate
         meta.dashboard_notes = existingNotes
           ? `${newEntry}\n${existingNotes}`.slice(0, 500)
           : newEntry.slice(0, 500);
@@ -98,8 +115,11 @@ module.exports = async function handler(req, res) {
         return res.status(400).json({ error: `Unknown action: ${action}` });
     }
 
-    // Update Stripe PaymentIntent metadata
-    await stripe.paymentIntents.update(intentId, { metadata: meta });
+    if (isCustomer) {
+      await stripe.customers.update(intentId, { metadata: meta });
+    } else {
+      await stripe.paymentIntents.update(intentId, { metadata: meta });
+    }
 
     return res.status(200).json({ ok: true, action, intentId });
   } catch (err) {
