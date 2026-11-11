@@ -104,6 +104,11 @@ module.exports = async function handler(req, res) {
         items: c.metadata.items || '',
         total: Number(c.metadata.total) || 0,
         itemCount: Number(c.metadata.item_count) || 0,
+        paymentStatus: c.metadata.payment_status || (c.metadata.payment_intent_id ? 'paid' : 'payment_needed'),
+        dashboardStatus: c.metadata.dashboard_status || (c.metadata.payment_intent_id ? 'confirmed' : 'draft'),
+        cardLast4: c.metadata.card_last4 || '',
+        cardBrand: c.metadata.card_brand || '',
+        paymentIntentId: c.metadata.payment_intent_id || '',
         createdAt: c.metadata.created_at || new Date(c.created * 1000).toISOString(),
       }));
 
@@ -238,6 +243,11 @@ module.exports = async function handler(req, res) {
             items: itemSummary,
             total: String(total),
             item_count: String(computedItemCount),
+            payment_status: body.paymentStatus || (body.paymentIntentId ? 'paid' : 'payment_needed'),
+            dashboard_status: body.status || (body.paymentStatus === 'paid' ? 'confirmed' : 'draft'),
+            payment_intent_id: body.paymentIntentId || '',
+            card_last4: body.cardLast4 || '',
+            card_brand: body.cardBrand || '',
             created_at: new Date().toISOString(),
           },
         });
@@ -248,6 +258,7 @@ module.exports = async function handler(req, res) {
     }
 
     // 2. Dispatch Email Confirmations (Customer Confirmation + Kitchen Alert)
+    const isPaid = body.paymentStatus === 'paid' || Boolean(body.paymentIntentId);
     const emailData = {
       orderId,
       customerName,
@@ -260,6 +271,9 @@ module.exports = async function handler(req, res) {
       items,
       total,
       itemCount: computedItemCount,
+      paymentStatus: isPaid ? 'paid' : 'payment_needed',
+      cardLast4: body.cardLast4 || '',
+      cardBrand: body.cardBrand || '',
     };
 
     let customerEmailResult = 'skipped (no email provided)';
@@ -356,7 +370,7 @@ async function sendCustomerEmail(data) {
   <div style="max-width:580px;margin:0 auto;background:#FFFFFF;border-radius:12px;overflow:hidden;border:1px solid #E8E4DA;box-shadow:0 4px 14px rgba(0,0,0,.06);">
     <div style="background:#121110;color:#F3C457;padding:22px 24px;border-bottom:3px solid #C8941F;">
       <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#F3C457;font-weight:700;">Hatch Kitchen &bull; OK Kosher</div>
-      <div style="font-size:22px;font-weight:800;color:#FFFFFF;margin-top:4px;">🦃 Thanksgiving Pre-Order Confirmed</div>
+      <div style="font-size:22px;font-weight:800;color:#FFFFFF;margin-top:4px;">${data.paymentStatus === 'paid' ? '🦃 Thanksgiving Order Confirmed & Paid' : '🦃 Thanksgiving Pre-Order (Payment Needed)'}</div>
     </div>
     <div style="padding:24px;">
       <p style="margin:0 0 14px;font-size:16px;">Hi <strong>${esc(firstName)}</strong>,</p>
@@ -369,6 +383,10 @@ async function sendCustomerEmail(data) {
           <tr>
             <td style="padding:6px 0;color:#777;width:140px;">Order Reference:</td>
             <td style="padding:6px 0;font-weight:700;font-family:monospace;color:#121110;">${esc(data.orderId)}</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0;color:#777;">Payment Status:</td>
+            <td style="padding:6px 0;">${data.paymentStatus === 'paid' ? `<strong style="color:#15803D;">✓ PAID</strong> via Credit Card (${esc(data.cardBrand || 'Card')} &bull;&bull;&bull;&bull; ${esc(data.cardLast4 || '****')})` : `<strong style="color:#B45309;">⚠️ PAYMENT NEEDED</strong> (Draft Order)`}</td>
           </tr>
           <tr>
             <td style="padding:6px 0;color:#777;">Storefront Pickup:</td>
@@ -404,7 +422,7 @@ async function sendCustomerEmail(data) {
       </div>
 
       <div style="background:#F5F5F5;border-radius:8px;padding:14px;font-size:13px;line-height:1.55;color:#555;margin-bottom:20px;">
-        <strong>What Happens Next:</strong> Our kitchen team will contact you directly via your preferred contact method to confirm final details, availability, and finalize payment before pickup on your selected date.
+        <strong>What Happens Next:</strong> ${data.paymentStatus === 'paid' ? 'Your payment has been successfully processed and your Thanksgiving feast is fully reserved and confirmed! We will have your complete package packaged fresh and ready for pickup at our storefront on your selected date.' : 'Your pre-order is currently saved as a draft. Payment is required before checkout to confirm your order. Our kitchen team will contact you directly to collect payment before pickup.'}
       </div>
 
       <p style="margin:0;font-size:13px;color:#777;line-height:1.5;">
@@ -422,7 +440,7 @@ async function sendCustomerEmail(data) {
     from,
     to: data.email,
     replyTo: OWNER_EMAIL,
-    subject: `🦃 Your Hatch Kitchen Thanksgiving Pre-Order Confirmation (${data.orderId})`,
+    subject: data.paymentStatus === 'paid' ? `🦃 Your Hatch Kitchen Thanksgiving Order Confirmation (PAID - ${data.orderId})` : `🦃 Your Hatch Kitchen Thanksgiving Pre-Order (Payment Needed - ${data.orderId})`,
     text: [
       `Hi ${firstName},`,
       ``,

@@ -165,14 +165,17 @@ module.exports = async function handler(req, res) {
 
         const formattedTg = tgCustomers.map((c) => {
           const createdUnix = Math.floor(new Date(c.metadata?.created_at || (c.created * 1000)).getTime() / 1000);
+          const isPaid = c.metadata?.payment_status === 'paid' || Boolean(c.metadata?.payment_intent_id);
+          const paymentStatus = isPaid ? 'succeeded' : 'payment_needed';
+          const dashboardStatus = c.metadata?.dashboard_status || (isPaid ? 'confirmed' : 'draft');
           return {
             id: c.metadata?.order_id || c.id,
             stripeCustomerId: c.id,
             orderType: 'thanksgiving',
             amount: Number(c.metadata?.total) || 0,
             currency: 'USD',
-            paymentStatus: 'succeeded', // Pre-orders marked succeeded/valid
-            dashboardStatus: c.metadata?.dashboard_status || 'new',
+            paymentStatus, // 'succeeded' if paid, 'payment_needed' if unpaid draft
+            dashboardStatus, // 'confirmed' if paid, 'draft' if unpaid
             dashboardNotes: c.metadata?.comments || '',
             flagged: false,
             created: createdUnix,
@@ -188,8 +191,8 @@ module.exports = async function handler(req, res) {
             raffleEntered: false,
             pickupDay: c.metadata?.pickup_day || '',
             promoCode: c.metadata?.promo_code || '',
-            cardLast4: '',
-            cardBrand: '',
+            cardLast4: c.metadata?.card_last4 || '',
+            cardBrand: c.metadata?.card_brand || '',
           };
         });
 
@@ -197,9 +200,10 @@ module.exports = async function handler(req, res) {
         let filteredTg = formattedTg;
         if (status && status !== 'all') {
           if (status === 'fulfilled') filteredTg = formattedTg.filter((o) => o.dashboardStatus === 'fulfilled');
-          else if (status === 'new') filteredTg = formattedTg.filter((o) => !o.dashboardStatus || o.dashboardStatus === 'new');
+          else if (status === 'new') filteredTg = formattedTg.filter((o) => !o.dashboardStatus || o.dashboardStatus === 'new' || o.dashboardStatus === 'confirmed' || o.dashboardStatus === 'draft');
           else if (status === 'cancelled') filteredTg = formattedTg.filter((o) => o.dashboardStatus === 'cancelled');
-          else if (status === 'failed') filteredTg = [];
+          else if (status === 'paid') filteredTg = formattedTg.filter((o) => o.paymentStatus === 'succeeded');
+          else if (status === 'failed') filteredTg = formattedTg.filter((o) => o.paymentStatus === 'payment_needed');
         }
 
         if (from) {

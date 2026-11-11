@@ -1629,19 +1629,26 @@ function renderOrdersTable() {
     const timeStr = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 
     const isTg = o.orderType === 'thanksgiving';
+    const isPaid = o.paymentStatus === 'succeeded' || o.paymentStatus === 'paid';
+    const isPaymentNeeded = o.paymentStatus === 'payment_needed' || (isTg && !isPaid);
 
-    const payBadge = isTg
-      ? '<span class="badge badge-paid" style="background:rgba(243,196,87,.2);color:var(--gold);border:1px solid rgba(243,196,87,.4);">Pre-Order</span>'
-      : (o.paymentStatus === 'succeeded'
-        ? '<span class="badge badge-paid">✓ Paid</span>'
-        : o.paymentStatus === 'canceled'
-          ? '<span class="badge badge-cancelled">Cancelled</span>'
-          : '<span class="badge badge-failed">⚠ ' + o.paymentStatus + '</span>');
+    let payBadge = '';
+    if (isPaid) {
+      payBadge = '<span class="badge badge-paid">✓ Paid</span>';
+    } else if (isPaymentNeeded) {
+      payBadge = '<span class="badge" style="background:rgba(243,196,87,.18);color:#F3C457;border:1px solid rgba(243,196,87,.45);font-weight:700;">⚠️ PAYMENT NEEDED</span>';
+    } else if (o.paymentStatus === 'canceled') {
+      payBadge = '<span class="badge badge-cancelled">Cancelled</span>';
+    } else {
+      payBadge = '<span class="badge badge-failed">⚠ ' + o.paymentStatus + '</span>';
+    }
 
     let statusBadge = '';
     if (o.flagged) statusBadge += '<span class="badge badge-flagged">🚩 Flagged</span> ';
     if (o.dashboardStatus === 'fulfilled') statusBadge += '<span class="badge badge-fulfilled">✓ Fulfilled</span>';
     else if (o.dashboardStatus === 'cancelled') statusBadge += '<span class="badge badge-cancelled">Cancelled</span>';
+    else if (o.dashboardStatus === 'confirmed') statusBadge += '<span class="badge badge-fulfilled">Confirmed</span>';
+    else if (o.dashboardStatus === 'draft') statusBadge += '<span class="badge" style="background:rgba(239,68,68,.18);color:#FCA5A5;border:1px solid rgba(239,68,68,.35);font-weight:600;">Draft</span>';
     else statusBadge += '<span class="badge badge-new">New</span>';
 
     const displayName = isTg ? (o.customerName || o.residentName || '—') : (o.residentName || '—');
@@ -1817,8 +1824,11 @@ function openModal(order) {
       </div>
       <div class="modal-field">
         <span class="modal-field-label">Payment status</span>
-        <span class="modal-field-value">${order.paymentStatus === 'succeeded' ? '<span class="badge badge-paid">✓ Paid</span>' : '<span class="badge badge-failed">' + order.paymentStatus + '</span>'}</span>
-      </div>
+        <span class="modal-field-value">${(order.paymentStatus === 'succeeded' || order.paymentStatus === 'paid') ? '<span class="badge badge-paid">✓ Paid</span>' : (order.paymentStatus === 'payment_needed' || order.orderType === 'thanksgiving' ? '<span class="badge" style="background:rgba(243,196,87,.2);color:#F3C457;border:1px solid rgba(243,196,87,.45);font-weight:700;">⚠️ Payment Needed (Draft)</span>' : '<span class="badge badge-failed">' + order.paymentStatus + '</span>')}</span>
+      </div>${(order.paymentStatus === 'payment_needed' || (order.orderType === 'thanksgiving' && order.paymentStatus !== 'succeeded' && order.paymentStatus !== 'paid')) ? `
+      <div style="background:rgba(243,196,87,.12);border:1px solid rgba(243,196,87,.35);border-radius:8px;padding:12px;margin:12px 0;font-size:.85rem;color:#F3C457;line-height:1.45;">
+        <strong>⚠️ Payment Needed:</strong> This order was submitted without card payment and remains in draft. Contact the customer to collect payment before pickup.
+      </div>` : ''}
       ${order.cardLast4 ? `<div class="modal-field">
         <span class="modal-field-label">Card</span>
         <span class="modal-field-value mono">${order.cardBrand ? order.cardBrand + ' ' : ''}•••• ${order.cardLast4}</span>

@@ -1,9 +1,9 @@
 // api/create-payment-intent.js
 // ─────────────────────────────────────────────────────────────
-// Vercel Serverless Function — Hatch Kitchen Orders (Camp + Village)
+// Vercel / Netlify Serverless Function — Hatch Kitchen Orders (Camp, Village & Thanksgiving)
 // Creates a Stripe PaymentIntent on the server side (required by Stripe)
 //
-// ENV VARS required in Vercel dashboard:
+// ENV VARS required:
 //   STRIPE_SECRET_KEY  → Your Stripe secret key (sk_live_... or sk_test_...)
 // ─────────────────────────────────────────────────────────────
 
@@ -48,7 +48,15 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid amount' });
     }
 
+    const isThanksgiving = metadata.source === 'hatch-thanksgiving-orders' || metadata.order_type === 'thanksgiving-preorder';
     const isVillage = metadata.source === 'hatch-village-orders' || metadata.order_type === 'village-dinner';
+
+    let description = `Hatch Kitchen — Camp Lunch Order (${metadata.customer_name || 'parent'})`;
+    if (isThanksgiving) {
+      description = `Hatch Kitchen — Thanksgiving Pre-Order (${metadata.order_id || metadata.customer_name || 'Holiday Feast'})`;
+    } else if (isVillage) {
+      description = `Hatch Kitchen — Meals at the Village (${metadata.week || 'Weekly Dinner'})`;
+    }
 
     // Card Element + confirmCardPayment needs payment_method_types: ['card']
     // (automatic_payment_methods is for Payment Element flows)
@@ -60,13 +68,11 @@ module.exports = async function handler(req, res) {
         source: metadata.source || 'hatch-camp-orders',
         ...flattenMetadata(metadata),
       },
-      description: isVillage
-        ? `Hatch Kitchen — Meals at the Village (${metadata.week || 'Weekly Dinner'})`
-        : `Hatch Kitchen — Camp Lunch Order (${metadata.customer_name || 'parent'})`,
+      description,
     });
 
     // Return only the client secret (never the full intent)
-    return res.status(200).json({ clientSecret: paymentIntent.client_secret });
+    return res.status(200).json({ clientSecret: paymentIntent.client_secret, paymentIntentId: paymentIntent.id });
 
   } catch (err) {
     console.error('[Stripe error]', err.message);

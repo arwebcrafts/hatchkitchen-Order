@@ -31,6 +31,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Allura&family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
+<script src="https://js.stripe.com/v3/"></script>
 
 <style>
 /* ============================================================
@@ -390,6 +391,38 @@
   display: none;
 }
 .tg-field.is-invalid .tg-error-text { display: block; }
+
+/* ---- Stripe Card Element Styles ---- */
+.stripe-element-wrap {
+  padding: 13px 14px;
+  border: 1.5px solid #d9d5ce;
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  transition: border-color .15s, box-shadow .15s;
+  min-height: 48px;
+}
+.stripe-element-wrap.focused {
+  border-color: var(--gold-dark);
+  box-shadow: 0 0 0 3px rgba(200,148,31,.15);
+}
+.stripe-element-wrap.error { border-color: #B91C1C; }
+.stripe-error {
+  color: #B91C1C;
+  font-size: .88rem;
+  margin-top: 8px;
+  font-weight: 600;
+  display: none;
+}
+.stripe-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--f-mono);
+  font-size: .78rem;
+  color: rgba(18,17,16,.5);
+  margin-top: 14px;
+}
 
 /* Sticky Submit & Total Bar */
 .tg-bottom-bar {
@@ -1286,16 +1319,64 @@
         </div>
       </div>
 
+      <!-- Step 5: Secure Card Payment Section -->
+      <div class="tg-section" id="tg-payment-section">
+        <div class="tg-section-header">
+          <span class="tg-badge">Step 5</span>
+          <h2 class="tg-section-title">Secure Card Payment <span class="req">*</span></h2>
+          <p class="tg-section-subtitle">Payment is required before checkout. Pay securely to confirm your Thanksgiving order.</p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;">
+          <div class="tg-field" style="grid-column: 1 / -1;" id="field-card-name">
+            <label for="card-name">Name on card <span class="req">*</span></label>
+            <input type="text" id="card-name" placeholder="Full name on credit card" autocomplete="cc-name" required>
+            <span class="tg-error-text">Please enter name on card.</span>
+          </div>
+
+          <div class="tg-field" style="grid-column: 1 / -1;" id="field-card-number">
+            <label>Card number <span class="req">*</span></label>
+            <div class="stripe-element-wrap" id="card-number-element"></div>
+          </div>
+
+          <div class="tg-field" id="field-card-expiry">
+            <label>Expiration <span class="req">*</span></label>
+            <div class="stripe-element-wrap" id="card-expiry-element"></div>
+          </div>
+
+          <div class="tg-field" id="field-card-cvc">
+            <label>CVC <span class="req">*</span></label>
+            <div class="stripe-element-wrap" id="card-cvc-element"></div>
+          </div>
+
+          <div class="tg-field" style="grid-column: 1 / -1;" id="field-card-zip">
+            <label for="card-zip-stripe">Billing zip code <span class="req">*</span></label>
+            <input type="text" id="card-zip-stripe" placeholder="90035" autocomplete="postal-code" inputmode="numeric" required>
+            <span class="tg-error-text">Please enter billing zip code.</span>
+          </div>
+        </div>
+
+        <div class="stripe-error" id="card-error"></div>
+
+        <div class="stripe-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          Secured by Stripe · 256-Bit SSL Encrypted Payment
+        </div>
+      </div>
+
 
       <!-- Sticky Bottom Live Total & Submit Bar -->
       <div class="tg-bottom-bar">
         <div class="tg-total-group">
-          <span class="tg-total-label">Estimated Pre-Order Total</span>
+          <span class="tg-total-label">Total to Pay Now</span>
           <span class="tg-total-amt" id="live-total-amt">$0.00</span>
         </div>
 
         <button type="submit" class="tg-submit-btn" id="submit-btn">
-          <span>Submit Pre-Order Request →</span>
+          <span id="submit-btn-text">Pay & Confirm Pre-Order →</span>
         </button>
       </div>
 
@@ -1309,7 +1390,7 @@
   <div class="tg-dashboard-wrap" id="dashboard-view">
 
     <div class="tg-dash-hero">
-      <div class="tg-status-pill">● PRE-ORDER RECEIVED · AWAITING KITCHEN CONFIRMATION</div>
+      <div class="tg-status-pill" id="dash-status-pill">● PRE-ORDER PAID & CONFIRMED</div>
       <div class="tg-check-icon">✓</div>
       <h2 class="tg-dash-title">You're All <em>Set!</em></h2>
       <p class="tg-dash-sub">Thank you, <strong id="dash-cust-header-name"></strong>! Your Thanksgiving pre-order request has been received by Hatch Kitchen. We will reach out to you shortly to confirm your order.</p>
@@ -1335,6 +1416,10 @@
       <div class="tg-receipt-row">
         <span class="tg-receipt-label">Storefront Pickup</span>
         <span class="tg-receipt-val highlight" id="dash-receipt-pickup">—</span>
+      </div>
+      <div class="tg-receipt-row">
+        <span class="tg-receipt-label">Payment Status</span>
+        <span class="tg-receipt-val" id="dash-receipt-payment" style="color:#15803D;font-weight:700;">✓ PAID</span>
       </div>
       <div class="tg-receipt-row">
         <span class="tg-receipt-label">Pickup Location</span>
@@ -1463,6 +1548,7 @@ let formState = {
 
 document.addEventListener('DOMContentLoaded', () => {
   renderAdditionalSides();
+  initStripePayment();
   setupRowSelectionHighlighting();
   checkUrlOrStoredDashboard();
 });
@@ -1668,30 +1754,93 @@ function getOrderPayloadItems() {
   return items;
 }
 
-// Form Submission & Redirect
+// Stripe Configuration & Payment Initialization
+const STRIPE_PK = 'pk_live_51TWjEHHMqcxiN2xT842JWnIIIZee7ZxpUBh0hPDvaKgtnovvbhbW5kPG7YKiclZilDOPLTIQDew0iKEIr8qqiVGq00rSvNtj7P';
+let stripe = null;
+let cardNumberEl = null;
+let cardExpiryEl = null;
+let cardCvcEl = null;
+let stripeElementsReady = false;
+
+function initStripePayment() {
+  if (typeof Stripe === 'undefined') return;
+  try {
+    stripe = Stripe(STRIPE_PK);
+    const elements = stripe.elements();
+    const stripeStyle = {
+      base: {
+        fontFamily: '"Hanken Grotesk", sans-serif',
+        fontSize: '15px',
+        color: '#121110',
+        '::placeholder': { color: '#a8a59e' },
+      },
+      invalid: { color: '#B91C1C' },
+    };
+
+    cardNumberEl = elements.create('cardNumber', { style: stripeStyle, showIcon: true });
+    cardExpiryEl = elements.create('cardExpiry', { style: stripeStyle });
+    cardCvcEl = elements.create('cardCvc', { style: stripeStyle });
+
+    cardNumberEl.mount('#card-number-element');
+    cardExpiryEl.mount('#card-expiry-element');
+    cardCvcEl.mount('#card-cvc-element');
+
+    [
+      { el: cardNumberEl, wrapId: 'card-number-element' },
+      { el: cardExpiryEl, wrapId: 'card-expiry-element' },
+      { el: cardCvcEl, wrapId: 'card-cvc-element' },
+    ].forEach(({ el, wrapId }) => {
+      const wrap = document.getElementById(wrapId);
+      el.on('focus', () => wrap && wrap.classList.add('focused'));
+      el.on('blur', () => wrap && wrap.classList.remove('focused'));
+      el.on('change', (ev) => {
+        const errEl = document.getElementById('card-error');
+        if (ev.error) {
+          wrap && wrap.classList.add('error');
+          errEl.textContent = ev.error.message;
+          errEl.style.display = 'block';
+        } else {
+          wrap && wrap.classList.remove('error');
+          errEl.style.display = 'none';
+        }
+      });
+    });
+
+    stripeElementsReady = true;
+  } catch (err) {
+    console.warn('[Stripe init warning]', err);
+  }
+}
+
+// Form Submission with Strict Payment Required
 async function handleFormSubmit(e) {
   if (e) e.preventDefault();
 
   const nameInput = document.getElementById('cust-name');
   const phoneInput = document.getElementById('cust-phone');
   const emailInput = document.getElementById('cust-email');
+  const cardNameInput = document.getElementById('card-name');
+  const cardZipInput = document.getElementById('card-zip-stripe');
 
   let hasError = false;
   [
     { el: nameInput, fieldId: 'field-cust-name' },
     { el: phoneInput, fieldId: 'field-cust-phone' },
+    { el: cardNameInput, fieldId: 'field-card-name' },
+    { el: cardZipInput, fieldId: 'field-card-zip' },
   ].forEach(item => {
     const parent = document.getElementById(item.fieldId);
-    if (!item.el.value.trim()) {
-      parent.classList.add('is-invalid');
+    if (!item.el || !item.el.value.trim()) {
+      if (parent) parent.classList.add('is-invalid');
       hasError = true;
     } else {
-      parent.classList.remove('is-invalid');
+      if (parent) parent.classList.remove('is-invalid');
     }
   });
 
   if (hasError) {
-    nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const firstInvalid = document.querySelector('.is-invalid input');
+    if (firstInvalid) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
   }
 
@@ -1709,6 +1858,11 @@ async function handleFormSubmit(e) {
 
   let total = 0;
   items.forEach(i => total += i.price);
+
+  if (total <= 0) {
+    alert('Please choose items to pre-order.');
+    return;
+  }
 
   const orderId = 'ORD-TG-' + Math.random().toString(36).substr(2, 6).toUpperCase();
   const dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -1730,30 +1884,124 @@ async function handleFormSubmit(e) {
   };
 
   const submitBtn = document.getElementById('submit-btn');
+  const submitBtnText = document.getElementById('submit-btn-text') || submitBtn;
   submitBtn.disabled = true;
-  submitBtn.textContent = 'Submitting Pre-Order...';
+  submitBtnText.textContent = `Processing Payment ($${total.toFixed(2)})...`;
 
-  // 1. Store locally
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(orderData));
-  } catch (_) {}
+  const cardErrorEl = document.getElementById('card-error');
+  cardErrorEl.style.display = 'none';
 
-  // 2. Dispatch to serverless endpoint
   try {
-    await fetch('/api/save-thanksgiving-order', {
+    // 1. Create Stripe PaymentIntent
+    const itemSummary = items.map(i => `${i.title || i.name} ($${Number(i.price || 0).toFixed(2)})`).join('; ').slice(0, 480);
+    const intentRes = await fetch('/api/create-payment-intent', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(orderData),
+      body: JSON.stringify({
+        amount: Math.round(total * 100),
+        currency: 'usd',
+        metadata: {
+          source: 'hatch-thanksgiving-orders',
+          order_type: 'thanksgiving-preorder',
+          order_id: orderId,
+          customer_name: nameInput.value.trim(),
+          customer_phone: phoneInput.value.trim(),
+          customer_email: emailInput.value.trim(),
+          pickup_day: pickupDay,
+          items: itemSummary,
+          item_count: items.length,
+          comments,
+          promo_code: promo,
+          total: total.toFixed(2),
+        },
+      }),
     });
-  } catch (err) {
-    console.warn('[thanksgiving] Offline / server error:', err);
-  }
 
-  // 3. Immediately REDIRECT user to Dashboard
-  const redirectUrl = `thanksgiving-orders.html?view=dashboard&order_id=${encodeURIComponent(orderId)}#dashboard`;
-  window.history.pushState(null, '', redirectUrl);
-  renderDashboard(orderData);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (!intentRes.ok) {
+      const errJson = await intentRes.json().catch(() => ({}));
+      throw new Error(errJson.error || 'Payment initialization failed. Please try again.');
+    }
+
+    const { clientSecret } = await intentRes.json();
+    if (!clientSecret) throw new Error('Stripe client secret not received.');
+
+    // 2. Confirm Card Payment via Stripe Elements
+    const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: cardNumberEl,
+        billing_details: {
+          name: cardNameInput.value.trim(),
+          email: emailInput.value.trim() || undefined,
+          phone: phoneInput.value.trim() || undefined,
+          address: { postal_code: cardZipInput.value.trim() },
+        },
+      },
+    });
+
+    if (error) {
+      // Payment Failed! Order remains UNPAID / DRAFT as required!
+      cardErrorEl.textContent = error.message;
+      cardErrorEl.style.display = 'block';
+      cardErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      // Record draft in backend with payment_needed status
+      await fetch('/api/save-thanksgiving-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...orderData,
+          paymentStatus: 'payment_needed',
+          status: 'draft',
+          paymentError: error.message,
+        }),
+      }).catch(() => {});
+
+      submitBtn.disabled = false;
+      submitBtnText.textContent = 'Pay & Confirm Pre-Order →';
+      return;
+    }
+
+    if (paymentIntent && paymentIntent.status === 'succeeded') {
+      // Payment SUCCEEDED! Order is 100% CONFIRMED with payment!
+      const last4 = paymentIntent.charges?.data?.[0]?.payment_method_details?.card?.last4 || '';
+      const brand = paymentIntent.charges?.data?.[0]?.payment_method_details?.card?.brand || 'Card';
+
+      const confirmedOrderData = {
+        ...orderData,
+        paymentIntentId: paymentIntent.id,
+        paymentStatus: 'paid',
+        status: 'confirmed',
+        cardLast4: last4,
+        cardBrand: brand,
+      };
+
+      // 1. Store confirmed order locally
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(confirmedOrderData));
+      } catch (_) {}
+
+      // 2. Dispatch to serverless endpoint (Marks confirmed & sends confirmation emails)
+      await fetch('/api/save-thanksgiving-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(confirmedOrderData),
+      }).catch(err => console.warn('[thanksgiving] save error:', err));
+
+      // 3. Render Confirmed Receipt View
+      const redirectUrl = `thanksgiving-orders.html?view=dashboard&order_id=${encodeURIComponent(orderId)}#dashboard`;
+      window.history.pushState(null, '', redirectUrl);
+      renderDashboard(confirmedOrderData);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      throw new Error('Payment was not completed. Please try again.');
+    }
+  } catch (err) {
+    cardErrorEl.textContent = err.message || 'Payment processing error. Please check your card details.';
+    cardErrorEl.style.display = 'block';
+    cardErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    submitBtn.disabled = false;
+    submitBtnText.textContent = 'Pay & Confirm Pre-Order →';
+  }
 }
 
 // Render Dashboard View
@@ -1761,6 +2009,20 @@ function renderDashboard(data) {
   document.getElementById('preorder-form-view').style.display = 'none';
   const dash = document.getElementById('dashboard-view');
   dash.style.display = 'block';
+
+  const isPaid = data.paymentStatus === 'paid';
+  const pill = document.getElementById('dash-status-pill');
+  if (pill) {
+    pill.textContent = isPaid ? '● PRE-ORDER PAID & CONFIRMED' : '● PRE-ORDER DRAFT · PAYMENT NEEDED';
+    pill.style.background = isPaid ? '#DCFCE7' : '#FEF3C7';
+    pill.style.color = isPaid ? '#15803D' : '#B45309';
+  }
+
+  const payVal = document.getElementById('dash-receipt-payment');
+  if (payVal) {
+    payVal.textContent = isPaid ? `✓ PAID (${data.cardBrand || 'Card'} •••• ${data.cardLast4 || '****'})` : '⚠️ Payment Needed (Draft)';
+    payVal.style.color = isPaid ? '#15803D' : '#B45309';
+  }
 
   document.getElementById('dash-cust-header-name').textContent = data.customer.name;
   document.getElementById('dash-receipt-id').textContent = data.orderId;
