@@ -945,7 +945,7 @@
 
       <div class="tg-intro-box">
         <p>After you fill out this order request, we will contact you to go over details and availability before the order is completed. If you would like faster service and direct information on current stock and pricing please contact us at <a href="tel:+14244553195" class="tg-intro-highlight">(424) 455-3195</a> or <a href="mailto:info@thehatchkitchen.com" class="tg-intro-highlight">info@thehatchkitchen.com</a>.</p>
-        <p><strong>Pre-order closes 11/24.</strong> Pick up at Hatch Kitchen storefront at <strong>8947 W. Pico Blvd</strong> on <strong>Wednesday 11/25 or Thursday 11/26 between 9am–4pm</strong>.</p>
+        <p><strong>Pre-order closes 11/24.</strong> Pick up at Hatch Kitchen storefront at <strong>8947 W. Pico Blvd</strong> on <strong>Wednesday 11/25 or Thursday 11/26 between 9am–3pm</strong>.</p>
       </div>
     </div>
 
@@ -959,14 +959,26 @@
           <span class="tg-q-pill">Field 1 of 14</span>
           <div class="tg-card-title">
             <span>FAMILY PACKAGE (FEEDS 10-12) - $499</span>
-            <span class="tg-card-price">$499</span>
+            <span class="tg-card-price">$499 each</span>
           </div>
-          <p class="tg-card-desc">Includes choice of 1 whole rotisserie turkey or 4 lb braised brisket. Includes choice of 3 sides, 2 fresh-baked sourdough loaves, turkey gravy and cranberry sauce. Please choose 1 entree below:</p>
+          <p class="tg-card-desc">Includes choice of 1 whole rotisserie turkey or 4 lb braised brisket. Includes choice of 3 sides, 2 fresh-baked sourdough loaves, turkey gravy and cranberry sauce. Please choose your entree choice and quantity below:</p>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; background:#FFF; padding:12px 16px; border:1px solid var(--line-soft); border-radius:var(--radius-sm);">
+          <div>
+            <span style="font-weight:700; font-size:.95rem; color:var(--ink);">Quantity of Family Packages</span>
+            <div style="font-size:.78rem; color:var(--ink-soft);">$499.00 each (+ $30 if carved turkey)</div>
+          </div>
+          <div class="tg-stepper">
+            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('family-qty', -1)">&minus;</button>
+            <span class="tg-stepper-val" id="family-qty-display">0</span>
+            <button type="button" class="tg-stepper-btn" onclick="adjustStepper('family-qty', 1)">&plus;</button>
+          </div>
         </div>
 
         <div class="tg-option-group" id="family-entree-group">
           <label class="tg-option-row">
-            <input type="radio" name="family_entree" value="Whole un-carved rotisserie turkey (12-15 lb)" data-addon="0" onchange="updateFormCalculations()">
+            <input type="radio" name="family_entree" value="Whole un-carved rotisserie turkey (12-15 lb)" data-addon="0" onchange="handleFamilyEntreeChange(this)">
             <img src="images/menu/thanksgiving-family-turkey.jpg" alt="Whole un-carved rotisserie turkey family meal" class="tg-row-img" loading="lazy">
             <div class="tg-option-content">
               <div class="tg-option-title">Whole un-carved rotisserie turkey (12-15 lb)</div>
@@ -975,7 +987,7 @@
           </label>
 
           <label class="tg-option-row">
-            <input type="radio" name="family_entree" value="Whole carved rotisserie turkey (yields approx 8-10 lb meat) +$30" data-addon="30" onchange="updateFormCalculations()">
+            <input type="radio" name="family_entree" value="Whole carved rotisserie turkey (yields approx 8-10 lb meat) +$30" data-addon="30" onchange="handleFamilyEntreeChange(this)">
             <img src="images/menu/thanksgiving-family-turkey-carved.jpg" alt="Whole carved rotisserie turkey family meal" class="tg-row-img" loading="lazy">
             <div class="tg-option-content">
               <div class="tg-option-title">Whole carved rotisserie turkey (yields approx 8-10 lb meat) <span style="color:var(--gold-dark); font-weight:700;">+$30</span></div>
@@ -984,7 +996,7 @@
           </label>
 
           <label class="tg-option-row">
-            <input type="radio" name="family_entree" value="4 lb wine braised brisket sliced with caramelized onions and carrots" data-addon="0" onchange="updateFormCalculations()">
+            <input type="radio" name="family_entree" value="4 lb wine braised brisket sliced with caramelized onions and carrots" data-addon="0" onchange="handleFamilyEntreeChange(this)">
             <img src="images/menu/thanksgiving-family-brisket.jpg" alt="Wine braised brisket family meal" class="tg-row-img" loading="lazy">
             <div class="tg-option-content">
               <div class="tg-option-title">4 lb wine braised brisket sliced with caramelized onions and carrots</div>
@@ -993,7 +1005,7 @@
           </label>
 
           <label class="tg-option-row is-selected">
-            <input type="radio" name="family_entree" value="none" data-addon="0" checked onchange="updateFormCalculations()">
+            <input type="radio" name="family_entree" value="none" data-addon="0" checked onchange="handleFamilyEntreeChange(this)">
             <div class="tg-option-content">
               <div class="tg-option-title">Not ordering Family Package</div>
               <div class="tg-option-sub">Skip this package and order individual meals or a la carte below</div>
@@ -1004,16 +1016,16 @@
 
 
       <!-- ========================================================
-           FIELD 2: Choose Sides (Up to 3)
+           FIELD 2: Choose Sides (Up to 3 per package)
            ======================================================== -->
       <div class="tg-card" id="q-family-sides">
         <div class="tg-card-head">
           <span class="tg-q-pill">Field 2 of 14</span>
           <div class="tg-card-title">
-            <span>Choose Sides (Up to 3)</span>
+            <span>Choose Sides</span>
             <span class="tg-card-price" id="family-sides-count-badge" style="font-size:.92rem; color:var(--ink-soft);">0 of 3 selected</span>
           </div>
-          <p class="tg-card-desc">Included with Family Package (Feeds 10–12). If you ordered the Family Package above, please select up to 3 included sides:</p>
+          <p class="tg-card-desc">Included with Family Package (Feeds 10–12). If you ordered the Family Package above, please select up to 3 included sides per package:</p>
         </div>
 
         <div class="tg-option-group" id="family-sides-list">
@@ -1199,16 +1211,16 @@
 
 
       <!-- ========================================================
-           FIELD 6: Individual meal - sides (choose up to 2)
+           FIELD 6: Individual meal - sides (2 included per meal)
            ======================================================== -->
       <div class="tg-card" id="q-indiv-sides">
         <div class="tg-card-head">
           <span class="tg-q-pill">Field 6 of 14</span>
           <div class="tg-card-title">
-            <span>Individual meal - sides (choose up to 2)</span>
+            <span>Individual meal - sides</span>
             <span class="tg-card-price" id="indiv-sides-count-badge" style="font-size:.92rem; color:var(--ink-soft);">0 of 2 selected</span>
           </div>
-          <p class="tg-card-desc">Included with Individual Thanksgiving Meal. If you ordered an Individual Meal above, please choose up to 2 sides:</p>
+          <p class="tg-card-desc">2 sides included per individual meal. Additional sides can be added for <strong>$10 each</strong>:</p>
         </div>
 
         <div class="tg-option-group" id="indiv-sides-list">
@@ -1238,17 +1250,17 @@
 
         <div class="tg-option-group" id="pickup-day-group">
           <label class="tg-option-row is-selected">
-            <input type="radio" name="pickup_day" value="Wednesday 11/25 between 9am–4pm" checked onchange="updateFormCalculations()">
+            <input type="radio" name="pickup_day" value="Wednesday 11/25 between 9am–3pm" checked onchange="updateFormCalculations()">
             <div class="tg-option-content">
-              <div class="tg-option-title">Wednesday 11/25 between 9am–4pm</div>
+              <div class="tg-option-title">Wednesday 11/25 between 9am–3pm</div>
               <div class="tg-option-sub">Hatch Kitchen storefront pickup</div>
             </div>
           </label>
 
           <label class="tg-option-row">
-            <input type="radio" name="pickup_day" value="Thursday 11/26 between 9am–4pm (Thanksgiving Day)" onchange="updateFormCalculations()">
+            <input type="radio" name="pickup_day" value="Thursday 11/26 between 9am–3pm (Thanksgiving Day)" onchange="updateFormCalculations()">
             <div class="tg-option-content">
-              <div class="tg-option-title">Thursday 11/26 between 9am–4pm (Thanksgiving Day)</div>
+              <div class="tg-option-title">Thursday 11/26 between 9am–3pm (Thanksgiving Day)</div>
               <div class="tg-option-sub">Hatch Kitchen storefront pickup</div>
             </div>
           </label>
@@ -1539,6 +1551,7 @@ const SIDES_DATA = [
 ];
 
 let formState = {
+  familyQty: 0,
   indivQty: 0,
   proteinUncarvedQty: 0,
   proteinCarvedQty: 0,
@@ -1550,6 +1563,9 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAdditionalSides();
   initStripePayment();
   setupRowSelectionHighlighting();
+  updateFamilySidesBadge();
+  updateIndivSidesBadge();
+  updateFormCalculations();
   checkUrlOrStoredDashboard();
 });
 
@@ -1590,7 +1606,27 @@ function setupRowSelectionHighlighting() {
 }
 
 function adjustStepper(type, delta) {
-  if (type === 'indiv-qty') {
+  if (type === 'family-qty') {
+    formState.familyQty = Math.max(0, formState.familyQty + delta);
+    document.getElementById('family-qty-display').textContent = formState.familyQty;
+    if (formState.familyQty > 0) {
+      const current = document.querySelector('input[name="family_entree"]:checked');
+      if (!current || current.value === 'none') {
+        const first = document.querySelector('input[name="family_entree"][value="Whole un-carved rotisserie turkey (12-15 lb)"]');
+        if (first) {
+          first.checked = true;
+          document.querySelectorAll('input[name="family_entree"]').forEach(r => r.closest('.tg-option-row').classList.toggle('is-selected', r.checked));
+        }
+      }
+    } else {
+      const noneRadio = document.querySelector('input[name="family_entree"][value="none"]');
+      if (noneRadio) {
+        noneRadio.checked = true;
+        document.querySelectorAll('input[name="family_entree"]').forEach(r => r.closest('.tg-option-row').classList.toggle('is-selected', r.checked));
+      }
+    }
+    updateFamilySidesBadge();
+  } else if (type === 'indiv-qty') {
     formState.indivQty = Math.max(0, formState.indivQty + delta);
     document.getElementById('indiv-qty-display').textContent = formState.indivQty;
     // Auto-select first entree if none selected yet
@@ -1603,7 +1639,14 @@ function adjustStepper(type, delta) {
           document.querySelectorAll('input[name="indiv_entree"]').forEach(r => r.closest('.tg-option-row').classList.toggle('is-selected', r.checked));
         }
       }
+    } else {
+      const noneRadio = document.querySelector('input[name="indiv_entree"][value="none"]');
+      if (noneRadio) {
+        noneRadio.checked = true;
+        document.querySelectorAll('input[name="indiv_entree"]').forEach(r => r.closest('.tg-option-row').classList.toggle('is-selected', r.checked));
+      }
     }
+    updateIndivSidesBadge();
   } else if (type === 'protein-uncarved') {
     formState.proteinUncarvedQty = Math.max(0, formState.proteinUncarvedQty + delta);
     document.getElementById('protein-uncarved-display').textContent = formState.proteinUncarvedQty;
@@ -1617,6 +1660,18 @@ function adjustStepper(type, delta) {
   updateFormCalculations();
 }
 
+function handleFamilyEntreeChange(radio) {
+  if (radio.value !== 'none' && formState.familyQty === 0) {
+    formState.familyQty = 1;
+    document.getElementById('family-qty-display').textContent = 1;
+  } else if (radio.value === 'none') {
+    formState.familyQty = 0;
+    document.getElementById('family-qty-display').textContent = 0;
+  }
+  updateFamilySidesBadge();
+  updateFormCalculations();
+}
+
 function handleIndivEntreeChange(radio) {
   if (radio.value !== 'none' && formState.indivQty === 0) {
     formState.indivQty = 1;
@@ -1625,6 +1680,7 @@ function handleIndivEntreeChange(radio) {
     formState.indivQty = 0;
     document.getElementById('indiv-qty-display').textContent = 0;
   }
+  updateIndivSidesBadge();
   updateFormCalculations();
 }
 
@@ -1637,28 +1693,73 @@ function adjustSideQty(sideId, delta) {
   updateFormCalculations();
 }
 
-function handleFamilySideChange(checkbox) {
+function updateFamilySidesBadge() {
+  const maxSides = (formState.familyQty > 0 ? formState.familyQty : 1) * 3;
   const checked = document.querySelectorAll('input[name="family_side"]:checked');
-  if (checked.length > 3) {
+  const badge = document.getElementById('family-sides-count-badge');
+  if (badge) {
+    badge.textContent = `${checked.length} of ${maxSides} selected`;
+  }
+}
+
+function handleFamilySideChange(checkbox) {
+  if (checkbox.checked && formState.familyQty === 0) {
+    formState.familyQty = 1;
+    document.getElementById('family-qty-display').textContent = 1;
+    const current = document.querySelector('input[name="family_entree"]:checked');
+    if (!current || current.value === 'none') {
+      const first = document.querySelector('input[name="family_entree"][value="Whole un-carved rotisserie turkey (12-15 lb)"]');
+      if (first) {
+        first.checked = true;
+        document.querySelectorAll('input[name="family_entree"]').forEach(r => r.closest('.tg-option-row').classList.toggle('is-selected', r.checked));
+      }
+    }
+  }
+
+  const maxSides = (formState.familyQty > 0 ? formState.familyQty : 1) * 3;
+  const checked = document.querySelectorAll('input[name="family_side"]:checked');
+  if (checked.length > maxSides) {
     checkbox.checked = false;
     checkbox.closest('.tg-option-row').classList.remove('is-selected');
-    alert('You may select up to 3 included sides for the Family Package.');
+    alert(`You may select up to ${maxSides} included sides (${formState.familyQty > 1 ? formState.familyQty + ' Family Packages x 3 sides' : '3 sides per Family Package'}).`);
     return;
   }
-  document.getElementById('family-sides-count-badge').textContent = `${checked.length} of 3 selected`;
   checkbox.closest('.tg-option-row').classList.toggle('is-selected', checkbox.checked);
+  updateFamilySidesBadge();
+  updateFormCalculations();
+}
+
+function updateIndivSidesBadge() {
+  const badge = document.getElementById('indiv-sides-count-badge');
+  if (!badge) return;
+  const checked = document.querySelectorAll('input[name="indiv_side"]:checked');
+  const includedLimit = (formState.indivQty > 0 ? formState.indivQty : 1) * 2;
+  const checkedCount = checked.length;
+  if (checkedCount <= includedLimit) {
+    badge.innerHTML = `${checkedCount} of ${includedLimit} included selected`;
+  } else {
+    const extra = checkedCount - includedLimit;
+    badge.innerHTML = `${includedLimit} of ${includedLimit} included + <strong style="color:var(--gold-dark);">${extra} extra (+$${(extra * 10).toFixed(2)})</strong>`;
+  }
 }
 
 function handleIndivSideChange(checkbox) {
-  const checked = document.querySelectorAll('input[name="indiv_side"]:checked');
-  if (checked.length > 2) {
-    checkbox.checked = false;
-    checkbox.closest('.tg-option-row').classList.remove('is-selected');
-    alert('You may select up to 2 included sides for the Individual Meal.');
-    return;
+  if (checkbox.checked && formState.indivQty === 0) {
+    formState.indivQty = 1;
+    document.getElementById('indiv-qty-display').textContent = 1;
+    const current = document.querySelector('input[name="indiv_entree"]:checked');
+    if (!current || current.value === 'none') {
+      const first = document.querySelector('input[name="indiv_entree"][value="Turkey - dark meat 8 oz"]');
+      if (first) {
+        first.checked = true;
+        document.querySelectorAll('input[name="indiv_entree"]').forEach(r => r.closest('.tg-option-row').classList.toggle('is-selected', r.checked));
+      }
+    }
   }
-  document.getElementById('indiv-sides-count-badge').textContent = `${checked.length} of 2 selected`;
+
   checkbox.closest('.tg-option-row').classList.toggle('is-selected', checkbox.checked);
+  updateIndivSidesBadge();
+  updateFormCalculations();
 }
 
 function handleContactMethodChange(radio) {
@@ -1671,11 +1772,24 @@ function updateFormCalculations() {
   const selectedFamilyEntree = document.querySelector('input[name="family_entree"]:checked');
   let familyPrice = 0;
 
-  if (selectedFamilyEntree && selectedFamilyEntree.value !== 'none') {
-    familyPrice = 499 + Number(selectedFamilyEntree.dataset.addon || 0);
+  if (formState.familyQty > 0 && selectedFamilyEntree && selectedFamilyEntree.value !== 'none') {
+    const addon = Number(selectedFamilyEntree.dataset.addon || 0);
+    familyPrice = formState.familyQty * (499 + addon);
   }
 
-  const indivTotal = formState.indivQty * 50;
+  const indivMealBase = formState.indivQty * 50;
+
+  // Additional sides for individual meals ($10 each beyond 2 per meal)
+  let indivExtraSidesCost = 0;
+  if (formState.indivQty > 0) {
+    const checkedIndivSides = document.querySelectorAll('input[name="indiv_side"]:checked').length;
+    const includedLimit = formState.indivQty * 2;
+    const extraSidesCount = Math.max(0, checkedIndivSides - includedLimit);
+    indivExtraSidesCost = extraSidesCount * 10;
+  }
+
+  const indivTotal = indivMealBase + indivExtraSidesCost;
+
   const proteinTotal = (formState.proteinUncarvedQty * 225) +
                        (formState.proteinCarvedQty * 250) +
                        (formState.proteinBrisketQty * 200);
@@ -1690,7 +1804,8 @@ function updateFormCalculations() {
   }
 
   const grandTotal = familyPrice + indivTotal + proteinTotal + sidesTotal;
-  document.getElementById('live-total-amt').textContent = `$${grandTotal.toFixed(2)}`;
+  const totalAmtEl = document.getElementById('live-total-amt');
+  if (totalAmtEl) totalAmtEl.textContent = `$${grandTotal.toFixed(2)}`;
 }
 
 // Compute items list for submission payload
@@ -1698,12 +1813,15 @@ function getOrderPayloadItems() {
   const items = [];
   const selectedFamilyEntree = document.querySelector('input[name="family_entree"]:checked');
 
-  if (selectedFamilyEntree && selectedFamilyEntree.value !== 'none') {
+  if (formState.familyQty > 0 && selectedFamilyEntree && selectedFamilyEntree.value !== 'none') {
     const addon = Number(selectedFamilyEntree.dataset.addon || 0);
+    const unitPrice = 499 + addon;
     const familySides = Array.from(document.querySelectorAll('input[name="family_side"]:checked')).map(c => c.value);
     items.push({
-      title: 'Family Package (Feeds 10–12)',
-      price: 499 + addon,
+      title: `${formState.familyQty > 1 ? formState.familyQty + 'x ' : ''}Family Package (Feeds 10–12)`,
+      price: formState.familyQty * unitPrice,
+      unitPrice: unitPrice,
+      quantity: formState.familyQty,
       entree: selectedFamilyEntree.value,
       sides: familySides,
     });
@@ -1712,13 +1830,28 @@ function getOrderPayloadItems() {
   if (formState.indivQty > 0) {
     const selectedIndivRadio = document.querySelector('input[name="indiv_entree"]:checked');
     const indivEntree = (selectedIndivRadio && selectedIndivRadio.value !== 'none') ? selectedIndivRadio.value : 'Turkey - dark meat 8 oz';
-    const indivSides = Array.from(document.querySelectorAll('input[name="indiv_side"]:checked')).map(c => c.value);
+    const allIndivSides = Array.from(document.querySelectorAll('input[name="indiv_side"]:checked')).map(c => c.value);
+    const includedLimit = formState.indivQty * 2;
+    const extraSidesCount = Math.max(0, allIndivSides.length - includedLimit);
+    const extraSidesCost = extraSidesCount * 10;
+
     items.push({
-      title: `${formState.indivQty}x Individual Thanksgiving Meal (Feeds 1–2)`,
+      title: `${formState.indivQty > 1 ? formState.indivQty + 'x ' : ''}Individual Thanksgiving Meal (Feeds 1–2)`,
       price: formState.indivQty * 50,
+      quantity: formState.indivQty,
       entree: indivEntree,
-      sides: indivSides,
+      sides: allIndivSides.slice(0, includedLimit),
     });
+
+    if (extraSidesCount > 0) {
+      const extraSideNames = allIndivSides.slice(includedLimit);
+      items.push({
+        title: `${extraSidesCount}x Additional Individual Side${extraSidesCount > 1 ? 's' : ''} ($10 ea)`,
+        price: extraSidesCost,
+        quantity: extraSidesCount,
+        sides: extraSideNames,
+      });
+    }
   }
 
   if (formState.proteinUncarvedQty > 0) {
@@ -1851,7 +1984,7 @@ async function handleFormSubmit(e) {
     return;
   }
 
-  const pickupDay = document.querySelector('input[name="pickup_day"]:checked')?.value || 'Wednesday 11/25 between 9am–4pm';
+  const pickupDay = document.querySelector('input[name="pickup_day"]:checked')?.value || 'Wednesday 11/25 between 9am–3pm';
   const preferredContact = document.querySelector('input[name="preferred_contact"]:checked')?.value || 'Phone';
   const promo = document.getElementById('cust-promo').value.trim();
   const comments = document.getElementById('cust-comments').value.trim();
