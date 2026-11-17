@@ -1850,6 +1850,16 @@ function openModal(order) {
         <span class="modal-field-label">Amount</span>
         <span class="modal-field-value" style="color:var(--gold);font-family:var(--f-display);font-weight:800;font-size:1.3rem">$${order.amount.toFixed(2)}</span>
       </div>
+      ${order.orderType === 'thanksgiving' ? `
+      <div class="modal-field">
+        <span class="modal-field-label">Subtotal</span>
+        <span class="modal-field-value mono">$${(order.subtotal != null ? order.subtotal : (order.amount ? order.amount / 1.0975 : 0)).toFixed(2)}</span>
+      </div>
+      <div class="modal-field">
+        <span class="modal-field-label">Sales Tax (9.75%)</span>
+        <span class="modal-field-value mono" style="color:var(--gold);">$${(order.tax != null ? order.tax : (order.amount ? order.amount - (order.amount / 1.0975) : 0)).toFixed(2)}</span>
+      </div>
+      ` : ''}
       <div class="modal-field">
         <span class="modal-field-label">Payment status</span>
         <span class="modal-field-value">${(order.paymentStatus === 'succeeded' || order.paymentStatus === 'paid') ? '<span class="badge badge-paid">✓ Paid</span>' : (order.paymentStatus === 'payment_needed' || order.orderType === 'thanksgiving' ? '<span class="badge" style="background:rgba(243,196,87,.2);color:#F3C457;border:1px solid rgba(243,196,87,.45);font-weight:700;">⚠️ Payment Needed (Draft)</span>' : '<span class="badge badge-failed">' + order.paymentStatus + '</span>')}</span>

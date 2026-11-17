@@ -168,11 +168,17 @@ module.exports = async function handler(req, res) {
           const isPaid = c.metadata?.payment_status === 'paid' || Boolean(c.metadata?.payment_intent_id);
           const paymentStatus = isPaid ? 'succeeded' : 'payment_needed';
           const dashboardStatus = c.metadata?.dashboard_status || (isPaid ? 'confirmed' : 'draft');
+          const totalAmt = Number(c.metadata?.total) || 0;
+          const subtotalAmt = Number(c.metadata?.subtotal) || (totalAmt ? Math.round((totalAmt / 1.0975) * 100) / 100 : 0);
+          const taxAmt = Number(c.metadata?.tax) || (totalAmt ? Math.round((totalAmt - subtotalAmt) * 100) / 100 : 0);
           return {
             id: c.metadata?.order_id || c.id,
             stripeCustomerId: c.id,
             orderType: 'thanksgiving',
-            amount: Number(c.metadata?.total) || 0,
+            amount: totalAmt,
+            subtotal: subtotalAmt,
+            tax: taxAmt,
+            taxRate: c.metadata?.tax_rate || '9.75%',
             currency: 'USD',
             paymentStatus, // 'succeeded' if paid, 'payment_needed' if unpaid draft
             dashboardStatus, // 'confirmed' if paid, 'draft' if unpaid

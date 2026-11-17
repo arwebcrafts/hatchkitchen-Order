@@ -91,26 +91,34 @@ module.exports = async function handler(req, res) {
         );
       }
 
-      const orders = customerList.map((c) => ({
-        id: c.id,
-        orderId: c.metadata.order_id || c.id,
-        customerName: c.name || c.metadata.customer_name || 'Unknown',
-        customerPhone: c.phone || c.metadata.customer_phone || '',
-        customerEmail: c.email || c.metadata.customer_email || '',
-        preferredContact: c.metadata.preferred_contact || 'Phone',
-        pickupDay: c.metadata.pickup_day || '',
-        promoCode: c.metadata.promo_code || '',
-        comments: c.metadata.comments || '',
-        items: c.metadata.items || '',
-        total: Number(c.metadata.total) || 0,
-        itemCount: Number(c.metadata.item_count) || 0,
-        paymentStatus: c.metadata.payment_status || (c.metadata.payment_intent_id ? 'paid' : 'payment_needed'),
-        dashboardStatus: c.metadata.dashboard_status || (c.metadata.payment_intent_id ? 'confirmed' : 'draft'),
-        cardLast4: c.metadata.card_last4 || '',
-        cardBrand: c.metadata.card_brand || '',
-        paymentIntentId: c.metadata.payment_intent_id || '',
-        createdAt: c.metadata.created_at || new Date(c.created * 1000).toISOString(),
-      }));
+      const orders = customerList.map((c) => {
+        const total = Number(c.metadata.total) || 0;
+        const subtotal = Number(c.metadata.subtotal) || (total ? Math.round((total / 1.0975) * 100) / 100 : 0);
+        const tax = Number(c.metadata.tax) || (total ? Math.round((total - subtotal) * 100) / 100 : 0);
+        return {
+          id: c.id,
+          orderId: c.metadata.order_id || c.id,
+          customerName: c.name || c.metadata.customer_name || 'Unknown',
+          customerPhone: c.phone || c.metadata.customer_phone || '',
+          customerEmail: c.email || c.metadata.customer_email || '',
+          preferredContact: c.metadata.preferred_contact || 'Phone',
+          pickupDay: c.metadata.pickup_day || '',
+          promoCode: c.metadata.promo_code || '',
+          comments: c.metadata.comments || '',
+          items: c.metadata.items || '',
+          subtotal,
+          tax,
+          taxRate: c.metadata.tax_rate || '9.75%',
+          total,
+          itemCount: Number(c.metadata.item_count) || 0,
+          paymentStatus: c.metadata.payment_status || (c.metadata.payment_intent_id ? 'paid' : 'payment_needed'),
+          dashboardStatus: c.metadata.dashboard_status || (c.metadata.payment_intent_id ? 'confirmed' : 'draft'),
+          cardLast4: c.metadata.card_last4 || '',
+          cardBrand: c.metadata.card_brand || '',
+          paymentIntentId: c.metadata.payment_intent_id || '',
+          createdAt: c.metadata.created_at || new Date(c.created * 1000).toISOString(),
+        };
+      });
 
       // Sort by newest first
       orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -187,7 +195,7 @@ module.exports = async function handler(req, res) {
         else filename += '-all';
         res.setHeader('Content-Disposition', `attachment; filename="${filename}.csv"`);
 
-        const headers = ['Order ID', 'Customer Name', 'Phone', 'Email', 'Preferred Contact', 'Pickup Day', 'Total ($)', 'Items', 'Promo Code', 'Comments', 'Payment Status', 'Created At'];
+        const headers = ['Order ID', 'Customer Name', 'Phone', 'Email', 'Preferred Contact', 'Pickup Day', 'Subtotal ($)', 'Tax ($)', 'Total ($)', 'Items', 'Promo Code', 'Comments', 'Payment Status', 'Created At'];
         const csvRows = [headers.join(',')];
         exportOrders.forEach((o) => {
           csvRows.push([
@@ -197,6 +205,8 @@ module.exports = async function handler(req, res) {
             `"${o.customerEmail}"`,
             `"${o.preferredContact}"`,
             `"${o.pickupDay.replace(/"/g, '""')}"`,
+            (o.subtotal != null ? o.subtotal : (o.total ? o.total / 1.0975 : 0)).toFixed(2),
+            (o.tax != null ? o.tax : (o.total ? o.total - (o.total / 1.0975) : 0)).toFixed(2),
             o.total.toFixed(2),
             `"${o.items.replace(/"/g, '""')}"`,
             `"${o.promoCode}"`,
@@ -231,11 +241,17 @@ module.exports = async function handler(req, res) {
       customer = {},
       pickupDay = '',
       items = [],
-      total = 0,
+      subtotal: rawSubtotal,
+      tax: rawTax,
+      total: rawTotal = 0,
       itemCount = 0,
       promoCode = '',
       comments = '',
     } = body;
+
+    const total = Number(rawTotal) || 0;
+    const subtotal = Number(rawSubtotal != null ? rawSubtotal : (total ? Math.round((total / 1.0975) * 100) / 100 : 0));
+    const tax = Number(rawTax != null ? rawTax : (total ? Math.round((total - subtotal) * 100) / 100 : 0));
 
     const customerName = customer.name || 'Unknown';
     const email = customer.email || '';
@@ -272,7 +288,10 @@ module.exports = async function handler(req, res) {
             promo_code: promoCode,
             comments: (comments || '').slice(0, 450),
             items: itemSummary,
-            total: String(total),
+            subtotal: subtotal.toFixed(2),
+            tax: tax.toFixed(2),
+            tax_rate: '9.75%',
+            total: total.toFixed(2),
             item_count: String(computedItemCount),
             payment_status: body.paymentStatus || (body.paymentIntentId ? 'paid' : 'payment_needed'),
             dashboard_status: body.status || (body.paymentStatus === 'paid' ? 'confirmed' : 'draft'),
@@ -300,6 +319,9 @@ module.exports = async function handler(req, res) {
       promoCode,
       comments,
       items,
+      subtotal,
+      tax,
+      taxRate: '9.75%',
       total,
       itemCount: computedItemCount,
       paymentStatus: isPaid ? 'paid' : 'payment_needed',
@@ -447,9 +469,19 @@ async function sendCustomerEmail(data) {
         <span style="font-style:italic;color:#444;">"${esc(data.comments)}"</span>
       </div>` : ''}
 
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-top:2px solid #EEE;border-bottom:2px solid #EEE;margin-bottom:20px;">
-        <span style="font-size:16px;font-weight:700;color:#121110;">Estimated Total:</span>
-        <span style="font-size:22px;font-weight:800;color:#C8941F;font-family:monospace;">$${Number(data.total).toFixed(2)}</span>
+      <div style="background:#FBF9F1;border:1px solid #EAE2C7;border-radius:8px;padding:14px 18px;margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:14px;color:#555;">
+          <span>Order Subtotal:</span>
+          <span style="font-family:monospace;font-weight:700;color:#121110;">$${Number(data.subtotal != null ? data.subtotal : (data.total / 1.0975)).toFixed(2)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:14px;color:#555;">
+          <span>Sales Tax (9.75%):</span>
+          <span style="font-family:monospace;font-weight:700;color:#C8941F;">$${Number(data.tax != null ? data.tax : (data.total - (data.total / 1.0975))).toFixed(2)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0 2px;border-top:1px dashed #EAE2C7;margin-top:6px;">
+          <span style="font-size:16px;font-weight:700;color:#121110;">${data.paymentStatus === 'paid' ? 'Total Paid (incl. 9.75% tax):' : 'Total Due (incl. 9.75% tax):'}</span>
+          <span style="font-size:22px;font-weight:800;color:#C8941F;font-family:monospace;">$${Number(data.total).toFixed(2)}</span>
+        </div>
       </div>
 
       <div style="background:#F5F5F5;border-radius:8px;padding:14px;font-size:13px;line-height:1.55;color:#555;margin-bottom:20px;">
@@ -480,7 +512,9 @@ async function sendCustomerEmail(data) {
       `Order Reference: ${data.orderId}`,
       `Storefront Pickup: ${data.pickupDay}`,
       `Pickup Location:  8947 W. Pico Blvd, Los Angeles, CA 90035`,
-      `Estimated Total:  $${Number(data.total).toFixed(2)}`,
+      `Order Subtotal:   $${Number(data.subtotal != null ? data.subtotal : (data.total / 1.0975)).toFixed(2)}`,
+      `Sales Tax (9.75%): $${Number(data.tax != null ? data.tax : (data.total - (data.total / 1.0975))).toFixed(2)}`,
+      `Total ${data.paymentStatus === 'paid' ? 'Paid' : 'Due'}:       $${Number(data.total).toFixed(2)}`,
       ``,
       `ITEMS:`,
       itemsText,
@@ -532,6 +566,8 @@ async function sendOwnerEmail(data) {
       `Pickup Day:      ${data.pickupDay}`,
       `Pickup Location: Storefront (8947 W. Pico Blvd, Los Angeles)`,
       `Promo Code:      ${data.promoCode || 'None'}`,
+      `Order Subtotal:  $${Number(data.subtotal != null ? data.subtotal : (data.total / 1.0975)).toFixed(2)}`,
+      `Sales Tax (9.75%): $${Number(data.tax != null ? data.tax : (data.total - (data.total / 1.0975))).toFixed(2)}`,
       ``,
       `ITEMS REQUESTED (${data.itemCount} items, Total: $${Number(data.total).toFixed(2)}):`,
       itemsText,

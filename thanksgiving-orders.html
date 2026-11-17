@@ -1339,6 +1339,23 @@
           <p class="tg-section-subtitle">Payment is required before checkout. Pay securely to confirm your Thanksgiving order.</p>
         </div>
 
+        <!-- Order Summary & 9.75% Sales Tax Breakdown Card -->
+        <div class="tg-tax-summary-card" style="background:#FFF9EB; border:1.5px solid rgba(200,148,31,.35); border-radius:12px; padding:16px 20px; margin-top:16px; margin-bottom:18px;">
+          <div style="font-family:var(--f-mono); font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px;">Order Pricing &amp; Taxes</div>
+          <div style="display:flex; justify-content:space-between; font-size:.92rem; color:var(--ink-soft); margin-bottom:6px;">
+            <span>Order Subtotal</span>
+            <strong id="summary-subtotal-amt" style="font-family:var(--f-mono); color:var(--ink);">$0.00</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:.92rem; color:var(--ink-soft); margin-bottom:8px;">
+            <span>Sales Tax (9.75%)</span>
+            <strong id="summary-tax-amt" style="font-family:var(--f-mono); color:var(--gold-dark);">$0.00</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline; padding-top:10px; border-top:1px dashed rgba(200,148,31,.35);">
+            <span style="font-size:1rem; font-weight:700; color:var(--ink);">Total to Pay Now</span>
+            <strong id="summary-total-amt" style="font-family:var(--f-display); font-size:1.35rem; font-weight:800; color:var(--ink);">$0.00</strong>
+          </div>
+        </div>
+
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;">
           <div class="tg-field" style="grid-column: 1 / -1;" id="field-card-name">
             <label for="card-name">Name on card <span class="req">*</span></label>
@@ -1383,7 +1400,12 @@
       <!-- Sticky Bottom Live Total & Submit Bar -->
       <div class="tg-bottom-bar">
         <div class="tg-total-group">
-          <span class="tg-total-label">Total to Pay Now</span>
+          <div class="tg-total-subbreakdown" style="display:flex; gap:10px; font-family:var(--f-mono); font-size:.74rem; color:rgba(245,241,227,.6); margin-bottom:3px; flex-wrap:wrap;">
+            <span>Subtotal: <strong id="live-subtotal-amt" style="color:var(--cream);">$0.00</strong></span>
+            <span>·</span>
+            <span>Tax (9.75%): <strong id="live-tax-amt" style="color:var(--gold);">$0.00</strong></span>
+          </div>
+          <span class="tg-total-label">Total to Pay Now (incl. 9.75% tax)</span>
           <span class="tg-total-amt" id="live-total-amt">$0.00</span>
         </div>
 
@@ -1455,8 +1477,17 @@
         <span class="tg-receipt-val" id="dash-receipt-comments" style="font-weight:500; font-style:italic;">—</span>
       </div>
 
+      <div class="tg-receipt-row">
+        <span class="tg-receipt-label">Order Subtotal</span>
+        <span class="tg-receipt-val" id="dash-receipt-subtotal" style="font-family:var(--f-mono);">$0.00</span>
+      </div>
+      <div class="tg-receipt-row">
+        <span class="tg-receipt-label">Sales Tax (9.75%)</span>
+        <span class="tg-receipt-val" id="dash-receipt-tax" style="font-family:var(--f-mono); color:var(--gold-dark);">$0.00</span>
+      </div>
+
       <div class="tg-receipt-total">
-        <span class="label">Estimated Total</span>
+        <span class="label">Total Paid (incl. 9.75% tax)</span>
         <span class="val" id="dash-receipt-total">$0.00</span>
       </div>
     </div>
@@ -1768,6 +1799,15 @@ function handleContactMethodChange(radio) {
   });
 }
 
+const SALES_TAX_RATE = 0.0975; // 9.75% Los Angeles / California Sales Tax
+
+function calculateTotals(subtotal) {
+  const safeSubtotal = Number(subtotal) || 0;
+  const tax = Math.round(safeSubtotal * SALES_TAX_RATE * 100) / 100;
+  const total = Math.round((safeSubtotal + tax) * 100) / 100;
+  return { subtotal: safeSubtotal, tax, total };
+}
+
 function updateFormCalculations() {
   const selectedFamilyEntree = document.querySelector('input[name="family_entree"]:checked');
   let familyPrice = 0;
@@ -1803,9 +1843,28 @@ function updateFormCalculations() {
     }
   }
 
-  const grandTotal = familyPrice + indivTotal + proteinTotal + sidesTotal;
+  const subtotal = familyPrice + indivTotal + proteinTotal + sidesTotal;
+  const { tax, total } = calculateTotals(subtotal);
+
+  // Update Sticky Bottom Bar
+  const subtotalEl = document.getElementById('live-subtotal-amt');
+  if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+
+  const taxEl = document.getElementById('live-tax-amt');
+  if (taxEl) taxEl.textContent = `$${tax.toFixed(2)}`;
+
   const totalAmtEl = document.getElementById('live-total-amt');
-  if (totalAmtEl) totalAmtEl.textContent = `$${grandTotal.toFixed(2)}`;
+  if (totalAmtEl) totalAmtEl.textContent = `$${total.toFixed(2)}`;
+
+  // Update Step 5 Payment Section Card
+  const summarySubtotalEl = document.getElementById('summary-subtotal-amt');
+  if (summarySubtotalEl) summarySubtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+
+  const summaryTaxEl = document.getElementById('summary-tax-amt');
+  if (summaryTaxEl) summaryTaxEl.textContent = `$${tax.toFixed(2)}`;
+
+  const summaryTotalEl = document.getElementById('summary-total-amt');
+  if (summaryTotalEl) summaryTotalEl.textContent = `$${total.toFixed(2)}`;
 }
 
 // Compute items list for submission payload
@@ -1989,13 +2048,15 @@ async function handleFormSubmit(e) {
   const promo = document.getElementById('cust-promo').value.trim();
   const comments = document.getElementById('cust-comments').value.trim();
 
-  let total = 0;
-  items.forEach(i => total += i.price);
+  let subtotal = 0;
+  items.forEach(i => subtotal += i.price);
 
-  if (total <= 0) {
+  if (subtotal <= 0) {
     alert('Please choose items to pre-order.');
     return;
   }
+
+  const { tax, total } = calculateTotals(subtotal);
 
   const orderId = 'ORD-TG-' + Math.random().toString(36).substr(2, 6).toUpperCase();
   const dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -2011,6 +2072,9 @@ async function handleFormSubmit(e) {
     },
     pickupDay,
     items,
+    subtotal,
+    tax,
+    taxRate: '9.75%',
     total,
     promoCode: promo,
     comments,
@@ -2045,6 +2109,9 @@ async function handleFormSubmit(e) {
           item_count: items.length,
           comments,
           promo_code: promo,
+          subtotal: subtotal.toFixed(2),
+          tax: tax.toFixed(2),
+          tax_rate: '9.75%',
           total: total.toFixed(2),
         },
       }),
@@ -2163,7 +2230,17 @@ function renderDashboard(data) {
   document.getElementById('dash-receipt-name').textContent = data.customer.name;
   document.getElementById('dash-receipt-contact').textContent = `${data.customer.phone} ${data.customer.email ? '· ' + data.customer.email : ''} (${data.customer.preferredContact})`;
   document.getElementById('dash-receipt-pickup').textContent = data.pickupDay;
-  document.getElementById('dash-receipt-total').textContent = `$${Number(data.total).toFixed(2)}`;
+
+  const orderTotal = Number(data.total || 0);
+  const orderSubtotal = Number(data.subtotal != null ? data.subtotal : (orderTotal ? Math.round((orderTotal / 1.0975) * 100) / 100 : 0));
+  const orderTax = Number(data.tax != null ? data.tax : (orderTotal ? Math.round((orderTotal - orderSubtotal) * 100) / 100 : 0));
+
+  const subtotalEl = document.getElementById('dash-receipt-subtotal');
+  if (subtotalEl) subtotalEl.textContent = `$${orderSubtotal.toFixed(2)}`;
+  const taxEl = document.getElementById('dash-receipt-tax');
+  if (taxEl) taxEl.textContent = `$${orderTax.toFixed(2)}`;
+  const totalEl = document.getElementById('dash-receipt-total');
+  if (totalEl) totalEl.textContent = `$${orderTotal.toFixed(2)}`;
 
   if (data.promoCode) {
     document.getElementById('dash-promo-row').style.display = 'flex';
