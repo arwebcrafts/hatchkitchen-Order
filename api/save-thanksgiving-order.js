@@ -153,13 +153,43 @@ module.exports = async function handler(req, res) {
         }
       }
 
-      // Handle CSV export
+      // Handle CSV export (with date-range filtering support)
       if (req.query.format === 'csv') {
+        const fromDate = req.query.from || req.query.dateFrom;
+        const toDate = req.query.to || req.query.dateTo;
+        let exportOrders = orders;
+
+        if (fromDate) {
+          const fromTime = new Date(fromDate + 'T00:00:00').getTime();
+          if (!isNaN(fromTime)) {
+            exportOrders = exportOrders.filter((o) => {
+              const orderTime = new Date(o.createdAt).getTime();
+              return !isNaN(orderTime) && orderTime >= fromTime;
+            });
+          }
+        }
+
+        if (toDate) {
+          const toTime = new Date(toDate + 'T23:59:59.999').getTime();
+          if (!isNaN(toTime)) {
+            exportOrders = exportOrders.filter((o) => {
+              const orderTime = new Date(o.createdAt).getTime();
+              return !isNaN(orderTime) && orderTime <= toTime;
+            });
+          }
+        }
+
         res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-        res.setHeader('Content-Disposition', 'attachment; filename="hatch-thanksgiving-orders.csv"');
-        const headers = ['Order ID', 'Customer Name', 'Phone', 'Email', 'Preferred Contact', 'Pickup Day', 'Total ($)', 'Items', 'Promo Code', 'Comments', 'Created At'];
+        let filename = 'hatch-thanksgiving-orders';
+        if (fromDate && toDate) filename += `-${fromDate}-to-${toDate}`;
+        else if (fromDate) filename += `-from-${fromDate}`;
+        else if (toDate) filename += `-to-${toDate}`;
+        else filename += '-all';
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}.csv"`);
+
+        const headers = ['Order ID', 'Customer Name', 'Phone', 'Email', 'Preferred Contact', 'Pickup Day', 'Total ($)', 'Items', 'Promo Code', 'Comments', 'Payment Status', 'Created At'];
         const csvRows = [headers.join(',')];
-        orders.forEach((o) => {
+        exportOrders.forEach((o) => {
           csvRows.push([
             `"${o.orderId}"`,
             `"${o.customerName.replace(/"/g, '""')}"`,
@@ -171,6 +201,7 @@ module.exports = async function handler(req, res) {
             `"${o.items.replace(/"/g, '""')}"`,
             `"${o.promoCode}"`,
             `"${o.comments.replace(/"/g, '""')}"`,
+            `"${o.paymentStatus || 'confirmed'}"`,
             `"${o.createdAt}"`,
           ].join(','));
         });

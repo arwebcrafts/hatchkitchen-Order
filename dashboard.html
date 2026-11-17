@@ -1128,6 +1128,32 @@ input, select, textarea { font: inherit; }
 
     <!-- ============ ORDERS TAB ============ -->
     <div id="orders-tab">
+      <!-- Thanksgiving Custom Date-Range Export Bar (Visible only on Thanksgiving Tab) -->
+      <div class="tg-export-bar" id="tg-export-bar" style="display:none; margin-bottom:14px; background:rgba(243,196,87,.07); border:1px solid rgba(243,196,87,.22); border-radius:var(--radius-md); padding:12px 18px; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:1.35rem; line-height:1;">🦃</span>
+          <div>
+            <div style="font-family:var(--f-display); font-weight:700; font-size:.95rem; color:var(--cream); letter-spacing:.01em;">
+              Thanksgiving Sales Date-Range Export
+            </div>
+            <div style="font-size:.78rem; color:rgba(245,241,227,.55);" id="tg-range-status-text">
+              Showing all Thanksgiving dates
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <label for="tg-date-from" style="font-size:.75rem; font-family:var(--f-mono); color:rgba(245,241,227,.6); font-weight:600;">FROM:</label>
+          <input type="date" class="filter-date" id="tg-date-from" onchange="syncDateFilters('from', this.value)" style="padding:6px 10px; font-size:.78rem;">
+          <label for="tg-date-to" style="font-size:.75rem; font-family:var(--f-mono); color:rgba(245,241,227,.6); font-weight:600;">TO:</label>
+          <input type="date" class="filter-date" id="tg-date-to" onchange="syncDateFilters('to', this.value)" style="padding:6px 10px; font-size:.78rem;">
+          <button type="button" class="filter-btn" onclick="setDatePreset('11/1-11/15')" style="padding:6px 12px; font-size:.72rem;" title="Select Nov 1 to Nov 15">Nov 1–15</button>
+          <button type="button" class="filter-btn" onclick="setDatePreset('all')" style="padding:6px 12px; font-size:.72rem;" title="Clear date filter">All Dates</button>
+          <button type="button" class="filter-btn filter-btn-export" onclick="exportCSV()" id="tg-export-btn" style="padding:7px 16px; font-size:.78rem; font-weight:700;" title="Export filtered Thanksgiving orders as CSV">
+            ↓ Export Selected Dates (<span id="tg-export-count">0</span>)
+          </button>
+        </div>
+      </div>
+
       <!-- Filters -->
       <div class="filters-bar">
         <div class="filter-search">
@@ -1557,13 +1583,13 @@ function applyFilters() {
       if (status === 'failed' && o.paymentStatus === 'succeeded') return false;
     }
 
-    // Date range
+    // Date range (inclusive local day bounds)
     if (dateFrom) {
-      const from = new Date(dateFrom).getTime() / 1000;
+      const from = new Date(dateFrom + 'T00:00:00').getTime() / 1000;
       if (o.created < from) return false;
     }
     if (dateTo) {
-      const to = new Date(dateTo).getTime() / 1000 + 86399;
+      const to = new Date(dateTo + 'T23:59:59').getTime() / 1000;
       if (o.created > to) return false;
     }
 
@@ -1583,6 +1609,7 @@ function applyFilters() {
 
   renderOrdersTable();
   updateTabCounts();
+  updateTgExportBanner();
 }
 
 function sortBy(field) {
@@ -1797,6 +1824,7 @@ function switchTab(tab) {
     applyFilters();
     clearNotifBadge();
   }
+  updateTgExportBanner();
 }
 
 /* ================================================================
@@ -2225,11 +2253,153 @@ function escapeCsvValue(val) {
   return str;
 }
 
-async function exportCSV() {
+function setDatePreset(preset) {
+  const fromEl = document.getElementById('tg-date-from');
+  const toEl = document.getElementById('tg-date-to');
+  const mainFrom = document.getElementById('date-from');
+  const mainTo = document.getElementById('date-to');
+
+  if (preset === '11/1-11/15') {
+    const yr = new Date().getFullYear();
+    const fVal = `${yr}-11-01`;
+    const tVal = `${yr}-11-15`;
+    if (fromEl) fromEl.value = fVal;
+    if (toEl) toEl.value = tVal;
+    if (mainFrom) mainFrom.value = fVal;
+    if (mainTo) mainTo.value = tVal;
+  } else if (preset === 'all') {
+    if (fromEl) fromEl.value = '';
+    if (toEl) toEl.value = '';
+    if (mainFrom) mainFrom.value = '';
+    if (mainTo) mainTo.value = '';
+  }
+  applyFilters();
+}
+
+function syncDateFilters(type, val) {
+  if (type === 'from') {
+    const mainFrom = document.getElementById('date-from');
+    if (mainFrom) mainFrom.value = val;
+    const tgFrom = document.getElementById('tg-date-from');
+    if (tgFrom && tgFrom.value !== val) tgFrom.value = val;
+  } else if (type === 'to') {
+    const mainTo = document.getElementById('date-to');
+    if (mainTo) mainTo.value = val;
+    const tgTo = document.getElementById('tg-date-to');
+    if (tgTo && tgTo.value !== val) tgTo.value = val;
+  }
+  applyFilters();
+}
+
+function updateTgExportBanner() {
+  const banner = document.getElementById('tg-export-bar');
+  if (!banner) return;
+
   if (currentTab === 'thanksgiving') {
-    const pw = 'HatchAdmin2026';
-    window.location.href = `/api/save-thanksgiving-order?pw=${encodeURIComponent(pw)}&format=csv`;
-    showToast('Exporting Thanksgiving orders CSV...', 'info');
+    banner.style.display = 'flex';
+    const mainFrom = document.getElementById('date-from')?.value || '';
+    const mainTo = document.getElementById('date-to')?.value || '';
+    const tgFrom = document.getElementById('tg-date-from');
+    const tgTo = document.getElementById('tg-date-to');
+    if (tgFrom && tgFrom.value !== mainFrom) tgFrom.value = mainFrom;
+    if (tgTo && tgTo.value !== mainTo) tgTo.value = mainTo;
+
+    const tgCount = filteredOrders.filter(o => o.orderType === 'thanksgiving').length;
+    const countEl = document.getElementById('tg-export-count');
+    if (countEl) countEl.textContent = tgCount;
+
+    const labelEl = document.getElementById('tg-range-status-text');
+    if (labelEl) {
+      if (mainFrom && mainTo) {
+        labelEl.textContent = `Showing orders from ${mainFrom} to ${mainTo} (${tgCount} order${tgCount !== 1 ? 's' : ''})`;
+      } else if (mainFrom) {
+        labelEl.textContent = `Showing orders from ${mainFrom} onwards (${tgCount} order${tgCount !== 1 ? 's' : ''})`;
+      } else if (mainTo) {
+        labelEl.textContent = `Showing orders up to ${mainTo} (${tgCount} order${tgCount !== 1 ? 's' : ''})`;
+      } else {
+        labelEl.textContent = `Showing all Thanksgiving dates (${tgCount} order${tgCount !== 1 ? 's' : ''})`;
+      }
+    }
+  } else {
+    banner.style.display = 'none';
+  }
+}
+
+function exportThanksgivingCSV(tgOrders, dateFrom, dateTo) {
+  if (!tgOrders || !tgOrders.length) {
+    showToast('No Thanksgiving orders match the selected date range', 'error');
+    return;
+  }
+
+  const headers = [
+    'Order ID',
+    'Date',
+    'Customer Name',
+    'Phone',
+    'Email',
+    'Preferred Contact',
+    'Pickup Day',
+    'Total ($)',
+    'Items',
+    'Item Count',
+    'Promo Code',
+    'Comments',
+    'Payment Status',
+    'Order Status'
+  ];
+
+  const rows = tgOrders.map(o => {
+    const dateStr = o.created ? new Date(o.created * 1000).toLocaleString('en-US') : '';
+    return [
+      escapeCsvValue(o.id),
+      escapeCsvValue(dateStr),
+      escapeCsvValue(o.customerName || o.residentName),
+      escapeCsvValue(o.customerPhone),
+      escapeCsvValue(o.customerEmail),
+      escapeCsvValue(o.preferredContact || 'Phone'),
+      escapeCsvValue(o.pickupDay || o.week),
+      escapeCsvValue(Number(o.amount || 0).toFixed(2)),
+      escapeCsvValue(o.items),
+      escapeCsvValue(o.itemCount || 1),
+      escapeCsvValue(o.promoCode),
+      escapeCsvValue(o.comments || o.dashboardNotes),
+      escapeCsvValue(o.paymentStatus === 'succeeded' ? 'Paid' : (o.paymentStatus || 'Payment Needed')),
+      escapeCsvValue(o.dashboardStatus || 'confirmed'),
+    ].join(',');
+  });
+
+  const csv = [headers.join(','), ...rows].join('\r\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+
+  let filenameRange = 'all';
+  if (dateFrom && dateTo) filenameRange = `${dateFrom}_to_${dateTo}`;
+  else if (dateFrom) filenameRange = `from_${dateFrom}`;
+  else if (dateTo) filenameRange = `to_${dateTo}`;
+
+  a.download = `hatch-thanksgiving-orders-${filenameRange}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  const rangeMsg = dateFrom || dateTo ? ` for ${dateFrom || 'start'} to ${dateTo || 'now'}` : '';
+  showToast(`Exported ${tgOrders.length} Thanksgiving order${tgOrders.length !== 1 ? 's' : ''}${rangeMsg} (CSV)`, 'success');
+}
+
+async function exportCSV() {
+  const dateFrom = document.getElementById('date-from')?.value || document.getElementById('tg-date-from')?.value || '';
+  const dateTo = document.getElementById('date-to')?.value || document.getElementById('tg-date-to')?.value || '';
+
+  if (currentTab === 'thanksgiving') {
+    const tgOrders = filteredOrders.filter(o => o.orderType === 'thanksgiving');
+    if (!tgOrders.length) {
+      showToast('No Thanksgiving orders match the selected date range', 'error');
+      return;
+    }
+    exportThanksgivingCSV(tgOrders, dateFrom, dateTo);
     return;
   }
 
