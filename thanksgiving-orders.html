@@ -251,6 +251,48 @@
   margin-top: 2px;
 }
 
+/* Dietary Badges & Tags */
+.diet-tag {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--f-mono);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+  line-height: 1.2;
+}
+.diet-tag.vegan-gf {
+  background: rgba(79, 107, 61, 0.14);
+  color: #2E7D32;
+  border: 1px solid rgba(79, 107, 61, 0.32);
+}
+.diet-tag.gf {
+  background: rgba(200, 148, 31, 0.14);
+  color: #8A6006;
+  border: 1px solid rgba(200, 148, 31, 0.35);
+}
+.diet-tag.vegan {
+  background: rgba(79, 107, 61, 0.14);
+  color: #2E7D32;
+  border: 1px solid rgba(79, 107, 61, 0.32);
+}
+.tg-option-row.is-selected .diet-tag.vegan-gf,
+.tg-option-row.is-selected .diet-tag.vegan {
+  background: rgba(134, 239, 172, 0.22);
+  color: #86EFAC;
+  border-color: rgba(134, 239, 172, 0.45);
+}
+.tg-option-row.is-selected .diet-tag.gf {
+  background: rgba(243, 196, 87, 0.22);
+  color: var(--gold);
+  border-color: rgba(243, 196, 87, 0.45);
+}
+
 /* Stepper (Plus / Minus) for quantities */
 .tg-item-row {
   display: flex;
@@ -961,7 +1003,7 @@
             <span>FAMILY PACKAGE (FEEDS 10-12) - $499</span>
             <span class="tg-card-price">$499 each</span>
           </div>
-          <p class="tg-card-desc">Includes choice of 1 whole rotisserie turkey or 4 lb braised brisket. Includes choice of 3 sides, 2 fresh-baked sourdough loaves, turkey gravy and cranberry sauce. Please choose your entree choice and quantity below:</p>
+          <p class="tg-card-desc">Includes choice of 1 whole rotisserie turkey or 4 lb braised brisket. Includes choice of 3 sides, 2 fresh-baked organic sourdough loaves (Vegan), turkey gravy (GF) and cranberry sauce (Vegan &amp; GF). Please choose your entree choice and quantity below:</p>
         </div>
 
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; background:#FFF; padding:12px 16px; border:1px solid var(--line-soft); border-radius:var(--radius-sm);">
@@ -1030,46 +1072,124 @@
 
         <div class="tg-option-group" id="family-sides-list">
           <label class="tg-option-row">
-            <input type="checkbox" name="family_side" value="Sourdough stuffing 9x13 pan" onchange="handleFamilySideChange(this)">
-            <img src="images/menu/thanksgiving-sourdough-stuffing.jpg" alt="Sourdough stuffing" class="tg-row-img" loading="lazy">
-            <div class="tg-option-content"><div class="tg-option-title">Sourdough stuffing 9x13 pan</div></div>
+            <input type="checkbox" name="family_side" value="Organic sourdough stuffing 9x13 pan" onchange="handleFamilySideChange(this)">
+            <img src="images/menu/thanksgiving-sourdough-stuffing.jpg" alt="Organic sourdough stuffing" class="tg-row-img" loading="lazy">
+            <div class="tg-option-content"><div class="tg-option-title">Organic sourdough stuffing 9x13 pan</div></div>
           </label>
           <label class="tg-option-row">
             <input type="checkbox" name="family_side" value="Creamy mashed potato 9x13 pan" onchange="handleFamilySideChange(this)">
             <img src="images/menu/thanksgiving-creamy-mashed-potatoes.jpg" alt="Creamy mashed potato" class="tg-row-img" loading="lazy">
-            <div class="tg-option-content"><div class="tg-option-title">Creamy mashed potato 9x13 pan</div></div>
+            <div class="tg-option-content"><div class="tg-option-title">Creamy mashed potato 9x13 pan <span class="diet-tag vegan-gf">Vegan &amp; GF</span></div></div>
           </label>
           <label class="tg-option-row">
             <input type="checkbox" name="family_side" value="Green bean and mushroom casserole 9x13 pan" onchange="handleFamilySideChange(this)">
             <img src="images/menu/thanksgiving-green-bean-casserole.jpg" alt="Green bean and mushroom casserole" class="tg-row-img" loading="lazy">
-            <div class="tg-option-content"><div class="tg-option-title">Green bean and mushroom casserole 9x13 pan</div></div>
+            <div class="tg-option-content"><div class="tg-option-title">Green bean and mushroom casserole 9x13 pan <span class="diet-tag vegan-gf">Vegan &amp; GF</span></div></div>
           </label>
           <label class="tg-option-row">
             <input type="checkbox" name="family_side" value="Classic cornbread 9x13 pan" onchange="handleFamilySideChange(this)">
             <img src="images/menu/thanksgiving-classic-cornbread.jpg" alt="Classic cornbread" class="tg-row-img" loading="lazy">
-            <div class="tg-option-content"><div class="tg-option-title">Classic cornbread 9x13 pan</div></div>
+            <div class="tg-option-content"><div class="tg-option-title">Classic cornbread 9x13 pan <span class="diet-tag gf">GF</span></div></div>
           </label>
           <label class="tg-option-row">
             <input type="checkbox" name="family_side" value="&quot;Cheesy&quot; jalapeno cornbread 9x13" onchange="handleFamilySideChange(this)">
             <img src="images/menu/thanksgiving-cheesy-jalapeno-cornbread.jpg" alt="Cheesy jalapeno cornbread" class="tg-row-img" loading="lazy">
-            <div class="tg-option-content"><div class="tg-option-title">"Cheesy" jalapeno cornbread 9x13</div></div>
+            <div class="tg-option-content"><div class="tg-option-title">"Cheesy" jalapeno cornbread 9x13 <span class="diet-tag gf">GF</span></div></div>
           </label>
           <label class="tg-option-row">
             <input type="checkbox" name="family_side" value="Winter kale salad - large bowl" onchange="handleFamilySideChange(this)">
             <img src="images/menu/thanksgiving-tuscan-kale-salad.jpg" alt="Winter kale salad" class="tg-row-img" loading="lazy">
-            <div class="tg-option-content"><div class="tg-option-title">Winter kale salad - large bowl</div></div>
+            <div class="tg-option-content"><div class="tg-option-title">Winter kale salad - large bowl <span class="diet-tag vegan-gf">Vegan &amp; GF</span></div></div>
           </label>
           <label class="tg-option-row">
             <input type="checkbox" name="family_side" value="Sweet potato with marshmallows - 9x13 pan" onchange="handleFamilySideChange(this)">
             <img src="images/menu/thanksgiving-sweet-potato-marshmallows.jpg" alt="Sweet potato with marshmallows" class="tg-row-img" loading="lazy">
-            <div class="tg-option-content"><div class="tg-option-title">Sweet potato with marshmallows - 9x13 pan</div></div>
+            <div class="tg-option-content"><div class="tg-option-title">Sweet potato with marshmallows - 9x13 pan <span class="diet-tag vegan-gf">Vegan &amp; GF</span></div></div>
           </label>
           <label class="tg-option-row">
             <input type="checkbox" name="family_side" value="Steam roasted butternut squash - 9x13 pan" onchange="handleFamilySideChange(this)">
             <img src="images/menu/thanksgiving-roasted-butternut-squash.jpg" alt="Steam roasted butternut squash" class="tg-row-img" loading="lazy">
-            <div class="tg-option-content"><div class="tg-option-title">Steam roasted butternut squash - 9x13 pan</div></div>
+            <div class="tg-option-content"><div class="tg-option-title">Steam roasted butternut squash - 9x13 pan <span class="diet-tag vegan-gf">Vegan &amp; GF</span></div></div>
           </label>
         </div>
+      </div>
+
+
+      <!-- ========================================================
+           ORGANIC SOURDOUGH PUMPKIN SECTION: Swaps & Add-ons
+           ======================================================== -->
+      <div class="tg-card" id="q-pumpkin-sourdough">
+        <div class="tg-card-head">
+          <span class="tg-q-pill" style="background:rgba(200,148,31,.18); color:var(--gold-dark); border-color:rgba(200,148,31,.35);">🎃 Holiday Centerpiece</span>
+          <div class="tg-card-title">
+            <span>Organic Sourdough Pumpkin</span>
+          </div>
+          <p class="tg-card-desc">Upgrade your included Family Package sourdough loaves to our festive artisan pumpkin-shaped sourdough, or add fresh organic sourdough pumpkin loaves to any order!</p>
+        </div>
+
+        <!-- Featured Product Showcase Banner -->
+        <div style="display:flex; gap:16px; align-items:center; background:#FFF; border:1px solid var(--line-soft); border-radius:12px; padding:14px; margin-bottom:16px; flex-wrap:wrap;">
+          <img src="images/menu/image_540367.jpg" alt="Artisan Organic Sourdough Pumpkin Loaf" style="width:110px; height:90px; object-fit:cover; border-radius:8px; border:1px solid var(--line-soft); flex-shrink:0;">
+          <div style="flex:1; min-width:200px;">
+            <div style="font-family:var(--f-display); font-weight:700; font-size:1.05rem; color:var(--ink);">Artisan Organic Sourdough Pumpkin <span class="diet-tag vegan">Vegan</span></div>
+            <div style="font-size:.84rem; color:var(--ink-soft); margin-top:3px; line-height:1.45;">Handcrafted organic sourdough shaped and scored like a harvest pumpkin with a cinnamon stick stem. Baked fresh for Thanksgiving pickup.</div>
+          </div>
+        </div>
+
+        <!-- Sourdough Swap Options -->
+        <div style="margin-bottom:16px;">
+          <div style="font-family:var(--f-mono); font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:8px;">
+            Family Package Sourdough Loaf Swap Options
+          </div>
+          <div class="tg-option-group" id="pumpkin-swap-group">
+            <label class="tg-option-row is-selected">
+              <input type="radio" name="pumpkin_swap" value="none" data-cost="0" checked onchange="handlePumpkinSwapChange(this)">
+              <div class="tg-option-content">
+                <div class="tg-option-title">Keep standard organic sourdough loaves <span class="diet-tag vegan">Vegan</span></div>
+                <div class="tg-option-sub">2 standard organic sourdough loaves included with Family Package ($0)</div>
+              </div>
+            </label>
+
+            <label class="tg-option-row">
+              <input type="radio" name="pumpkin_swap" value="swap-1" data-cost="5" onchange="handlePumpkinSwapChange(this)">
+              <div class="tg-option-content">
+                <div class="tg-option-title">Swap one organic sourdough loaf to an organic sourdough PUMPKIN <span style="color:var(--gold-dark); font-weight:700;">+$5</span> <span class="diet-tag vegan">Vegan</span></div>
+                <div class="tg-option-sub">Swap 1 of your included loaves to an artisan pumpkin sourdough (+$5.00)</div>
+              </div>
+            </label>
+
+            <label class="tg-option-row">
+              <input type="radio" name="pumpkin_swap" value="swap-2" data-cost="10" onchange="handlePumpkinSwapChange(this)">
+              <div class="tg-option-content">
+                <div class="tg-option-title">Swap both loaves for organic sourdough PUMPKIN <span style="color:var(--gold-dark); font-weight:700;">+$10</span> <span class="diet-tag vegan">Vegan</span></div>
+                <div class="tg-option-sub">Swap both of your included loaves to artisan pumpkin sourdough (+$10.00)</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Add-on Loaf Option -->
+        <div style="border-top:1px dashed var(--line-soft); padding-top:14px;">
+          <div style="font-family:var(--f-mono); font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:8px;">
+            Add Whole Pumpkin Sourdough Loaves to Order
+          </div>
+          <div class="tg-item-row" style="background:#FFF; border:1px solid var(--line-soft); border-radius:10px; padding:12px 16px;">
+            <img src="images/menu/image_540367.jpg" alt="Organic Sourdough Pumpkin Loaf" class="tg-item-img" loading="lazy">
+            <div class="tg-item-info">
+              <div class="tg-item-name">Add organic sourdough PUMPKIN to your order - $20 <span class="diet-tag vegan">Vegan</span></div>
+              <div class="tg-item-desc">Feeds 10–12 · Fresh-baked artisan organic sourdough pumpkin centerpiece loaf</div>
+            </div>
+            <div class="tg-item-action">
+              <div class="tg-item-price">$20</div>
+              <div class="tg-stepper">
+                <button type="button" class="tg-stepper-btn" onclick="adjustPumpkinAddonQty(-1)">&minus;</button>
+                <span class="tg-stepper-val" id="pumpkin-addon-display">0</span>
+                <button type="button" class="tg-stepper-btn" onclick="adjustPumpkinAddonQty(1)">&plus;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
 
@@ -1163,7 +1283,7 @@
             <span>Individual Thanksgiving Meal (feeds 1-2) - $50</span>
             <span class="tg-card-price">$50 each</span>
           </div>
-          <p class="tg-card-desc">Includes choice of white or dark meat turkey or braised brisket, choice of 2 sides, 4 oz house gravy + 4 oz house cranberry sauce. Please choose your entree choice and quantity below:</p>
+          <p class="tg-card-desc">Includes choice of white or dark meat turkey or braised brisket, choice of 2 sides, 4 oz house gravy (GF) + 4 oz house cranberry sauce (Vegan &amp; GF). Please choose your entree choice and quantity below:</p>
         </div>
 
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; background:#FFF; padding:12px 16px; border:1px solid var(--line-soft); border-radius:var(--radius-sm);">
@@ -1224,14 +1344,14 @@
         </div>
 
         <div class="tg-option-group" id="indiv-sides-list">
-          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Sourdough stuffing" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-sourdough-stuffing.jpg" alt="Sourdough stuffing" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">Sourdough stuffing</div></div></label>
-          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Creamy mashed potato" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-creamy-mashed-potatoes.jpg" alt="Creamy mashed potato" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">Creamy mashed potato</div></div></label>
-          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Green bean and mushroom casserole" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-green-bean-casserole.jpg" alt="Green bean and mushroom casserole" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">Green bean and mushroom casserole</div></div></label>
-          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Classic cornbread" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-classic-cornbread.jpg" alt="Classic cornbread" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">Classic cornbread</div></div></label>
-          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="&quot;Cheesy&quot; jalapeno cornbread" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-cheesy-jalapeno-cornbread.jpg" alt="Cheesy jalapeno cornbread" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">"Cheesy" jalapeno cornbread</div></div></label>
-          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Winter kale salad" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-tuscan-kale-salad.jpg" alt="Winter kale salad" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">Winter kale salad</div></div></label>
-          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Sweet potato with marshmallows" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-sweet-potato-marshmallows.jpg" alt="Sweet potato with marshmallows" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">Sweet potato with marshmallows</div></div></label>
-          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Steam roasted butternut squash" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-roasted-butternut-squash.jpg" alt="Steam roasted butternut squash" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">Steam roasted butternut squash</div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Organic sourdough stuffing" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-sourdough-stuffing.jpg" alt="Organic sourdough stuffing" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">Organic sourdough stuffing</div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Creamy mashed potato" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-creamy-mashed-potatoes.jpg" alt="Creamy mashed potato" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">Creamy mashed potato <span class="diet-tag vegan-gf">Vegan &amp; GF</span></div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Green bean and mushroom casserole" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-green-bean-casserole.jpg" alt="Green bean and mushroom casserole" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">Green bean and mushroom casserole <span class="diet-tag vegan-gf">Vegan &amp; GF</span></div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Classic cornbread" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-classic-cornbread.jpg" alt="Classic cornbread" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">Classic cornbread <span class="diet-tag gf">GF</span></div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="&quot;Cheesy&quot; jalapeno cornbread" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-cheesy-jalapeno-cornbread.jpg" alt="Cheesy jalapeno cornbread" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">"Cheesy" jalapeno cornbread <span class="diet-tag gf">GF</span></div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Winter kale salad" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-tuscan-kale-salad.jpg" alt="Winter kale salad" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">Winter kale salad <span class="diet-tag vegan-gf">Vegan &amp; GF</span></div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Sweet potato with marshmallows" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-sweet-potato-marshmallows.jpg" alt="Sweet potato with marshmallows" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">Sweet potato with marshmallows <span class="diet-tag vegan-gf">Vegan &amp; GF</span></div></div></label>
+          <label class="tg-option-row"><input type="checkbox" name="indiv_side" value="Steam roasted butternut squash" onchange="handleIndivSideChange(this)"><img src="images/menu/thanksgiving-roasted-butternut-squash.jpg" alt="Steam roasted butternut squash" class="tg-row-img" loading="lazy"><div class="tg-option-content"><div class="tg-option-title">Steam roasted butternut squash <span class="diet-tag vegan-gf">Vegan &amp; GF</span></div></div></label>
         </div>
       </div>
 
@@ -1569,16 +1689,16 @@
 const STORAGE_KEY = 'hatch_thanksgiving_order_live';
 
 const SIDES_DATA = [
-  { id: 'side-stuffing', name: 'Sourdough stuffing 9x13 - $60', price: 60, desc: 'Feeds 10–12 · Scratch-made sourdough stuffing', image: 'images/menu/thanksgiving-sourdough-stuffing.jpg' },
-  { id: 'side-mashed', name: 'Creamy mashed potato 9x13 pan (vegan) - $60', price: 60, desc: 'Feeds 10–12 · Velvety Yukon gold potatoes', image: 'images/menu/thanksgiving-creamy-mashed-potatoes.jpg' },
-  { id: 'side-greenbean', name: 'Green bean and mushroom casserole 9x13 pan (vegan) - $70', price: 70, desc: 'Feeds 10–12 · Savory mushroom gravy', image: 'images/menu/thanksgiving-green-bean-casserole.jpg' },
-  { id: 'side-cornbread', name: 'Classic cornbread 9x13 pan (vegan) - $45', price: 45, desc: 'Feeds 10–12 · Fresh-baked golden cornbread', image: 'images/menu/thanksgiving-classic-cornbread.jpg' },
-  { id: 'side-jalapeno', name: '"Cheesy" jalapeno cornbread 9x13 (vegan) - $60', price: 60, desc: 'Feeds 10–12 · Plant-based cheddar & jalapeno', image: 'images/menu/thanksgiving-cheesy-jalapeno-cornbread.jpg' },
-  { id: 'side-kale', name: 'Tuscan kale salad with roasted butternut squash, pumpkin seeds, cranberries and shallot dijon vinagrette - large bowl - $70', price: 70, desc: 'Feeds 10–12 · Large bowl with shallot dijon vinaigrette', image: 'images/menu/thanksgiving-tuscan-kale-salad.jpg' },
-  { id: 'side-sweetpotato', name: 'Sweet potato casserol with marshmallows - 9x13 pan (vegan) - $70', price: 70, desc: 'Feeds 10–12 · Candied sweet potatoes & marshmallows', image: 'images/menu/thanksgiving-sweet-potato-marshmallows.jpg' },
-  { id: 'side-butternut', name: 'Steam roasted rosemary butternut squash - 9x13 pan (vegan) - $60', price: 60, desc: 'Feeds 10–12 · Fresh rosemary and sea salt', image: 'images/menu/thanksgiving-roasted-butternut-squash.jpg' },
-  { id: 'side-gravy', name: 'Turkey Gravy (1 pint) - $20', price: 20, desc: '16 oz pint · Scratch-simmered rich turkey gravy', image: 'images/menu/thanksgiving-turkey-gravy.jpg' },
-  { id: 'side-cranberry', name: 'Cranberry sauce - 1 pint (vegan) - $20', price: 20, desc: '16 oz pint · House tart & sweet cranberry sauce', image: 'images/menu/thanksgiving-cranberry-sauce.jpg' },
+  { id: 'side-stuffing', name: 'Organic sourdough stuffing 9x13 - $60', price: 60, desc: 'Feeds 10–12 · Scratch-made organic sourdough stuffing', image: 'images/menu/thanksgiving-sourdough-stuffing.jpg' },
+  { id: 'side-mashed', name: 'Creamy mashed potato 9x13 pan - $60', price: 60, desc: 'Feeds 10–12 · Velvety Yukon gold potatoes', image: 'images/menu/thanksgiving-creamy-mashed-potatoes.jpg', diet: 'Vegan & GF' },
+  { id: 'side-greenbean', name: 'Green bean and mushroom casserole 9x13 pan - $70', price: 70, desc: 'Feeds 10–12 · Savory mushroom gravy', image: 'images/menu/thanksgiving-green-bean-casserole.jpg', diet: 'Vegan & GF' },
+  { id: 'side-cornbread', name: 'Classic cornbread 9x13 pan - $45', price: 45, desc: 'Feeds 10–12 · Fresh-baked golden cornbread (NOT vegan)', image: 'images/menu/thanksgiving-classic-cornbread.jpg', diet: 'GF' },
+  { id: 'side-jalapeno', name: '"Cheesy" jalapeno cornbread 9x13 - $60', price: 60, desc: 'Feeds 10–12 · Cheddar & spicy jalapeno (NOT vegan)', image: 'images/menu/thanksgiving-cheesy-jalapeno-cornbread.jpg', diet: 'GF' },
+  { id: 'side-kale', name: 'Winter kale salad - large bowl - $70', price: 70, desc: 'Feeds 10–12 · Roasted butternut squash, pumpkin seeds, cranberries & shallot dijon vinaigrette', image: 'images/menu/thanksgiving-tuscan-kale-salad.jpg', diet: 'Vegan & GF' },
+  { id: 'side-sweetpotato', name: 'Sweet potato casserole with marshmallows - 9x13 pan - $70', price: 70, desc: 'Feeds 10–12 · Candied sweet potatoes & marshmallows', image: 'images/menu/thanksgiving-sweet-potato-marshmallows.jpg', diet: 'Vegan & GF' },
+  { id: 'side-butternut', name: 'Steam roasted rosemary butternut squash - 9x13 pan - $60', price: 60, desc: 'Feeds 10–12 · Fresh rosemary and sea salt', image: 'images/menu/thanksgiving-roasted-butternut-squash.jpg', diet: 'Vegan & GF' },
+  { id: 'side-gravy', name: 'Turkey Gravy (1 pint) - $20', price: 20, desc: '16 oz pint · Scratch-simmered rich turkey gravy', image: 'images/menu/thanksgiving-turkey-gravy.jpg', diet: 'GF' },
+  { id: 'side-cranberry', name: 'Cranberry sauce - 1 pint - $20', price: 20, desc: '16 oz pint · House tart & sweet cranberry sauce', image: 'images/menu/thanksgiving-cranberry-sauce.jpg', diet: 'Vegan & GF' },
 ];
 
 let formState = {
@@ -1588,6 +1708,8 @@ let formState = {
   proteinCarvedQty: 0,
   proteinBrisketQty: 0,
   additionalSides: {}, // id -> qty
+  pumpkinSwap: 'none', // 'none' | 'swap-1' | 'swap-2'
+  pumpkinAddonQty: 0,
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1606,7 +1728,10 @@ function renderAdditionalSides() {
     <div class="tg-item-row">
       ${side.image ? `<img src="${side.image}" alt="${side.name}" class="tg-item-img" loading="lazy">` : ''}
       <div class="tg-item-info">
-        <div class="tg-item-name">${side.name}</div>
+        <div class="tg-item-name">
+          ${side.name}
+          ${side.diet ? `<span class="diet-tag ${side.diet === 'GF' ? 'gf' : (side.diet === 'Vegan' ? 'vegan' : 'vegan-gf')}">${side.diet}</span>` : ''}
+        </div>
         <div class="tg-item-desc">${side.desc}</div>
       </div>
       <div class="tg-item-action">
@@ -1799,6 +1924,24 @@ function handleContactMethodChange(radio) {
   });
 }
 
+function handlePumpkinSwapChange(radio) {
+  formState.pumpkinSwap = radio.value;
+  document.querySelectorAll('input[name="pumpkin_swap"]').forEach(r => {
+    r.closest('.tg-option-row')?.classList.toggle('is-selected', r.checked);
+  });
+  if (radio.value !== 'none' && formState.familyQty === 0) {
+    adjustStepper('family-qty', 1);
+  }
+  updateFormCalculations();
+}
+
+function adjustPumpkinAddonQty(delta) {
+  formState.pumpkinAddonQty = Math.max(0, formState.pumpkinAddonQty + delta);
+  const disp = document.getElementById('pumpkin-addon-display');
+  if (disp) disp.textContent = formState.pumpkinAddonQty;
+  updateFormCalculations();
+}
+
 const SALES_TAX_RATE = 0.0975; // 9.75% Los Angeles / California Sales Tax
 
 function calculateTotals(subtotal) {
@@ -1843,7 +1986,17 @@ function updateFormCalculations() {
     }
   }
 
-  const subtotal = familyPrice + indivTotal + proteinTotal + sidesTotal;
+  // Pumpkin sourdough calculations
+  let pumpkinSwapCost = 0;
+  if (formState.pumpkinSwap === 'swap-1') {
+    pumpkinSwapCost = (formState.familyQty > 0 ? formState.familyQty : 1) * 5;
+  } else if (formState.pumpkinSwap === 'swap-2') {
+    pumpkinSwapCost = (formState.familyQty > 0 ? formState.familyQty : 1) * 10;
+  }
+
+  const pumpkinAddonCost = formState.pumpkinAddonQty * 20;
+
+  const subtotal = familyPrice + indivTotal + proteinTotal + sidesTotal + pumpkinSwapCost + pumpkinAddonCost;
   const { tax, total } = calculateTotals(subtotal);
 
   // Update Sticky Bottom Bar
@@ -1941,6 +2094,33 @@ function getOrderPayloadItems() {
         price: qty * sData.price,
       });
     }
+  }
+
+  // Pumpkin Sourdough swap & add-on payload items
+  let pumpkinSwapCost = 0;
+  if (formState.pumpkinSwap === 'swap-1') {
+    pumpkinSwapCost = (formState.familyQty > 0 ? formState.familyQty : 1) * 5;
+  } else if (formState.pumpkinSwap === 'swap-2') {
+    pumpkinSwapCost = (formState.familyQty > 0 ? formState.familyQty : 1) * 10;
+  }
+
+  if (pumpkinSwapCost > 0) {
+    const swapMultiplier = formState.familyQty > 0 ? formState.familyQty : 1;
+    items.push({
+      title: formState.pumpkinSwap === 'swap-1'
+        ? `${swapMultiplier > 1 ? swapMultiplier + 'x ' : ''}Swap 1x Organic Sourdough Loaf to Organic Sourdough PUMPKIN (+$5)`
+        : `${swapMultiplier > 1 ? swapMultiplier + 'x ' : ''}Swap Both Loaves to Organic Sourdough PUMPKIN (+$10)`,
+      price: pumpkinSwapCost,
+      quantity: swapMultiplier,
+    });
+  }
+
+  if (formState.pumpkinAddonQty > 0) {
+    items.push({
+      title: `${formState.pumpkinAddonQty}x Add Organic Sourdough PUMPKIN to order ($20 ea)`,
+      price: formState.pumpkinAddonQty * 20,
+      quantity: formState.pumpkinAddonQty,
+    });
   }
 
   return items;
