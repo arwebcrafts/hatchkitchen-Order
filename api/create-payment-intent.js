@@ -49,6 +49,13 @@ module.exports = async function handler(req, res) {
     }
 
     const isThanksgiving = metadata.source === 'hatch-thanksgiving-orders' || metadata.order_type === 'thanksgiving-preorder';
+    if (isThanksgiving) {
+      // Thanksgiving Pre-order Cutoff Deadline: Monday, Nov 23 at 5:00 PM PT (UTC-8)
+      const THANKSGIVING_CUTOFF = new Date('2026-11-23T17:00:00-08:00');
+      if (new Date() > THANKSGIVING_CUTOFF) {
+        return res.status(403).json({ error: 'Thanksgiving pre-orders closed on Monday, November 23 at 5:00 PM PT.' });
+      }
+    }
     const isVillage = metadata.source === 'hatch-village-orders' || metadata.order_type === 'village-dinner';
 
     let description = `Hatch Kitchen — Camp Lunch Order (${metadata.customer_name || 'parent'})`;

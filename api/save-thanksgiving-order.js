@@ -234,6 +234,15 @@ module.exports = async function handler(req, res) {
   // POST: Pre-Order submission
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
+  // Strict Pre-Order Cutoff Deadline: Monday, November 23 at 5:00 PM Pacific Time (PST is UTC-8)
+  const THANKSGIVING_CUTOFF = new Date('2026-11-23T17:00:00-08:00');
+  if (new Date() > THANKSGIVING_CUTOFF) {
+    return res.status(403).json({
+      ok: false,
+      error: 'Thanksgiving pre-orders closed on Monday, November 23 at 5:00 PM PT. Please contact Hatch Kitchen directly at (424) 455-3195.',
+    });
+  }
+
   try {
     const body = req.body || {};
     const {

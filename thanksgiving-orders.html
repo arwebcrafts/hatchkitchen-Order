@@ -84,6 +84,26 @@
   background: var(--gold);
   border-radius: 50%;
 }
+.tg-cutoff-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(200,148,31,.16);
+  color: var(--gold);
+  border: 1px solid rgba(200,148,31,.35);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-family: var(--f-mono);
+  font-size: .73rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+  margin-bottom: 12px;
+}
+.tg-cutoff-badge.closed {
+  background: rgba(185,28,28,.18);
+  color: #FCA5A5;
+  border-color: rgba(185,28,28,.4);
+}
 .tg-title {
   font-family: var(--f-display);
   font-size: clamp(1.85rem, 3.8vw, 2.9rem);
@@ -981,13 +1001,20 @@
 
     <!-- Header Card -->
     <div class="tg-header-card">
-      <div class="tg-badge">OK Kosher Certified · Holiday Catering</div>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+        <div class="tg-badge" style="margin-bottom:0;">OK Kosher Certified · Holiday Catering</div>
+        <div class="tg-cutoff-badge" id="tg-cutoff-indicator" style="margin-bottom:0;">⏰ Pre-Order Cutoff: Monday, Nov 23 at 5:00 PM</div>
+      </div>
       <h1 class="tg-title">Thanksgiving Meal <em>Pre-Order.</em></h1>
       <span class="tg-script-tag">Feel-Good Fuel for the Holidays</span>
 
       <div class="tg-intro-box">
         <p>After you fill out this order request, we will contact you to go over details and availability before the order is completed. If you would like faster service and direct information on current stock and pricing please contact us at <a href="tel:+14244553195" class="tg-intro-highlight">(424) 455-3195</a> or <a href="mailto:info@thehatchkitchen.com" class="tg-intro-highlight">info@thehatchkitchen.com</a>.</p>
-        <p><strong>Pre-order closes 11/24.</strong> Pick up at Hatch Kitchen storefront at <strong>8947 W. Pico Blvd</strong> on <strong>Wednesday 11/25 or Thursday 11/26 between 9am–3pm</strong>.</p>
+        <p><strong>Pre-order Cutoff Deadline: Monday, November 23 at 5:00 PM (11/23 at 5 PM).</strong> Pick up at Hatch Kitchen storefront at <strong>8947 W. Pico Blvd</strong> on <strong>Wednesday 11/25 or Thursday 11/26 between 9am–3pm</strong>.</p>
+      </div>
+
+      <div id="tg-closed-alert" style="display:none; background:#FEF2F2; border:1px solid #F87171; color:#991B1B; padding:16px 20px; border-radius:12px; margin-top:16px; font-size:.92rem; line-height:1.5;">
+        <strong>⚠️ Thanksgiving Pre-Orders Are Now Closed:</strong> The cutoff deadline was <strong>Monday, November 23 at 5:00 PM PT</strong>. We are no longer accepting new online pre-orders. For last-minute catering inquiries or questions, please call <a href="tel:+14244553195" style="color:#991B1B; font-weight:700; text-decoration:underline;">(424) 455-3195</a> or email <a href="mailto:info@thehatchkitchen.com" style="color:#991B1B; font-weight:700; text-decoration:underline;">info@thehatchkitchen.com</a>.
       </div>
     </div>
 
@@ -1712,6 +1739,50 @@ let formState = {
   pumpkinAddonQty: 0,
 };
 
+// Thanksgiving Pre-order Cutoff Deadline: Monday, November 23, 2026 at 5:00 PM Pacific Time (PST is UTC-8)
+const THANKSGIVING_CUTOFF = new Date('2026-11-23T17:00:00-08:00');
+
+function isThanksgivingPreorderClosed() {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('test_cutoff') === 'closed') return true;
+  if (urlParams.get('test_cutoff') === 'open') return false;
+  return new Date() > THANKSGIVING_CUTOFF;
+}
+
+function checkThanksgivingCutoff() {
+  const isClosed = isThanksgivingPreorderClosed();
+  const indicator = document.getElementById('tg-cutoff-indicator');
+  const alertBox = document.getElementById('tg-closed-alert');
+  const submitBtn = document.getElementById('submit-btn');
+  const submitText = document.getElementById('submit-btn-text');
+
+  if (isClosed) {
+    if (indicator) {
+      indicator.textContent = '🔒 Pre-Orders Closed · Cutoff: Monday, Nov 23 at 5:00 PM';
+      indicator.classList.add('closed');
+    }
+    if (alertBox) {
+      alertBox.style.display = 'block';
+    }
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.55';
+      submitBtn.style.cursor = 'not-allowed';
+    }
+    if (submitText) {
+      submitText.textContent = 'Pre-Orders Closed (Cutoff: Nov 23, 5 PM)';
+    }
+  } else {
+    if (indicator) {
+      indicator.textContent = '⏰ Pre-Order Cutoff: Monday, Nov 23 at 5:00 PM';
+      indicator.classList.remove('closed');
+    }
+    if (alertBox) {
+      alertBox.style.display = 'none';
+    }
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   renderAdditionalSides();
   initStripePayment();
@@ -1719,6 +1790,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateFamilySidesBadge();
   updateIndivSidesBadge();
   updateFormCalculations();
+  checkThanksgivingCutoff();
   checkUrlOrStoredDashboard();
 });
 
@@ -2187,6 +2259,11 @@ function initStripePayment() {
 // Form Submission with Strict Payment Required
 async function handleFormSubmit(e) {
   if (e) e.preventDefault();
+
+  if (isThanksgivingPreorderClosed()) {
+    alert('Thanksgiving pre-orders closed on Monday, November 23 at 5:00 PM PT. Please contact Hatch Kitchen directly at (424) 455-3195.');
+    return;
+  }
 
   const nameInput = document.getElementById('cust-name');
   const phoneInput = document.getElementById('cust-phone');
